@@ -12,6 +12,10 @@
 | ④ | [실행 요청 → 커널 실행](docs/04-dispatch-to-kernel.md) | Python 함수가 반환되면 가속기 계산도 끝난 걸까? 커널은 어떻게 실행할까? |
 | ⑤ | [커널 → 칩 내부](docs/05-kernel-to-chip.md) | 연산은 어디서 이루어지고 데이터는 어디에서 이동해올까? |
 
+## 예제로 따라가기
+
+- [Y = ReLU(XW + b)가 코드에서 커널까지 내려가는 길](docs/example-relu-linear.md) — JAX와 PyTorch 양쪽의 실제 IR 출력을 단계별로 대조
+
 ## 스택별 상세 파이프라인
 
 - [JAX 코드가 TPU 실행 코드로 변환되는 흐름](docs/jax-to-tpu.md)
