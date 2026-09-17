@@ -15,6 +15,14 @@
 ## 예제로 따라가기
 
 - [Y = ReLU(XW + b)가 코드에서 커널까지 내려가는 길](docs/example-relu-linear.md) — JAX와 PyTorch 양쪽의 실제 IR 출력을 단계별로 대조
+- [실제 GPU: PyTorch 2 on NVIDIA A100](docs/example-pytorch-gpu-a100.md) — Colab A100에서 Dynamo → AOT → Inductor → Triton IR → PTX(sm_80) → SASS까지 실물 출력, f32/TF32/bf16 Tensor Core 비교, T4와의 차이
+- [실제 TPU: JAX on TPU v5e](docs/example-jax-tpu-v5e.md) — Colab v5e에서 jaxpr → StableHLO → 타일 레이아웃·VMEM·DMA가 드러난 HLO까지 실물 출력
+
+## Colab 노트북
+
+- [`notebooks/pytorch_gpu_relu_linear.ipynb`](notebooks/pytorch_gpu_relu_linear.ipynb) — GPU 런타임. Dynamo/AOT/Inductor 로그, Triton 캐시의 TTIR·TTGIR·PTX·SASS, 비동기 디스패치, 직접 쓴 Triton 커널
+- [`notebooks/jax_tpu_relu_linear.ipynb`](notebooks/jax_tpu_relu_linear.ipynb) — TPU 런타임. jaxpr, StableHLO, 타일 레이아웃·VMEM·DMA가 보이는 HLO, cost/memory analysis, 2048² 타일링, Pallas 커널
+- 터미널에서: `colab new -s gpu --gpu A100 && colab exec -s gpu -f notebooks/pytorch_gpu_relu_linear.ipynb --timeout 900 && colab stop -s gpu` (TPU는 `--tpu v5e1`)
 
 ## 스택별 상세 파이프라인
 
