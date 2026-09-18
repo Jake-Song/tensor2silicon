@@ -8,3 +8,6 @@ wheels/
 
 # Virtual environments
 .venv
+
+# toy compiler build outputs
+toy/_build/

@@ -24,6 +24,22 @@
 - [`notebooks/jax_tpu_relu_linear.ipynb`](notebooks/jax_tpu_relu_linear.ipynb) — TPU 런타임. jaxpr, StableHLO, 타일 레이아웃·VMEM·DMA가 보이는 HLO, cost/memory analysis, 2048² 타일링, Pallas 커널
 - 터미널에서: `colab new -s gpu --gpu A100 && colab exec -s gpu -f notebooks/pytorch_gpu_relu_linear.ipynb --timeout 900 && colab stop -s gpu` (TPU는 `--tpu v5e1`)
 
+## 직접 만들어보기: toy 컴파일러
+
+같은 식 `Y = ReLU(XW + b)`를 처리하는 아주 작은 컴파일러를 [`toy/`](toy/)에 만들었다. 위 5단계 중 ②~③을 손으로 구현한 것이다.
+
+| 파일 | 역할 | 대응되는 실제 단계 |
+|---|---|---|
+| [`toy/ir.py`](toy/ir.py) | 그래프 IR + shape 추론 (`matmul`, `add`, `relu`, `broadcast_in_dim`) | jaxpr / FX 그래프 |
+| [`toy/interp.py`](toy/interp.py) | NumPy 레퍼런스 인터프리터. 모든 코드 생성 결과의 정답 기준 | eager 실행 |
+| [`toy/codegen_c.py`](toy/codegen_c.py) | 노드마다 C 루프를 생성 → `gcc`로 빌드 → `ctypes`로 로드 | Inductor C++ / XLA CPU |
+
+```bash
+uv run -m toy   # IR 출력 → 생성된 C 출력 → 인터프리터와 비교(PASS/FAIL)
+```
+
+다음 단계 후보: 원소별 연산 퓨전 패스, `Tensor` 연산자 오버로딩으로 추적 프론트엔드, 타일링된 matmul, Triton 타깃.
+
 ## 스택별 상세 파이프라인
 
 - [JAX 코드가 TPU 실행 코드로 변환되는 흐름](docs/jax-to-tpu.md)
