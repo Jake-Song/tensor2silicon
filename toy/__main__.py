@@ -2,50 +2,61 @@
 
 import numpy as np
 
-from . import Graph, compile_graph, fuse, run
+import toy
+from toy import TraceError, jit, run
 
 
-def build_relu_linear(M=16, K=8, N=4) -> Graph:
-    g = Graph()
-    x = g.input("x", (M, K))
-    w = g.input("w", (K, N))
-    b = g.input("b", (N,))
-    xw = g.matmul(x, w)
-    bb = g.broadcast_in_dim(b, (M, N), dims=(1,))
-    y = g.relu(g.add(xw, bb))
-    g.output(y)
-    return g
+@jit
+def f(x, w, b):
+    return toy.relu(x @ w + b)
 
 
 def main() -> None:
-    g = build_relu_linear()
     rng = np.random.default_rng(0)
     x = rng.standard_normal((16, 8), dtype=np.float32)
     w = rng.standard_normal((8, 4), dtype=np.float32)
     b = rng.standard_normal((4,), dtype=np.float32)
-    (ref,) = run(g, x, w, b)
 
-    variants = [
-        ("unfused", g),
-        ("fused epilogue (matmul kept separate, Inductor-style)", fuse(g, fuse_matmul=False)),
-        ("fully fused (XLA-style)", fuse(g)),
-    ]
-    all_ok = True
-    for title, graph in variants:
-        print(f"==== {title} ====")
-        print("-- IR --")
-        print(graph)
-        compiled = compile_graph(graph)
-        print("-- generated C --")
-        print(compiled.source)
-        (interp_out,) = run(graph, x, w, b)
-        (c_out,) = compiled(x, w, b)
-        ok = np.allclose(ref, interp_out) and np.allclose(ref, c_out, rtol=1e-5, atol=1e-6)
-        all_ok &= ok
-        print(f"-- check vs unfused interpreter: max abs diff {np.abs(ref - c_out).max():.3e} -> "
-              f"{'PASS' if ok else 'FAIL'}\n")
-    print("ALL PASS" if all_ok else "SOME FAILED")
-    raise SystemExit(0 if all_ok else 1)
+    # Eager: the same Python function runs directly on NumPy arrays.
+    ref = f.fn(x, w, b)
+
+    print("==== 1. trace -> IR (like jax.make_jaxpr / FX graph) ====")
+    g = f.trace(x, w, b)
+    print(g)
+
+    print("\n==== 2. fusion pass (like XLA HLO fusion) ====")
+    print(f.lower(x, w, b))
+
+    print("\n==== 3. codegen -> C (like XLA CPU / Inductor C++) ====")
+    compiled = f.compile(x, w, b)
+    print(compiled.source)
+
+    print("==== 4. run and check ====")
+    y = f(x, w, b)  # cache hit: no retrace
+    (interp,) = run(g, x, w, b)
+    ok = np.allclose(ref, interp) and np.allclose(ref, y, rtol=1e-5, atol=1e-6)
+    print(f"eager vs interp vs C: max abs diff {np.abs(ref - y).max():.3e} -> {'PASS' if ok else 'FAIL'}")
+
+    print("\n==== 5. shape specialization: a new shape retraces and recompiles ====")
+    x2 = rng.standard_normal((32, 8), dtype=np.float32)
+    f(x2, w, b)
+    for k in f.cache:
+        print("  cache key:", [s for s, _ in k])
+
+    print("\n==== 6. graph break: Python control flow on a traced value ====")
+
+    @jit
+    def g_bad(x):
+        if x:  # would need the value at trace time
+            return toy.relu(x)
+        return x
+
+    try:
+        g_bad(x)
+    except TraceError as e:
+        print("  TraceError:", e)
+
+    raise SystemExit(0 if ok else 1)
 
 
 if __name__ == "__main__":

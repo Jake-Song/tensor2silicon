@@ -28,18 +28,27 @@
 
 같은 식 `Y = ReLU(XW + b)`를 처리하는 아주 작은 컴파일러를 [`toy/`](toy/)에 만들었다. 위 5단계 중 ②~③을 손으로 구현한 것이다.
 
+```python
+@toy.jit
+def f(x, w, b):
+    return toy.relu(x @ w + b)
+
+y = f(x, w, b)   # 첫 호출: 추적 → 퓨전 → C 컴파일. 같은 shape이면 캐시 히트
+```
+
 | 파일 | 역할 | 대응되는 실제 단계 |
 |---|---|---|
+| [`toy/trace.py`](toy/trace.py) | `Tensor` 연산자 오버로딩으로 함수를 추적해 그래프 기록, `jit`은 shape별로 컴파일 결과 캐시 | `jax.jit` 추적 / TorchDynamo |
 | [`toy/ir.py`](toy/ir.py) | 그래프 IR + shape 추론 (`matmul`, `add`, `relu`, `broadcast_in_dim`) | jaxpr / FX 그래프 |
 | [`toy/interp.py`](toy/interp.py) | NumPy 레퍼런스 인터프리터. 모든 코드 생성 결과의 정답 기준 | eager 실행 |
 | [`toy/passes.py`](toy/passes.py) | 퓨전 패스. 소비자가 하나뿐인 원소별 연산(과 matmul)을 소비자 루프 안으로 흡수 | XLA fusion / Inductor 커널 스케줄링 |
 | [`toy/codegen_c.py`](toy/codegen_c.py) | 노드마다 C 루프를 생성 → `gcc`로 빌드 → `ctypes`로 로드. `fusion` 노드는 루프 하나에 스칼라 문장으로 펼침 | Inductor C++ / XLA CPU |
 
 ```bash
-uv run -m toy   # 미퓨전 / 에필로그만 퓨전(Inductor식) / 전부 퓨전(XLA식) 세 가지의 IR·C 출력과 검증
+uv run -m toy   # 추적된 IR → 퓨전 IR → 생성된 C → 검증 → shape별 재추적 → 그래프 브레이크 예시
 ```
 
-다음 단계 후보: `Tensor` 연산자 오버로딩으로 추적 프론트엔드, 타일링된 matmul, Triton 타깃, autodiff.
+다음 단계 후보: 타일링된 matmul, Triton 타깃, autodiff, 상수·size-1 브로드캐스트 지원.
 
 ## 스택별 상세 파이프라인
 

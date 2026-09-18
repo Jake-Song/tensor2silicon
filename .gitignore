@@ -9,5 +9,8 @@ wheels/
 # Virtual environments
 .venv
 
+# vscode settings
+.vscode/
+
 # toy compiler build outputs
 toy/_build/
