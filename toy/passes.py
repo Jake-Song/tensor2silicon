@@ -108,3 +108,33 @@ def _clone(new: Graph, n: Node, old2new: dict[Node, Node]) -> Node:
             return new.fusion(args, n.attrs["body"], n.attrs["root"])
         case _:
             raise NotImplementedError(n.op)
+
+
+# -- scheduling -----------------------------------------------------------------
+
+Tile = tuple[int, int, int]
+
+# Candidate (BM, BN, BK) blocks tried by ``jit(tile="auto")``.
+TILE_CANDIDATES: list[Tile] = [
+    (16, 64, 64),
+    (32, 128, 64),
+    (64, 64, 64),
+    (64, 256, 32),
+    (128, 128, 128),
+]
+
+
+def tile_matmuls(graph: Graph, tile: Tile | None) -> Graph:
+    """Attach a ``tile`` schedule to every matmul (also inside fusion bodies).
+
+    ``None`` removes the schedule (naive ``i, j, k`` loops).  Mutates in place
+    and returns ``graph`` for chaining.
+    """
+    for n in graph.nodes:
+        for m in [n, *n.attrs.get("body", [])]:
+            if m.op == "matmul":
+                if tile is None:
+                    m.attrs.pop("tile", None)
+                else:
+                    m.attrs["tile"] = tuple(tile)
+    return graph

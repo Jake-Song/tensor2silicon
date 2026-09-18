@@ -10,13 +10,14 @@ and later calls with the same shapes hit the cache.
 from __future__ import annotations
 
 import inspect
+import time
 from typing import Callable
 
 import numpy as np
 
 from .codegen_c import Compiled, compile_graph
 from .ir import F32, Graph, Node
-from .passes import fuse as fuse_pass
+from .passes import TILE_CANDIDATES, Tile, fuse as fuse_pass, tile_matmuls
 
 
 class TraceError(RuntimeError):
@@ -121,11 +122,24 @@ def trace(fn: Callable, *specs) -> Graph:
 
 
 class Jitted:
-    def __init__(self, fn: Callable, *, fuse: bool = True, fuse_matmul: bool = True):
+    """``tile``: ``None`` for naive loops, a ``(BM, BN, BK)`` block, or ``"auto"``
+    to time each of ``TILE_CANDIDATES`` on the real inputs and keep the fastest
+    (a toy ``max-autotune``).  ``self.tuning`` records what was measured."""
+
+    def __init__(
+        self,
+        fn: Callable,
+        *,
+        fuse: bool = True,
+        fuse_matmul: bool = True,
+        tile: Tile | str | None = None,
+    ):
         self.fn = fn
         self.fuse = fuse
         self.fuse_matmul = fuse_matmul
+        self.tile = tile
         self.cache: dict[tuple, Compiled] = {}
+        self.tuning: dict[tuple, dict[Tile | None, float]] = {}
         self.__name__ = getattr(fn, "__name__", "jitted")
         self.__doc__ = fn.__doc__
 
@@ -137,16 +151,37 @@ class Jitted:
         """The raw traced graph, before any pass (like ``jax.make_jaxpr``)."""
         return trace(self.fn, *args)
 
-    def lower(self, *args) -> Graph:
-        """The graph after optimization passes (like ``jit(f).lower(...)``)."""
+    def lower(self, *args, tile: Tile | str | None = "default") -> Graph:
+        """The graph after passes (like ``jit(f).lower(...)``).  With
+        ``tile="auto"`` this returns the unscheduled graph; scheduling happens
+        in ``compile``."""
         g = self.trace(*args)
-        return fuse_pass(g, fuse_matmul=self.fuse_matmul) if self.fuse else g
+        if self.fuse:
+            g = fuse_pass(g, fuse_matmul=self.fuse_matmul)
+        tile = self.tile if tile == "default" else tile
+        return tile_matmuls(g, None if tile == "auto" else tile)
 
     def compile(self, *args) -> Compiled:
         key = self._key(args)
         if key not in self.cache:
-            self.cache[key] = compile_graph(self.lower(*args))
+            if self.tile == "auto":
+                self.cache[key] = self._autotune(key, args)
+            else:
+                self.cache[key] = compile_graph(self.lower(*args))
         return self.cache[key]
+
+    def _autotune(self, key: tuple, args, repeats: int = 3) -> Compiled:
+        timings: dict[Tile | None, float] = {}
+        best = None
+        for tile in [None, *TILE_CANDIDATES]:
+            c = compile_graph(self.lower(*args, tile=tile))
+            c(*args)  # warm-up
+            t = min(_time_call(c, args) for _ in range(repeats))
+            timings[tile] = t
+            if best is None or t < timings[best[0]]:
+                best = (tile, c)
+        self.tuning[key] = timings
+        return best[1]
 
     def __call__(self, *args):
         outs = self.compile(*args)(*args)
@@ -158,3 +193,9 @@ def jit(fn: Callable | None = None, /, **opts) -> Jitted | Callable[[Callable], 
     if fn is None:
         return lambda f: Jitted(f, **opts)
     return Jitted(fn, **opts)
+
+
+def _time_call(fn, args) -> float:
+    t0 = time.perf_counter()
+    fn(*args)
+    return time.perf_counter() - t0

@@ -34,6 +34,10 @@ def f(x, w, b):
     return toy.relu(x @ w + b)
 
 y = f(x, w, b)   # 첫 호출: 추적 → 퓨전 → C 컴파일. 같은 shape이면 캐시 히트
+
+@toy.jit(tile=(64, 256, 32))   # matmul 스케줄: 블록 크기. tile="auto"면 후보를 실측해 선택
+def g(x, w, b):
+    return toy.relu(x @ w + b)
 ```
 
 | 파일 | 역할 | 대응되는 실제 단계 |
@@ -41,14 +45,26 @@ y = f(x, w, b)   # 첫 호출: 추적 → 퓨전 → C 컴파일. 같은 shape�
 | [`toy/trace.py`](toy/trace.py) | `Tensor` 연산자 오버로딩으로 함수를 추적해 그래프 기록, `jit`은 shape별로 컴파일 결과 캐시 | `jax.jit` 추적 / TorchDynamo |
 | [`toy/ir.py`](toy/ir.py) | 그래프 IR + shape 추론 (`matmul`, `add`, `relu`, `broadcast_in_dim`) | jaxpr / FX 그래프 |
 | [`toy/interp.py`](toy/interp.py) | NumPy 레퍼런스 인터프리터. 모든 코드 생성 결과의 정답 기준 | eager 실행 |
-| [`toy/passes.py`](toy/passes.py) | 퓨전 패스. 소비자가 하나뿐인 원소별 연산(과 matmul)을 소비자 루프 안으로 흡수 | XLA fusion / Inductor 커널 스케줄링 |
-| [`toy/codegen_c.py`](toy/codegen_c.py) | 노드마다 C 루프를 생성 → `gcc`로 빌드 → `ctypes`로 로드. `fusion` 노드는 루프 하나에 스칼라 문장으로 펼침 | Inductor C++ / XLA CPU |
+| [`toy/passes.py`](toy/passes.py) | 퓨전 패스(소비자가 하나뿐인 원소별 연산과 matmul을 소비자 루프 안으로 흡수), `tile_matmuls` 스케줄 지정 | XLA fusion / Inductor 커널 스케줄링 |
+| [`toy/codegen_c.py`](toy/codegen_c.py) | 노드마다 C 루프를 생성 → `gcc`로 빌드 → `ctypes`로 로드. `fusion` 노드는 루프 하나에 스칼라 문장으로 펼침. `tile`이 있는 matmul은 블록(ii,jj,kk) + i,k,j 순서로, 에필로그는 블록 reduction이 끝난 뒤 적용 | Inductor C++ / XLA CPU |
+| [`toy/bench.py`](toy/bench.py) | 같은 그래프를 스케줄만 바꿔 NumPy(BLAS)와 비교. `uv run -m toy.bench` | Inductor max-autotune / XLA cost model |
 
 ```bash
 uv run -m toy   # 추적된 IR → 퓨전 IR → 생성된 C → 검증 → shape별 재추적 → 그래프 브레이크 예시
 ```
 
-다음 단계 후보: 타일링된 matmul, Triton 타깃, autodiff, 상수·size-1 브로드캐스트 지원.
+i7-10700K(AVX2) 1코어에서 M=N=K=1024 기준(`uv run -m toy.bench`):
+
+| 스케줄 | ms | GFLOP/s |
+|---|---|---|
+| NumPy sgemm(멀티스레드 BLAS) | 8.6 | 250 |
+| naive i,j,k | 1327 | 1.6 |
+| i,k,j 순서만 변경 | 132 | 16 |
+| tile=(64,256,32) | 85 | 25 |
+
+루프 순서만 바꿔도 10배, 블록화로 1.5배 더. 남은 10배는 레지스터 블로킹·FMA·멀티스레드 몫이다. `-O2`로는 타일 커널이 3.8 GFLOP/s에 그치고 `-O3 -march=native`여야 j 루프가 벡터화된다.
+
+다음 단계 후보: 레지스터 블로킹(마이크로커널), Triton 타깃, autodiff, 상수·size-1 브로드캐스트 지원.
 
 ## 스택별 상세 파이프라인
 
