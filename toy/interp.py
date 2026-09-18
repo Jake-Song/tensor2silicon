@@ -32,6 +32,15 @@ def _eval(node: Node, xs: list[np.ndarray]) -> np.ndarray:
             return xs[0] + xs[1]
         case "relu":
             return np.maximum(xs[0], 0)
+        case "fusion":
+            body, root = node.attrs["body"], node.attrs["root"]
+            env: dict[Node, np.ndarray] = {}
+            for inner in body:
+                if inner.op == "param":
+                    env[inner] = xs[inner.attrs["index"]]
+                else:
+                    env[inner] = _eval(inner, [env[i] for i in inner.inputs])
+            return env[root]
         case "broadcast_in_dim":
             shape, dims = node.attrs["shape"], node.attrs["dims"]
             # Insert size-1 axes for every target dim not mapped from the source,

@@ -1,8 +1,13 @@
 """C code generator: one loop nest per node, built with gcc, loaded via ctypes.
 
-Deliberately naive.  Every intermediate gets its own buffer and its own loop
+Deliberately naive.  Every graph node gets its own buffer and its own loop
 nest, and index math is spelled out with row-major strides, so the generated
-source reads like the IR.  Fusion and tiling are later exercises.
+source reads like the IR.
+
+A ``fusion`` node becomes a single loop nest over its output shape.  Its body
+is emitted as scalar statements (``float v3 = v1 + v2;``) inside the innermost
+loop, and a ``matmul`` inside the body becomes a ``k`` reduction loop feeding
+an accumulator, so the epilogue is applied straight to ``acc``.
 """
 
 from __future__ import annotations
@@ -90,8 +95,92 @@ def _emit_node(n: Node, buf: dict[Node, str]) -> list[str]:
                 lines.append("  " * d + f"for (int i{d} = 0; i{d} < {size}; i{d}++)")
             lines.append("  " * len(n.shape) + f"{out}[{dst_off}] = {a}[{src_off}];")
             return lines
+        case "fusion":
+            return _emit_fusion(n, buf)
         case _:
             raise NotImplementedError(n.op)
+
+
+def _emit_fusion(n: Node, buf: dict[Node, str]) -> list[str]:
+    out, srcs = buf[n], [buf[i] for i in n.inputs]
+    nd = len(n.shape)
+    idx = tuple(f"i{d}" for d in range(nd))
+    lines = [
+        "  " * d + f"for (int i{d} = 0; i{d} < {size}; i{d}++) {{"
+        for d, size in enumerate(n.shape)
+    ]
+    gen = _ScalarGen(srcs)
+    value = gen.expr(n.attrs["root"], idx)
+    pad = "  " * nd
+    lines += [pad + s for s in gen.stmts]
+    lines.append(pad + f"{out}[{_offset(list(idx), n.strides)}] = {value};")
+    lines += ["  " * d + "}" for d in reversed(range(nd))]
+    return lines
+
+
+class _ScalarGen:
+    """Turn a fusion body into scalar C statements for one output element.
+
+    ``expr(node, idx)`` returns a C expression for ``node`` at the element
+    addressed by loop variables ``idx``, appending any statements it needs to
+    ``self.stmts``.  Results are memoized per (node, idx) so a value reused by
+    two consumers is computed once.
+    """
+
+    def __init__(self, srcs: list[str]):
+        self.srcs = srcs
+        self.stmts: list[str] = []
+        self.memo: dict[tuple[int, tuple[str, ...]], str] = {}
+        self.counter = 0
+
+    def fresh(self, prefix: str = "v") -> str:
+        self.counter += 1
+        return f"{prefix}{self.counter - 1}"
+
+    def expr(self, node: Node, idx: tuple[str, ...]) -> str:
+        key = (id(node), idx)
+        if key in self.memo:
+            return self.memo[key]
+        match node.op:
+            case "param":
+                src = self.srcs[node.attrs["index"]]
+                v = self.fresh()
+                self.stmts.append(f"float {v} = {src}[{_offset(list(idx), node.strides)}];")
+            case "broadcast_in_dim":
+                # Pure index remap: the source element is idx restricted to mapped dims.
+                v = self.expr(node.inputs[0], tuple(idx[d] for d in node.attrs["dims"]))
+            case "add":
+                a = self.expr(node.inputs[0], idx)
+                b = self.expr(node.inputs[1], idx)
+                v = self.fresh()
+                self.stmts.append(f"float {v} = {a} + {b};")
+            case "relu":
+                a = self.expr(node.inputs[0], idx)
+                v = self.fresh()
+                self.stmts.append(f"float {v} = {a} > 0.0f ? {a} : 0.0f;")
+            case "matmul":
+                i, j = idx
+                K = node.inputs[0].shape[1]
+                acc, k = self.fresh("acc"), self.fresh("k")
+                self.stmts.append(f"float {acc} = 0.0f;")
+                self.stmts.append(f"for (int {k} = 0; {k} < {K}; {k}++) {{")
+                # Statements inside the k loop live in their own scope; anything
+                # memoized there must not be reused after the loop closes.
+                outer_stmts, outer_keys = self.stmts, set(self.memo)
+                self.stmts = []
+                a = self.expr(node.inputs[0], (i, k))
+                b = self.expr(node.inputs[1], (k, j))
+                self.stmts.append(f"{acc} += {a} * {b};")
+                inner_stmts, self.stmts = self.stmts, outer_stmts
+                self.stmts += ["  " + s for s in inner_stmts]
+                self.stmts.append("}")
+                for key_ in set(self.memo) - outer_keys:
+                    del self.memo[key_]
+                v = acc
+            case _:
+                raise NotImplementedError(node.op)
+        self.memo[key] = v
+        return v
 
 
 def _offset(idx: list[str], strides: tuple[int, ...]) -> str:

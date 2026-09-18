@@ -32,13 +32,14 @@
 |---|---|---|
 | [`toy/ir.py`](toy/ir.py) | 그래프 IR + shape 추론 (`matmul`, `add`, `relu`, `broadcast_in_dim`) | jaxpr / FX 그래프 |
 | [`toy/interp.py`](toy/interp.py) | NumPy 레퍼런스 인터프리터. 모든 코드 생성 결과의 정답 기준 | eager 실행 |
-| [`toy/codegen_c.py`](toy/codegen_c.py) | 노드마다 C 루프를 생성 → `gcc`로 빌드 → `ctypes`로 로드 | Inductor C++ / XLA CPU |
+| [`toy/passes.py`](toy/passes.py) | 퓨전 패스. 소비자가 하나뿐인 원소별 연산(과 matmul)을 소비자 루프 안으로 흡수 | XLA fusion / Inductor 커널 스케줄링 |
+| [`toy/codegen_c.py`](toy/codegen_c.py) | 노드마다 C 루프를 생성 → `gcc`로 빌드 → `ctypes`로 로드. `fusion` 노드는 루프 하나에 스칼라 문장으로 펼침 | Inductor C++ / XLA CPU |
 
 ```bash
-uv run -m toy   # IR 출력 → 생성된 C 출력 → 인터프리터와 비교(PASS/FAIL)
+uv run -m toy   # 미퓨전 / 에필로그만 퓨전(Inductor식) / 전부 퓨전(XLA식) 세 가지의 IR·C 출력과 검증
 ```
 
-다음 단계 후보: 원소별 연산 퓨전 패스, `Tensor` 연산자 오버로딩으로 추적 프론트엔드, 타일링된 matmul, Triton 타깃.
+다음 단계 후보: `Tensor` 연산자 오버로딩으로 추적 프론트엔드, 타일링된 matmul, Triton 타깃, autodiff.
 
 ## 스택별 상세 파이프라인
 

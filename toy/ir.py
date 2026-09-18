@@ -7,6 +7,11 @@ by construction.
 
 Supported ops: ``input``, ``matmul`` (2-D), ``add`` (identical shapes),
 ``relu``, ``broadcast_in_dim``.  Like StableHLO, broadcasting is explicit.
+
+A ``fusion`` node (produced by ``passes.fuse``) wraps a small body of inner
+nodes whose leaves are ``param`` nodes; ``attrs["body"]`` is the inner node
+list in topological order and ``attrs["root"]`` is the inner node whose value
+the fusion produces.  This mirrors an XLA fusion / an Inductor kernel.
 """
 
 from __future__ import annotations
@@ -48,6 +53,11 @@ class Node:
 
     def __repr__(self) -> str:
         return f"{self.name}:{self.type_str()}"
+
+
+def param(index: int, like: Node) -> Node:
+    """Leaf of a fusion body standing in for the fusion's ``index``-th input."""
+    return Node("param", [], like.shape, like.dtype, {"index": index}, name=f"p{index}")
 
 
 class Graph:
@@ -99,6 +109,21 @@ class Graph:
                 )
         return self._add_node("broadcast_in_dim", [a], shape, {"shape": shape, "dims": dims})
 
+    def fusion(self, inputs: list[Node], body: list[Node], root: Node) -> Node:
+        """Wrap ``body`` (inner nodes over ``param`` leaves) as one fused node."""
+        for inner in body:
+            if inner.op == "param":
+                k = inner.attrs["index"]
+                if not 0 <= k < len(inputs):
+                    raise ShapeError(f"fusion: param index {k} out of range")
+                if inner.shape != inputs[k].shape:
+                    raise ShapeError(
+                        f"fusion: param {k} shape {inner.shape} != input {inputs[k]!r}"
+                    )
+        if root not in body:
+            raise ShapeError("fusion: root must be a member of body")
+        return self._add_node("fusion", inputs, root.shape, {"body": body, "root": root})
+
     def output(self, node: Node) -> Node:
         self.outputs.append(node)
         return node
@@ -115,11 +140,23 @@ class Graph:
         head = " ".join(repr(n) for n in self.inputs)
         lines = [f"{{ lambda ; {head}. let"]
         for n in self.nodes:
-            attrs = ""
-            if n.attrs:
-                attrs = "[" + ", ".join(f"{k}={v}" for k, v in n.attrs.items()) + "]"
-            args = " ".join(i.name for i in n.inputs)
-            lines.append(f"    {n!r} = {n.op}{attrs} {args}")
+            lines.extend(_format_node(n, indent=4))
         outs = ", ".join(n.name for n in self.outputs)
         lines.append(f"  in ({outs}) }}")
         return "\n".join(lines)
+
+
+def _format_node(n: Node, indent: int) -> list[str]:
+    pad = " " * indent
+    args = " ".join(i.name for i in n.inputs)
+    if n.op == "fusion":
+        body, root = n.attrs["body"], n.attrs["root"]
+        lines = [f"{pad}{n!r} = fusion {args} {{"]
+        for inner in body:
+            lines.extend(_format_node(inner, indent + 4))
+        lines.append(f"{pad}  }} -> {root.name}")
+        return lines
+    attrs = ""
+    if n.attrs:
+        attrs = "[" + ", ".join(f"{k}={v}" for k, v in n.attrs.items()) + "]"
+    return [f"{pad}{n!r} = {n.op}{attrs} {args}".rstrip()]
