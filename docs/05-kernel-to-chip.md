@@ -15,6 +15,8 @@
 
 이전 단계 ← [④ 실행 요청 → 커널 실행](./04-dispatch-to-kernel.md)
 
+다음 단계 → [⑥ 추론과 Roofline](./06-inference-roofline.md)
+
 ---
 
 ## 1. TPU: 컴파일러가 모든 이동을 지시하는 칩
