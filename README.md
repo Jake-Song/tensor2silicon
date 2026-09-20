@@ -47,6 +47,7 @@ def g(x, w, b):
 | 파일 | 역할 | 대응되는 실제 단계 |
 |---|---|---|
 | [`toy/trace.py`](toy/trace.py) | `Tensor` 연산자 오버로딩으로 함수를 추적해 그래프 기록, `jit`은 shape별로 컴파일 결과 캐시 | `jax.jit` 추적 / TorchDynamo |
+| [`toy/graph_module.py`](toy/graph_module.py) | 추출한 그래프를 `GraphModule`로 감싸고 실행 가능한 NumPy Python 코드를 생성 | FX `symbolic_trace` / `GraphModule` |
 | [`toy/ir.py`](toy/ir.py) | 그래프 IR + shape 추론 (`matmul`, `add`, `relu`, `broadcast_in_dim`) | jaxpr / FX 그래프 |
 | [`toy/interp.py`](toy/interp.py) | NumPy 레퍼런스 인터프리터. 모든 코드 생성 결과의 정답 기준 | eager 실행 |
 | [`toy/passes.py`](toy/passes.py) | 퓨전 패스(소비자가 하나뿐인 원소별 연산과 matmul을 소비자 루프 안으로 흡수), `tile_matmuls` 스케줄 지정 | XLA fusion / Inductor 커널 스케줄링 |
@@ -55,6 +56,48 @@ def g(x, w, b):
 
 ```bash
 uv run -m toy   # 추적된 IR → 퓨전 IR → 생성된 C → 검증 → shape별 재추적 → 그래프 브레이크 예시
+```
+
+### FX 스타일로 그래프 추출하기
+
+```python
+import numpy as np
+import toy
+
+def forward(x, w, b):
+    return toy.relu(x @ w + b)
+
+# shape 튜플 대신 실제 배열을 넣어도 된다. 추적 중 텐서 계산은 하지 않는다.
+gm = toy.symbolic_trace(forward, (16, 8), (8, 4), (4,))
+print(gm.graph)            # shape과 dtype이 붙은 기존 IR
+gm.graph.print_tabular()   # 입력 → 연산 → 출력, 노드 의존 관계
+print(gm.code)             # 독립 실행 가능한 NumPy forward 소스
+
+rng = np.random.default_rng(0)
+x = rng.standard_normal((16, 8), dtype=np.float32)
+w = rng.standard_normal((8, 4), dtype=np.float32)
+b = rng.standard_normal((4,), dtype=np.float32)
+y = gm(x, w, b)            # 생성된 Python을 실행. 원래 forward는 다시 호출하지 않는다.
+np.testing.assert_allclose(y, forward(x, w, b))
+
+# 추출한 그래프를 기존 최적화·C 컴파일 파이프라인에 그대로 연결한다.
+compiled = toy.compile_graph(toy.fuse(gm.graph))
+np.testing.assert_allclose(compiled(x, w, b)[0], y, rtol=1e-5, atol=1e-6)
+```
+
+PyTorch FX에서 착안한 작은 인터페이스이며, PyTorch 설치는 필요 없다. 기존
+`toy.trace`처럼 입력 shape이 필요하고 `matmul`, `add`, `relu`, 명시적 broadcast만
+지원한다. 입력은 위치 인자로 전달하며 실행 시 float32로 변환하고 shape을 검사한다.
+shape이 바뀌면 다시 추출해야 한다. 반환값은 텐서 또는 평평한 튜플이며, 원래 함수의
+단일 텐서·한 원소 튜플·빈 튜플 구분을 유지한다.
+
+Python 함수는 추적할 때 한 번 실행되므로 `print` 등의 부수 효과도 그때 발생한다.
+텐서 값에 의존하는 분기, 텐서 반복, 상수 피연산자, 중첩 반환 구조는 지원하지 않는다.
+`gm.graph`는 검사와 컴파일 패스 입력용이며, 직접 수정해도 이미 생성된 `gm.code`와
+실행 함수는 바뀌지 않는다. 생성된 Python은 퓨전 전 그래프만 지원한다.
+
+```bash
+uv run python -m unittest discover -s tests -v
 ```
 
 i7-10700K(AVX2) 1코어에서 M=N=K=1024 기준(`uv run -m toy.bench`):

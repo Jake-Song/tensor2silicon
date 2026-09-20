@@ -136,6 +136,21 @@ class Graph:
 
     # -- printing -----------------------------------------------------------
 
+    def print_tabular(self) -> None:
+        """Print inputs, operations, and outputs without optional dependencies."""
+        rows = [("op", "name", "inputs", "shape", "dtype", "attrs")]
+        for n in [*self.inputs, *self.nodes]:
+            rows.append((n.op, n.name, str(tuple(i.name for i in n.inputs)),
+                         str(n.shape), n.dtype, str(n.attrs)))
+        rows.append(("output", "output", str(tuple(n.name for n in self.outputs)),
+                     str(tuple(n.shape for n in self.outputs)),
+                     str(tuple(n.dtype for n in self.outputs)), "{}"))
+        widths = [max(len(row[i]) for row in rows) for i in range(len(rows[0]))]
+        for i, row in enumerate(rows):
+            print("  ".join(cell.ljust(width) for cell, width in zip(row, widths)).rstrip())
+            if i == 0:
+                print("  ".join("-" * width for width in widths))
+
     def __str__(self) -> str:
         head = " ".join(repr(n) for n in self.inputs)
         lines = [f"{{ lambda ; {head}. let"]

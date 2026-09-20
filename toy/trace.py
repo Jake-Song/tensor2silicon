@@ -101,6 +101,11 @@ def _broadcast_to(graph: Graph, n: Node, shape: tuple[int, ...]) -> Node:
 
 def trace(fn: Callable, *specs) -> Graph:
     """Record ``fn`` into a Graph.  Each spec is a shape tuple or an array-like."""
+    return _capture(fn, *specs)[0]
+
+
+def _capture(fn: Callable, *specs) -> tuple[Graph, bool]:
+    """Capture once, retaining the single-value versus tuple return convention."""
     names = list(inspect.signature(fn).parameters)
     if len(names) != len(specs):
         raise TypeError(f"{fn.__name__} takes {len(names)} args, got {len(specs)} specs")
@@ -114,8 +119,10 @@ def trace(fn: Callable, *specs) -> Graph:
     for o in outs:
         if not isinstance(o, Tensor):
             raise TraceError(f"{fn.__name__} returned a non-Tensor {type(o).__name__}")
+        if o._graph is not graph:
+            raise TraceError("returned Tensor comes from a different trace")
         graph.output(o._node)
-    return graph
+    return graph, isinstance(result, tuple)
 
 
 # -- jit --------------------------------------------------------------------

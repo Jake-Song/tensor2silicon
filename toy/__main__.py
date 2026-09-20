@@ -56,6 +56,14 @@ def main() -> None:
     except TraceError as e:
         print("  TraceError:", e)
 
+    print("\n==== 7. FX-style extraction: graph, table, and executable Python ====")
+    gm = toy.symbolic_trace(f.fn, x, w, b)
+    gm.graph.print_tabular()
+    print(gm.code)
+    graph_ok = np.allclose(gm(x, w, b), ref, rtol=1e-5, atol=1e-6)
+    print(f"GraphModule vs eager: {'PASS' if graph_ok else 'FAIL'}")
+    ok = ok and graph_ok
+
     raise SystemExit(0 if ok else 1)
 
 
