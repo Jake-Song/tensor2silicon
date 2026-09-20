@@ -34,7 +34,7 @@ def _simulator():
     except ImportError as exc:
         raise ImportError(
             "The simgpu backend needs the float32-enabled sim-gpu checkout. "
-            "Run with: uv run --with-editable ../sim-gpu-worktree python -m toy.web --port 8010"
+            "Run with: uv run --with-editable ../sim-gpu python -m toy.web --port 8010"
         ) from exc
 
 

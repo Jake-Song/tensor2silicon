@@ -106,10 +106,10 @@ CPU C backend에 더해, 같은 float32 그래프를 `sim-gpu`의 작은 SIMT IS
 컴파일하고 실제 시뮬레이터에서 실행할 수 있다. float32 ISA가 추가된 simulator
 checkout이 필요하며 C backend만 사용할 때는 설치하지 않아도 된다.
 
-두 worktree가 나란히 있는 현재 구성에서는 compiler worktree에서 실행한다:
+두 프로젝트 디렉터리가 나란히 있는 구성에서는 tensor2silicon에서 실행한다:
 
 ```sh
-uv run --with-editable ../sim-gpu-worktree python -m toy.web --port 8010
+uv run --with-editable ../sim-gpu python -m toy.web --port 8010
 ```
 
 브라우저에서 `http://127.0.0.1:8010`을 열고 실행 대상을 **sim-gpu · SIMT**로
@@ -180,8 +180,8 @@ fusion 내부 연산까지 구분한다. `compiled.source`는 검사하기 위�
 검증:
 
 ```sh
-uv run --with-editable ../sim-gpu-worktree python -m unittest discover -s tests -v
-# sim-gpu worktree에서는 uv run pytest
+uv run --with-editable ../sim-gpu python -m unittest discover -s tests -v
+# sim-gpu 디렉터리에서는 uv run pytest
 ```
 
 simulator 없이 실행하는 기존 테스트는 simulator 전용 사례만 건너뛴다.
