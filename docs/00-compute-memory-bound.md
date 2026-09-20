@@ -1,17 +1,19 @@
-Inference 단계에서 Roofline 모델 기준으로 보면 최적화 방향은 꽤 명확하게 나눌 수 있습니다.
+# 추론 최적화: Compute Bound와 Memory Bound
 
-핵심은:
+> **한 줄 답.** Memory-bound에서는 데이터 이동량을 줄이고 재사용률을 높이며, compute-bound에서는 연산량을 줄이고 연산기 활용률을 높인다.
+
+Roofline 모델은 추론 단계의 병목에 따라 최적화 방향을 구분한다.
+
+Arithmetic intensity는 다음과 같이 정의된다.
 
 $$
 \text{Arithmetic Intensity} = \frac{\text{FLOPs}}{\text{Memory Traffic}}
 $$
 
-이고,
+이에 따라 병목은 다음 두 종류로 구분된다.
 
-* **Memory Bound**: 데이터를 가져오는 시간이 병목 → **메모리 이동량을 줄이거나 재사용률을 높이는 최적화**
-* **Compute Bound**: 연산 자체가 병목 → **연산량을 줄이거나 GPU/NPU 연산 효율을 높이는 최적화**
-
-라고 보면 됩니다.
+- **Memory Bound**: 데이터를 가져오는 시간이 병목 → **메모리 이동량을 줄이거나 재사용률을 높이는 최적화**
+- **Compute Bound**: 연산 자체가 병목 → **연산량을 줄이거나 GPU/NPU 연산 효율을 높이는 최적화**
 
 ## 한눈에 정리
 
@@ -21,13 +23,13 @@ $$
 | Compute Bound       | Tensor Core / ALU  | FLOPs ↓ 또는 utilization ↑ | FlashAttention, GEMM 최적화, speculative decoding, sparsity, quantization |
 | Communication Bound | GPU↔GPU / network  | communication ↓          | TP/PP 최적화, collective 최적화, KV placement                                |
 
-Inference에서는 특히 **Prefill과 Decode가 서로 다른 영역에 들어가는 경우가 많습니다.**
+Inference에서는 특히 **Prefill과 Decode가 서로 다른 영역에 들어가는 경우가 많다.**
 
 ---
 
-# 1. Memory Bound일 때
+## 1. Memory Bound 최적화
 
-Memory bound라는 것은 대략
+Memory-bound 영역은 대략 다음 조건에 해당한다.
 
 $$
 \frac{\text{FLOPs}}{\text{Bytes}}
@@ -35,54 +37,46 @@ $$
 \frac{\text{Peak FLOPs}}{\text{Memory Bandwidth}}
 $$
 
-인 상태입니다.
+즉 GPU는 계산할 능력이 남아 있는데 **데이터가 늦게 들어와서 기다리는 상황**이다.
 
-즉 GPU는 계산할 능력이 남아 있는데 **데이터가 늦게 들어와서 기다리는 상황**입니다.
+LLM inference에서는 특히 **Decode 단계**에서 매우 자주 발생한다.
 
-LLM inference에서는 특히 **Decode 단계**에서 매우 자주 발생합니다.
-
-예를 들어 token 하나를 생성할 때마다 weight를 HBM에서 계속 읽어야 하기 때문입니다.
+예를 들어 token 하나를 생성할 때마다 weight를 HBM에서 계속 읽어야 하기 때문이다.
 
 ### ① Weight memory traffic 줄이기
 
-가장 직접적인 방법입니다.
-
-FP16 대신:
+Weight quantization은 가중치의 데이터 이동량을 직접 줄인다. 예를 들어 다음과 같이 저장 정밀도를 낮춘다.
 
 $$
 FP16 \rightarrow FP8 \rightarrow INT8 \rightarrow INT4
 $$
 
-처럼 weight를 줄입니다.
-
 예를 들어 70B 모델이면 대략:
 
-* FP16 → 140 GB
-* INT8 → 70 GB
-* INT4 → 35 GB
+- FP16 → 140 GB
+- INT8 → 70 GB
+- INT4 → 35 GB
 
-따라서 token 하나 생성할 때 HBM에서 읽어야 하는 데이터가 크게 줄어듭니다.
+따라서 token 하나 생성할 때 HBM에서 읽어야 하는 데이터가 크게 줄어든다.
 
-그래서 **quantization은 단순히 모델을 메모리에 넣기 위한 기술만이 아니라 memory bandwidth optimization**이기도 합니다.
+**Quantization은 모델의 메모리 사용량을 줄이는 동시에 메모리 대역폭 부담을 낮춘다.**
 
 ---
 
 ### ② KV Cache 줄이기
 
-Decode가 길어질수록 KV cache 읽기가 커집니다.
+Decode가 길어질수록 KV cache 읽기가 커진다.
 
-주요 방법:
+주요 방법은 다음과 같다.
 
-* KV cache quantization
-* GQA
-* MQA
-* Sliding Window Attention
-* KV cache eviction
-* KV cache compression
+- KV cache quantization
+- GQA
+- MQA
+- Sliding Window Attention
+- KV cache eviction
+- KV cache compression
 
-예를 들어 MHA에서는 여러 attention head가 각자의 K,V를 가지지만,
-
-GQA/MQA에서는 여러 Q head가 KV를 공유합니다.
+예를 들어 MHA에서는 여러 attention head가 각자의 K,V를 가지지만, GQA/MQA에서는 여러 Q head가 KV를 공유한다.
 
 따라서:
 
@@ -90,13 +84,11 @@ $$
 KV\ traffic \downarrow
 $$
 
-가 됩니다.
+가 된다.
 
 ---
 
 ### ③ Cache hit / Prefix caching
-
-이전 대화에서 이야기했던 부분입니다.
 
 예를 들어 system prompt가:
 
@@ -106,7 +98,7 @@ repository information...
 tool descriptions...
 ```
 
-처럼 반복된다면 이를 매번 Prefill하지 않고 기존 KV를 재사용할 수 있습니다.
+처럼 반복된다면 이를 매번 Prefill하지 않고 기존 KV를 재사용할 수 있다.
 
 그러면
 
@@ -114,9 +106,9 @@ $$
 Memory\ traffic + Compute
 $$
 
-를 동시에 줄일 수 있습니다.
+를 동시에 줄일 수 있다.
 
-특히 coding agent처럼 긴 prefix가 반복되는 workload에서 효과가 큽니다.
+특히 coding agent처럼 긴 prefix가 반복되는 workload에서 효과가 크다.
 
 ---
 
@@ -141,7 +133,7 @@ HBM → GPU
 GPU → HBM
 ```
 
-이 발생할 수 있습니다.
+이 발생할 수 있다.
 
 이를 fused kernel로 만들면:
 
@@ -153,7 +145,7 @@ MatMul → Bias → Activation → Norm
 HBM
 ```
 
-으로 바뀝니다.
+으로 바뀐다.
 
 즉:
 
@@ -163,18 +155,16 @@ $$
 
 대표적으로:
 
-* RMSNorm fusion
-* SwiGLU fusion
-* Attention fusion
-* RoPE fusion
-
-등이 있습니다.
+- RMSNorm fusion
+- SwiGLU fusion
+- Attention fusion
+- RoPE fusion
 
 ---
 
 ### ⑤ Continuous batching / Larger batch
 
-Decode에서는 batch가 작으면 weight를 읽어놓고 계산을 조금밖에 하지 못합니다.
+Decode에서는 batch가 작으면 weight를 읽어놓고 계산을 조금밖에 하지 못한다.
 
 예를 들어 batch=1이면:
 
@@ -190,7 +180,7 @@ weight 100MB 읽기
 → token 32개 계산
 ```
 
-이 됩니다.
+이 된다.
 
 즉 같은 memory traffic으로 더 많은 FLOPs를 수행하므로
 
@@ -198,11 +188,11 @@ $$
 AI = \frac{FLOPs}{Bytes}
 $$
 
-가 증가합니다.
+가 증가한다.
 
-Roofline에서 보면 **오른쪽으로 이동**하는 것입니다.
+이는 Roofline에서 **오른쪽으로 이동**하는 것에 해당한다.
 
-그래서 continuous batching이 inference throughput에 매우 중요합니다.
+그래서 continuous batching이 inference throughput에 매우 중요하다.
 
 ---
 
@@ -210,50 +200,42 @@ Roofline에서 보면 **오른쪽으로 이동**하는 것입니다.
 
 예:
 
-* contiguous memory
-* coalesced memory access
-* paged KV cache
-* PagedAttention
-* Tensor layout 변경
-* cache locality 개선
+- contiguous memory
+- coalesced memory access
+- paged KV cache
+- PagedAttention
+- Tensor layout 변경
+- cache locality 개선
 
-목표는 모두 비슷합니다.
+이 기법들의 공통 목표는 유효 메모리 대역폭을 높이는 것이다.
 
 $$
 Effective\ Bandwidth \uparrow
 $$
 
-입니다.
-
-vLLM의 PagedAttention 역시 이런 관점에서 이해할 수 있습니다.
+vLLM의 PagedAttention 역시 이런 관점에서 이해할 수 있다.
 
 ---
 
-# 2. Compute Bound일 때
+## 2. Compute Bound 최적화
 
-Compute bound는
+Compute-bound 영역의 조건은 다음과 같다.
 
 $$
 AI > Ridge\ Point
 $$
 
-인 영역입니다.
+데이터 공급은 충분하지만 Tensor Core의 연산 처리량이 병목인 상태다.
 
-데이터 공급은 충분한데,
+Prefill에서 sequence가 길거나 batch가 클 때 자주 나타난다.
 
-> Tensor Core가 계산하느라 바쁜 상태
-
-입니다.
-
-Prefill에서 sequence가 길거나 batch가 클 때 자주 나타납니다.
-
-이때는 메모리 bandwidth를 더 높여도 성능 증가가 거의 없습니다.
+이때는 메모리 bandwidth를 더 높여도 성능 증가가 거의 없다.
 
 ---
 
-## ① FLOPs 자체를 줄인다
+### ① FLOPs 자체를 줄인다
 
-가장 근본적인 방법입니다.
+필요한 연산량 자체를 줄이는 접근이다.
 
 예를 들어 attention:
 
@@ -261,28 +243,26 @@ $$
 O(N^2d)
 $$
 
-연산량을 줄이는 방법:
+연산량을 줄이는 대표적인 방법은 다음과 같다.
 
-* Sliding Window Attention
-* Sparse Attention
-* Local Attention
-* Linear Attention
-* Token pruning
+- Sliding Window Attention
+- Sparse Attention
+- Local Attention
+- Linear Attention
+- Token pruning
 
-등이 있습니다.
+모델 자체를 줄일 수도 있다.
 
-모델 자체를 줄일 수도 있습니다.
-
-* smaller model
-* MoE
-* layer dropping
-* speculative decoding
+- smaller model
+- MoE
+- layer dropping
+- speculative decoding
 
 ---
 
-## ② 더 낮은 precision 사용
+### ② 더 낮은 precision 사용
 
-Quantization은 Memory-bound에서만 의미 있는 게 아닙니다.
+Quantization은 compute-bound 영역에서도 유효하다.
 
 예를 들어 GPU가 지원한다면:
 
@@ -296,7 +276,7 @@ FP8
 INT8
 ```
 
-로 내려가면서 Tensor Core throughput이 증가할 수 있습니다.
+로 내려가면서 Tensor Core throughput이 증가할 수 있다.
 
 예:
 
@@ -308,13 +288,13 @@ $$
 FP8: 200\ TFLOPS
 $$
 
-라면 Roofline의 ceiling 자체가 올라갑니다.
+라면 Roofline의 ceiling 자체가 올라간다.
 
-즉 compute-bound 영역에서 성능이 올라갑니다.
+즉 compute-bound 영역에서 성능이 올라간다.
 
 ---
 
-# 3. GEMM 최적화
+## 3. GEMM 최적화
 
 Transformer 연산 대부분은 결국:
 
@@ -322,9 +302,9 @@ $$
 C = AB
 $$
 
-GEMM입니다.
+GEMM이다.
 
-Compute-bound에서 중요한 것은 Tensor Core utilization입니다.
+Compute-bound에서 중요한 것은 Tensor Core utilization이다.
 
 예를 들어:
 
@@ -334,25 +314,25 @@ poor occupancy
 small GEMM
 ```
 
-이면 theoretical FLOPs를 제대로 사용하지 못합니다.
+이면 theoretical FLOPs를 제대로 사용하지 못한다.
 
 최적화:
 
-* tile size
-* warp scheduling
-* tensor core utilization
-* persistent kernel
-* CUDA Graph
-* CUTLASS kernel tuning
-* fused GEMM
+- tile size
+- warp scheduling
+- tensor core utilization
+- persistent kernel
+- CUDA Graph
+- CUTLASS kernel tuning
+- fused GEMM
 
-등을 사용할 수 있습니다.
+등을 사용할 수 있다.
 
 ---
 
-# 4. FlashAttention
+## 4. FlashAttention
 
-FlashAttention은 조금 특별합니다.
+FlashAttention은 메모리 I/O를 줄이는 attention 알고리즘이다.
 
 Attention의 일반적인 구현은:
 
@@ -360,9 +340,9 @@ $$
 QK^T
 $$
 
-중간 matrix를 HBM에 저장했다가 다시 읽습니다.
+중간 matrix를 HBM에 저장했다가 다시 읽는다.
 
-FlashAttention은 tiling으로 이 intermediate 결과를 SRAM에 유지합니다.
+FlashAttention은 tiling으로 이 intermediate 결과를 SRAM에 유지한다.
 
 그래서 원래는 주로
 
@@ -370,17 +350,17 @@ $$
 Memory\ IO \downarrow
 $$
 
-최적화입니다.
+최적화이다.
 
-하지만 GPU utilization도 높이기 때문에 compute efficiency 역시 좋아질 수 있습니다.
+하지만 GPU utilization도 높이기 때문에 compute efficiency 역시 좋아질 수 있다.
 
-즉 **Roofline에서 AI를 높이는 대표적인 알고리즘**으로 생각하면 좋습니다.
+즉 **Roofline에서 AI를 높이는 대표적인 알고리즘**이다.
 
 ---
 
-# 5. Speculative Decoding
+## 5. Speculative Decoding
 
-Speculative decoding은 compute-bound / latency optimization 관점에서 재미있는 방법입니다.
+Speculative decoding은 후보 토큰을 묶어 검증하여 decode 지연 시간을 줄이는 기법이다.
 
 기존:
 
@@ -404,7 +384,7 @@ Large Model
 한 번에 verification
 ```
 
-즉 expensive large model forward pass 횟수를 줄입니다.
+즉 expensive large model forward pass 횟수를 줄인다.
 
 결과적으로
 
@@ -412,15 +392,15 @@ $$
 Large\ Model\ Compute \downarrow
 $$
 
-시킬 수 있습니다.
+시킬 수 있다.
 
-특히 decode latency를 줄이는 데 많이 사용됩니다.
+특히 decode latency를 줄이는 데 많이 사용된다.
 
 ---
 
-# 6. Parallelism 최적화
+## 6. Parallelism 최적화
 
-큰 모델에서는 Roofline을 조금 확장해야 합니다.
+큰 모델에서는 Roofline을 조금 확장해야 한다.
 
 실제 inference에서는:
 
@@ -433,7 +413,7 @@ Communication
 )
 $$
 
-이기 때문입니다.
+이기 때문이다.
 
 예를 들어 Tensor Parallelism:
 
@@ -444,25 +424,25 @@ GPU2 ─┤
 GPU3 ─┘
 ```
 
-에서는 NVLink/PCIe communication이 bottleneck이 될 수 있습니다.
+에서는 NVLink/PCIe communication이 bottleneck이 될 수 있다.
 
 이 경우:
 
-* Tensor Parallel degree 조절
-* Pipeline Parallel
-* Expert Parallel
-* AllReduce fusion
-* communication-computation overlap
+- Tensor Parallel degree 조절
+- Pipeline Parallel
+- Expert Parallel
+- AllReduce fusion
+- communication-computation overlap
 
-등이 중요합니다.
+등이 중요하다.
 
-이전 질문에서 말한 것처럼 아주 단순한 모델에서는 communication을 memory bandwidth와 비슷한 데이터 이동 비용으로 묶어 생각할 수도 있지만, **실제 시스템 분석에서는 HBM bandwidth와 GPU 간 communication bandwidth를 따로 보는 편이 좋습니다.**
+단순화한 모델에서는 communication을 memory bandwidth와 비슷한 데이터 이동 비용으로 묶어 생각할 수도 있지만, **실제 시스템 분석에서는 HBM bandwidth와 GPU 간 communication bandwidth를 구분한다.**
 
 ---
 
-# Prefill vs Decode로 다시 보면
+## 7. Prefill과 Decode의 최적화
 
-LLM inference에서는 이 구분이 특히 중요합니다.
+LLM inference에서는 이 구분이 특히 중요하다.
 
 ### Prefill
 
@@ -472,9 +452,9 @@ $$
 X_{1:N}
 $$
 
-을 한꺼번에 처리합니다.
+을 한꺼번에 처리한다.
 
-Matrix multiplication이 크기 때문에 AI가 높아집니다.
+Matrix multiplication이 크기 때문에 AI가 높아진다.
 
 대체로:
 
@@ -482,18 +462,18 @@ $$
 \boxed{Compute\ Bound}
 $$
 
-쪽으로 가기 쉽습니다.
+영역에 해당하기 쉽다.
 
 따라서:
 
-* FlashAttention
-* Tensor Core 활용
-* FP8
-* GEMM 최적화
-* kernel fusion
-* prompt caching
+- FlashAttention
+- Tensor Core 활용
+- FP8
+- GEMM 최적화
+- kernel fusion
+- prompt caching
 
-이 중요합니다.
+이 중요하다.
 
 ---
 
@@ -505,9 +485,9 @@ $$
 x_t \rightarrow x_{t+1}
 $$
 
-를 생성합니다.
+를 생성한다.
 
-GEMM이 작아지고 weight를 계속 읽어야 합니다.
+GEMM이 작아지고 weight를 계속 읽어야 한다.
 
 그래서:
 
@@ -515,22 +495,20 @@ $$
 \boxed{Memory\ Bound}
 $$
 
-쪽으로 가기 쉽습니다.
+영역에 해당하기 쉽다.
 
-중요한 최적화:
+주요 최적화는 다음과 같다.
 
-* Weight quantization
-* KV cache optimization
-* Continuous batching
-* GQA/MQA
-* PagedAttention
-* Prefix caching
-
-입니다.
+- Weight quantization
+- KV cache optimization
+- Continuous batching
+- GQA/MQA
+- PagedAttention
+- Prefix caching
 
 ---
 
-# Roofline에서 움직이는 방향으로 생각하면 더 간단함
+## 8. Roofline에서의 성능 변화
 
 Roofline:
 
@@ -558,21 +536,21 @@ $$
 AI=\frac{FLOPs}{Bytes}\uparrow
 $$
 
-즉 **오른쪽으로 이동**입니다.
+즉 **오른쪽으로 이동**이다.
 
-방법:
+대표적인 방법은 다음과 같다.
 
-> Memory traffic ↓
-> Data reuse ↑
-> Batch ↑
-> Cache reuse ↑
-> Quantization
+- Memory traffic ↓
+- Data reuse ↑
+- Batch ↑
+- Cache reuse ↑
+- Quantization
 
 ---
 
 ### Compute Bound라면
 
-이미 오른쪽에 있기 때문에 더 오른쪽으로 가는 것이 크게 도움이 되지 않습니다.
+이미 오른쪽에 있기 때문에 더 오른쪽으로 가는 것이 크게 도움이 되지 않는다.
 
 목표는:
 
@@ -586,28 +564,26 @@ $$
 Required\ FLOPs \downarrow
 $$
 
-입니다.
+대표적인 방법은 다음과 같다.
 
-방법:
-
-> Tensor Core utilization ↑
-> Lower precision
-> Better GEMM kernel
-> FLOPs ↓
-> Speculative decoding
-> Sparse computation
+- Tensor Core utilization ↑
+- Lower precision
+- Better GEMM kernel
+- FLOPs ↓
+- Speculative decoding
+- Sparse computation
 
 ---
 
-## 실전적으로 외우면
+## 9. 요약: 병목별 최적화 방향
 
-| 문제                      | 질문                            | 최적화 방향                                      |
+| 문제                      | 점검 항목                            | 최적화 방향                                      |
 | ----------------------- | ----------------------------- | ------------------------------------------- |
-| **Memory Bound**        | "같은 데이터를 너무 많이 읽고 있나?"        | Quantization, cache, fusion, batching       |
-| **Compute Bound**       | "계산을 너무 많이 하나 / 연산기를 제대로 쓰나?" | FP8, Tensor Core, GEMM, sparsity            |
-| **Communication Bound** | "GPU끼리 너무 많이 통신하나?"           | TP degree, overlap, collective optimization |
+| **Memory Bound**        | 동일 데이터의 반복 읽기        | Quantization, cache, fusion, batching       |
+| **Compute Bound**       | 연산량과 연산기 활용률 | FP8, Tensor Core, GEMM, sparsity            |
+| **Communication Bound** | GPU 간 통신량           | TP degree, overlap, collective optimization |
 
-그리고 LLM inference에서는 아주 거칠게 말하면:
+LLM 추론의 최적화 방향은 대략 다음과 같이 요약된다.
 
 $$
 \boxed{
@@ -620,5 +596,3 @@ $$
 Decode \rightarrow Memory\ optimization
 }
 $$
-
-이라는 관점부터 시작하면 대부분의 inference optimization 기술을 꽤 잘 분류할 수 있습니다.

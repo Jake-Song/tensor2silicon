@@ -1,4 +1,8 @@
-가능해. 소프트웨어/알고리즘 최적화와 구분해서 보면, 하드웨어 최적화는 Roofline의 **ceiling 자체를 올리거나 실제 하드웨어가 ceiling에 더 가깝게 동작하도록 만드는 작업**이라고 보면 됩니다.
+# 하드웨어 최적화: 메모리 대역폭과 연산 처리량
+
+> **한 줄 답.** 하드웨어 최적화는 메모리 대역폭과 최대 연산 처리량을 높이고, 데이터 재사용과 통신을 지원하는 구조를 개선한다.
+
+하드웨어 최적화는 Roofline의 **ceiling 자체를 높이거나 실제 하드웨어가 ceiling에 더 가깝게 동작하도록 만드는 작업**이다.
 
 예를 들어 Roofline에서:
 
@@ -6,15 +10,13 @@ $$
 P = \min(AI \times BW_{mem},\ P_{compute})
 $$
 
-이므로 하드웨어 관점에서는 결국
+하드웨어 관점의 핵심 최적화 방향은 다음과 같다.
 
-* Memory Bound라면 **\(BW_{mem}\) 증가**
-* Compute Bound라면 **\(P_{compute}\) 증가**
-* Multi-GPU라면 **interconnect bandwidth 증가**
+- Memory Bound라면 **\(BW_{mem}\) 증가**
+- Compute Bound라면 **\(P_{compute}\) 증가**
+- Multi-GPU라면 **interconnect bandwidth 증가**
 
-가 핵심입니다.
-
-## Inference 최적화를 전체적으로 다시 정리하면
+## 추론 병목별 소프트웨어와 하드웨어 최적화
 
 | 병목                  | 소프트웨어 / 알고리즘                                 | 하드웨어                                                  |
 | ------------------- | -------------------------------------------- | ----------------------------------------------------- |
@@ -26,7 +28,7 @@ $$
 
 ---
 
-# 1. Memory Bound에서의 하드웨어 최적화
+## 1. Memory Bound에서의 하드웨어 최적화
 
 Memory Bound라면:
 
@@ -34,7 +36,7 @@ $$
 Performance \approx AI \times Memory\ Bandwidth
 $$
 
-이므로 가장 직접적인 방법은 **memory bandwidth 자체를 키우는 것**입니다.
+이므로 가장 직접적인 방법은 **memory bandwidth 자체를 키우는 것**이다.
 
 ### HBM bandwidth 증가
 
@@ -44,31 +46,25 @@ $$
 1.5\ TB/s \rightarrow 3\ TB/s
 $$
 
-가 되면 memory-bound workload에서는 이론적으로 성능 ceiling이 거의 2배 올라갑니다.
+가 되면 memory-bound workload에서는 이론적으로 성능 ceiling이 거의 2배 올라간다.
 
-방법은 하드웨어 설계 관점에서:
+하드웨어 설계 관점의 주요 방법은 다음과 같다.
 
-* 더 빠른 HBM 세대 사용
-* HBM stack 수 증가
-* Memory bus width 증가
-* Memory channel 증가
-* Memory controller 개선
+- 더 빠른 HBM 세대 사용
+- HBM stack 수 증가
+- Memory bus width 증가
+- Memory channel 증가
+- Memory controller 개선
 
-등입니다.
+HBM 대역폭은 LLM decode에서 특히 중요하다.
 
-LLM Decode에서는 이게 특히 중요합니다.
-
-그래서 GPU/NPU inference 성능을 볼 때 FLOPS만 보면 안 되고:
-
-> **HBM bandwidth / model size**
-
-도 매우 중요한 지표입니다.
+GPU/NPU 추론 성능을 평가할 때는 FLOPS와 함께 **HBM bandwidth / model size**도 고려해야 한다.
 
 ---
 
-# 2. On-chip SRAM / Cache 확대
+## 2. On-chip SRAM / Cache 확대
 
-HBM보다 SRAM이나 cache는 훨씬 빠릅니다.
+HBM보다 SRAM이나 cache는 훨씬 빠르다.
 
 개념적으로:
 
@@ -84,13 +80,11 @@ HBM
 CPU DRAM
 ```
 
-아래로 갈수록:
+이 계층을 아래로 내려갈수록 일반적으로 다음 경향이 나타난다.
 
-* capacity ↑
-* latency ↑
-* bandwidth ↓
-
-입니다.
+- capacity ↑
+- latency ↑
+- bandwidth ↓
 
 따라서 하드웨어에서 SRAM/L2를 키우면:
 
@@ -98,39 +92,35 @@ $$
 HBM\ access \downarrow
 $$
 
-시킬 수 있습니다.
+시킬 수 있다.
 
 특히:
 
-* weight tile
-* activation
-* attention intermediate
-* KV cache 일부
+- weight tile
+- activation
+- attention intermediate
+- KV cache 일부
 
-를 on-chip에 오래 유지할 수 있습니다.
+를 on-chip에 오래 유지할 수 있다.
 
-이건 FlashAttention 같은 알고리즘과도 직접 연결됩니다.
+온칩 메모리 용량은 FlashAttention 같은 알고리즘과도 직접 연결된다.
 
-FlashAttention은 결국:
-
-> "HBM이 아니라 SRAM에서 데이터를 최대한 재사용하자"
-
-는 아이디어이기 때문에 **SRAM capacity가 큰 하드웨어일수록 더 유리**합니다.
+FlashAttention은 SRAM에서 데이터를 재사용하여 HBM 접근을 줄인다. 따라서 **SRAM capacity가 큰 하드웨어일수록 데이터 재사용에 유리**하다.
 
 ---
 
-# 3. Memory hierarchy 자체를 개선
+## 3. Memory hierarchy 자체를 개선
 
 단순히 cache를 크게 하는 것 외에도:
 
-* prefetcher 개선
-* cache replacement policy
-* memory controller scheduling
-* bank conflict 감소
-* interleaving
-* burst access
+- prefetcher 개선
+- cache replacement policy
+- memory controller scheduling
+- bank conflict 감소
+- interleaving
+- burst access
 
-같은 하드웨어 최적화가 있습니다.
+같은 하드웨어 최적화가 있다.
 
 예를 들어 GPU가 앞으로 필요한 weight block을 예측해:
 
@@ -140,7 +130,7 @@ compute block N
 load block N+1
 ```
 
-을 동시에 수행하면 memory latency를 숨길 수 있습니다.
+을 동시에 수행하면 memory latency를 숨길 수 있다.
 
 즉:
 
@@ -148,11 +138,11 @@ $$
 Memory\ latency \rightarrow overlapped
 $$
 
-됩니다.
+된다.
 
 ---
 
-# 4. Compute Bound에서의 하드웨어 최적화
+## 4. Compute Bound에서의 하드웨어 최적화
 
 Compute Bound에서는:
 
@@ -160,17 +150,15 @@ $$
 Performance \approx Peak\ Compute
 $$
 
-이므로 연산기 자체를 강화해야 합니다.
+이므로 연산기 자체를 강화해야 한다.
 
-대표적으로:
+대표적인 방법은 다음과 같다.
 
-* Tensor Core 증가
-* MAC unit 증가
-* SIMD width 증가
-* higher clock
-* larger systolic array
-
-입니다.
+- Tensor Core 증가
+- MAC unit 증가
+- SIMD width 증가
+- higher clock
+- larger systolic array
 
 예:
 
@@ -182,13 +170,13 @@ GPU B
 200 TFLOPS
 ```
 
-같은 AI에서 compute bound라면 GPU B가 거의 2배 유리할 수 있습니다.
+같은 AI에서 compute bound라면 GPU B가 거의 2배 유리할 수 있다.
 
 ---
 
-# 5. Low Precision 전용 하드웨어
+## 5. Low Precision 전용 하드웨어
 
-요즘 AI accelerator에서 특히 중요한 부분입니다.
+낮은 정밀도 연산 지원은 AI 가속기의 주요 설계 요소다.
 
 예를 들어:
 
@@ -201,9 +189,9 @@ INT8 MAC
 INT4 MAC
 ```
 
-을 별도로 지원할 수 있습니다.
+을 별도로 지원할 수 있다.
 
-낮은 precision일수록 같은 silicon area에서 더 많은 연산기를 넣을 수 있습니다.
+낮은 precision일수록 같은 silicon area에서 더 많은 연산기를 넣을 수 있다.
 
 예를 들어 단순화하면:
 
@@ -221,9 +209,9 @@ $$
 INT4\ MAC \approx 4
 $$
 
-처럼 병렬성을 늘릴 수 있습니다.
+처럼 병렬성을 늘릴 수 있다.
 
-그래서 NVIDIA Tensor Core나 TPU/NPU의 systolic array는 low precision AI 연산에 최적화되어 있습니다.
+그래서 NVIDIA Tensor Core나 TPU/NPU의 systolic array는 low precision AI 연산에 최적화되어 있다.
 
 이 경우 quantization은:
 
@@ -237,11 +225,11 @@ $$
 Compute\ throughput \uparrow
 $$
 
-까지 동시에 얻을 수 있습니다.
+까지 동시에 얻을 수 있다.
 
 ---
 
-# 6. Matrix multiplication 전용 하드웨어
+## 6. Matrix multiplication 전용 하드웨어
 
 Transformer에서 가장 큰 연산은 결국:
 
@@ -249,7 +237,7 @@ $$
 Y = XW
 $$
 
-이므로 hardware도 GEMM에 맞춰집니다.
+이므로 hardware도 GEMM에 맞춰진다.
 
 GPU:
 
@@ -263,7 +251,7 @@ TPU/NPU:
 Systolic Array
 ```
 
-같은 구조입니다.
+같은 구조이다.
 
 예를 들어:
 
@@ -275,7 +263,7 @@ Input → MAC → MAC → MAC
        MAC → MAC → MAC
 ```
 
-처럼 데이터가 PE(Processing Element) 사이에서 직접 흐르게 만들면 HBM이나 register 접근을 줄일 수 있습니다.
+처럼 데이터가 PE(Processing Element) 사이에서 직접 흐르게 만들면 HBM이나 register 접근을 줄일 수 있다.
 
 즉:
 
@@ -289,32 +277,22 @@ $$
 Compute\ throughput \uparrow
 $$
 
-가 동시에 가능합니다.
+가 동시에 가능하다.
 
 ---
 
-# 7. 데이터 이동 최적화 하드웨어
+## 7. 데이터 이동 최적화 하드웨어
 
-AI accelerator에서는 실제로 계산보다 데이터 이동 에너지가 더 큰 경우가 많습니다.
+AI accelerator에서는 실제로 계산보다 데이터 이동 에너지가 더 큰 경우가 많다.
 
-그래서 하드웨어 설계에서:
+따라서 하드웨어 설계에서는 연산기 수뿐 아니라 데이터 이동량을 줄이는 구조가 중요하다.
 
-> "연산기를 얼마나 많이 넣을까?"
+대표적인 접근은 다음과 같다.
 
-보다
-
-> "데이터를 어떻게 덜 움직일까?"
-
-가 중요한 경우가 많습니다.
-
-대표적인 접근:
-
-* Near-memory compute
-* Processing-in-Memory(PIM)
-* SRAM compute
-* Compute-near-memory
-
-입니다.
+- Near-memory compute
+- Processing-in-Memory(PIM)
+- SRAM compute
+- Compute-near-memory
 
 예를 들어 기존에는:
 
@@ -335,13 +313,13 @@ HBM
  └ Compute
 ```
 
-처럼 memory 근처에서 일부 연산을 수행합니다.
+처럼 memory 근처에서 일부 연산을 수행한다.
 
-LLM inference처럼 memory-bound workload에서는 상당히 매력적인 구조입니다.
+이 구조는 LLM 추론처럼 memory-bound인 워크로드의 데이터 이동을 줄이는 데 유리하다.
 
 ---
 
-# 8. Compute와 Memory overlap
+## 8. Compute와 Memory overlap
 
 하드웨어가 동시에:
 
@@ -351,16 +329,16 @@ Compute A
 Load B
 ```
 
-를 수행할 수 있다면 memory latency를 숨길 수 있습니다.
+를 수행할 수 있다면 memory latency를 숨길 수 있다.
 
 이를 위해:
 
-* DMA engine
-* asynchronous memory copy
-* multiple execution queues
-* double buffering
+- DMA engine
+- asynchronous memory copy
+- multiple execution queues
+- double buffering
 
-등을 사용합니다.
+등을 사용한다.
 
 예를 들어:
 
@@ -382,15 +360,15 @@ Buffer B → Compute
 HBM → Buffer A
 ```
 
-를 반복합니다.
+를 반복한다.
 
-이게 **double buffering**입니다.
+이를 **double buffering**이라 한다.
 
-AI accelerator 설계에서 매우 자주 쓰입니다.
+AI accelerator 설계에서 매우 자주 쓰인다.
 
 ---
 
-# 9. Communication Bound 하드웨어 최적화
+## 9. Communication Bound 하드웨어 최적화
 
 큰 모델에서는 GPU 하나로 inference가 안 되기 때문에:
 
@@ -398,7 +376,7 @@ AI accelerator 설계에서 매우 자주 쓰입니다.
 GPU0 ←→ GPU1 ←→ GPU2 ←→ GPU3
 ```
 
-통신이 생깁니다.
+통신이 생긴다.
 
 이때 Roofline을 확장하면:
 
@@ -411,18 +389,18 @@ Communication
 )
 $$
 
-가 됩니다.
+가 된다.
 
 하드웨어에서는:
 
-* PCIe bandwidth 증가
-* NVLink
-* NVSwitch
-* InfiniBand
-* Ethernet accelerator
-* CXL
+- PCIe bandwidth 증가
+- NVLink
+- NVSwitch
+- InfiniBand
+- Ethernet accelerator
+- CXL
 
-같은 interconnect 개선이 중요합니다.
+같은 interconnect 개선이 중요하다.
 
 예를 들어 Tensor Parallelism에서는 layer마다:
 
@@ -430,13 +408,13 @@ $$
 AllReduce
 $$
 
-가 발생할 수 있기 때문에 GPU의 FLOPS가 아무리 높아도 network가 느리면 GPU들이 기다립니다.
+가 발생할 수 있기 때문에 GPU의 FLOPS가 아무리 높아도 network가 느리면 GPU들이 기다린다.
 
 ---
 
-# 10. GPU 간 memory 공유
+## 10. GPU 간 memory 공유
 
-또 다른 방향은 GPU마다 데이터를 복사하지 않는 것입니다.
+또 다른 방향은 GPU마다 데이터를 복사하지 않는 것이다.
 
 예:
 
@@ -453,22 +431,20 @@ GPU3 memory
 Shared / Unified Memory Pool
 ```
 
-처럼 사용할 수 있습니다.
+처럼 사용할 수 있다.
 
-대표적인 아이디어:
+대표적인 접근은 다음과 같다.
 
-* Unified Memory
-* CXL memory
-* shared HBM
-* coherent accelerator memory
+- Unified Memory
+- CXL memory
+- shared HBM
+- coherent accelerator memory
 
-등입니다.
-
-다만 latency와 bandwidth trade-off가 있습니다.
+다만 latency와 bandwidth trade-off가 있다.
 
 ---
 
-# Prefill / Decode에 적용하면 더 명확함
+## 11. Prefill과 Decode의 하드웨어 최적화
 
 ### Prefill
 
@@ -478,17 +454,15 @@ $$
 Compute\ Bound
 $$
 
-쪽입니다.
+쪽이다.
 
-하드웨어 최적화 우선순위는:
+하드웨어 최적화 우선순위는 다음과 같다.
 
 1. Tensor Core / MAC throughput 증가
 2. FP8/BF16 전용 unit
 3. systolic array
 4. large SRAM
 5. high compute utilization
-
-입니다.
 
 ---
 
@@ -500,9 +474,7 @@ $$
 Memory\ Bound
 $$
 
-입니다.
-
-하드웨어 최적화 우선순위는:
+하드웨어 최적화 우선순위는 다음과 같다.
 
 1. HBM bandwidth
 2. L2 / SRAM capacity
@@ -510,13 +482,11 @@ $$
 4. KV cache 전용 memory 구조
 5. near-memory / PIM
 
-쪽이 훨씬 중요합니다.
-
 ---
 
-# 결국 Roofline 기준으로 보면
+## 12. Roofline 관점의 하드웨어 최적화
 
-하드웨어가 할 수 있는 건 크게 3가지입니다.
+하드웨어 최적화는 크게 세 방향으로 구분된다.
 
 ```text
                   Compute ceiling ↑
@@ -534,7 +504,7 @@ Performance       ────────────────────�
 
 ### ① Memory bandwidth 증가
 
-Roofline의 왼쪽 기울기를 키움.
+Roofline의 왼쪽 기울기를 높인다.
 
 $$
 Slope = Memory\ Bandwidth
@@ -544,7 +514,7 @@ $$
 
 ### ② Peak Compute 증가
 
-Roofline의 위쪽 ceiling을 높임.
+Roofline의 위쪽 ceiling을 높인다.
 
 $$
 Ceiling = Peak\ FLOPS
@@ -554,20 +524,16 @@ $$
 
 ### ③ Arithmetic Intensity를 높이기 쉬운 architecture 제공
 
-엄밀히 말하면 AI 자체는 workload 특성이지만, 하드웨어가
+AI는 워크로드 특성이지만, 다음 하드웨어 요소는 데이터 재사용을 지원한다.
 
-* 큰 SRAM
-* 좋은 cache
-* data reuse
-* systolic array
+- 큰 SRAM
+- 좋은 cache
+- data reuse
+- systolic array
 
-를 제공하면 **effective memory traffic을 줄여 실제 AI를 높이는 데 도움**을 줍니다.
+이 요소들은 **effective memory traffic을 줄여 실제 AI를 높이는 데 도움**을 준다.
 
-그래서 LLM inference 하드웨어를 평가할 때는 단순히
-
-> "몇 TFLOPS야?"
-
-만 보면 부족하고,
+LLM 추론 하드웨어는 다음 네 가지 지표를 함께 평가해야 한다.
 
 $$
 \boxed{
@@ -578,6 +544,4 @@ Interconnect
 }
 $$
 
-이 네 가지를 같이 봐야 합니다.
-
-특히 **Decode에서는 FLOPS보다 HBM bandwidth가 더 중요한 경우가 많고, Prefill에서는 Tensor Core throughput이 상대적으로 더 중요하다**고 보면 됩니다.
+특히 **Decode에서는 FLOPS보다 HBM bandwidth가 더 중요한 경우가 많고, Prefill에서는 Tensor Core throughput이 상대적으로 더 중요하다**고 정리할 수 있다.
