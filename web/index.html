@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tensor to Silicon · Compiler Lab</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+<header><a class="brand" href="/">t<span>→</span>s <span class="brand-name">TENSOR TO SILICON</span></a><span class="badge">INTERACTIVE COMPILER LAB</span></header>
+<main>
+  <section class="intro"><div><p class="eyebrow">FROM A TENSOR EXPRESSION TO EXECUTING THREADS</p><h1>코드가 연산이 되고,<br>스레드가 실행하기까지.</h1><p class="lead">작은 모델 하나로 컴파일러와 GPU의 연결을 살펴보세요.<br>그래프의 연산이 어떤 명령어가 되고, 언제 실행되는지 확인합니다.</p></div><div class="formula">Y = ReLU(XW + b)<span>TRACE → FUSE → LOWER → EXECUTE</span></div></section>
+  <form id="controls" class="controls">
+    <label>예제<select id="example" name="example"></select></label>
+    <fieldset><legend>입력 shape</legend><label>M<input id="m" type="number" min="1" max="128" value="16" required></label><label>K<input id="k" type="number" min="1" max="128" value="8" required></label><label>N<input id="n" type="number" min="1" max="128" value="4" required></label></fieldset>
+    <label>Fusion<select id="fusion"><option value="none">없음 · 개별 연산</option><option value="epilogue">Epilogue · 원소별 연산</option><option value="full" selected>Full · matmul + epilogue</option></select></label>
+    <label>실행 대상<select id="backend"><option value="c">C · CPU</option><option value="simgpu">sim-gpu · SIMT</option></select></label>
+    <label class="checkbox"><input id="tiled" type="checkbox"> CPU tiling</label>
+    <button id="run" type="submit">컴파일 & 실행 <span>↗</span></button>
+  </form>
+  <p id="backend-note" class="note"></p><div id="status" role="status" aria-live="polite">예제를 불러오는 중…</div>
+  <div id="results" hidden>
+    <nav class="pipeline" aria-label="컴파일 단계"><a href="#model"><b>01</b> Python 모델</a><a href="#graphs"><b>02</b> 그래프 & Fusion</a><a href="#code"><b>03</b> 코드 생성</a><a href="#execution"><b>04</b> 실행 & 검증</a><a href="#gpu"><b>05</b> GPU 내부</a></nav>
+    <section class="two-col" id="model"><article class="panel"><div class="section-head"><h2><small>01</small> Python 모델</h2><span id="seed" class="muted"></span></div><pre id="model-source"></pre><p id="description" class="note"></p></article><article class="panel" id="execution"><div class="section-head"><h2><small>04</small> 실행 결과</h2><span id="output-shape" class="tag"></span></div><div id="checks" class="checks"></div><pre id="output"></pre><p id="tolerance" class="note"></p></article></section>
+    <section class="panel" id="graphs"><div class="section-head"><h2><small>02</small> 그래프 & Fusion</h2><span class="muted">최적화된 노드를 선택하면 해당 커널을 표시합니다</span></div><div class="graph-columns"><div><h3>추적된 그래프 <span id="raw-count"></span></h3><div id="raw-graph" class="graph"></div></div><div><h3>최적화된 그래프 <span id="optimized-count"></span></h3><div id="optimized-graph" class="graph"></div></div></div><details><summary>그래프 IR 보기</summary><pre id="ir"></pre></details></section>
+    <section class="panel" id="code"><div class="section-head"><h2><small>03</small> 생성된 코드</h2><div class="tabs"><button id="python-tab" class="tab active" type="button">NumPy Python</button><button id="c-tab" class="tab" type="button">C · CPU</button></div></div><pre id="generated-code" class="code-scroll"></pre></section>
+    <section id="gpu" class="panel" hidden><div class="section-head"><h2><small>05</small> GPU에서 실행된 명령어</h2><span class="tag">SIMULATED · FLOAT32</span></div><p class="note">출력 원소 하나를 스레드 하나가 계산합니다. 블록은 8 threads, warp는 4 threads, SM은 2개입니다. Cycle은 이 시뮬레이터의 측정값이며 실제 GPU 시간 예측이 아닙니다.</p><div id="stats" class="stats"></div><div class="kernel-toolbar"><label>실행 커널<select id="kernel"></select></label><span id="launch" class="muted"></span></div>
+      <div class="gpu-columns"><div><h3>SIMT assembly</h3><p class="note">명령어를 선택하면 timeline에 실행 위치가 표시됩니다.</p><div class="assembly-scroll"><table class="assembly"><thead><tr><th>PC</th><th>명령어</th><th>issue</th></tr></thead><tbody id="instructions"></tbody></table></div><details><summary>원본 assembly · labels 포함</summary><pre id="assembly-source"></pre></details></div><div class="timeline-panel"><div class="section-head"><h3>Warp timeline</h3><label class="window-label">표시 cycles<select id="window"><option>64</option><option selected>128</option><option>256</option><option>512</option></select></label></div><div class="legend"><span><i class="issue"></i>명령어 실행</span><span><i class="memory"></i>메모리 대기</span><span><i class="ready"></i>스케줄 대기</span><span><i class="barrier"></i>barrier</span></div><canvas id="timeline" height="200" aria-label="Warp별 명령어 실행과 메모리 대기 timeline"></canvas><div class="timeline-controls"><label for="start">시작 cycle</label><input id="start" type="range" value="0" min="0" max="0"><output id="cycle-range"></output></div><p id="hover" class="timeline-detail">셀에 마우스를 올리면 cycle, warp와 active lanes가 표시됩니다.</p><div id="insights" class="insights"></div></div></div>
+      <details><summary>글로벌 메모리 · word 단위 버퍼 배치</summary><div class="table-scroll"><table><thead><tr><th>Graph node</th><th>Address</th><th>Words</th><th>Shape</th></tr></thead><tbody id="memory-layout"></tbody></table></div></details>
+    </section>
+    <details class="panel"><summary>추적할 수 없는 코드: 데이터에 의존하는 Python 분기</summary><pre id="branch-source"></pre><p id="branch-error" class="note"></p></details>
+  </div>
+</main><footer>TENSOR TO SILICON <span>작은 컴파일러로 연결하는 모델과 하드웨어</span></footer>
+</body>
+</html>

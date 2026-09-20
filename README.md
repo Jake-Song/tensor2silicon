@@ -100,6 +100,92 @@ Python 함수는 추적할 때 한 번 실행되므로 `print` 등의 부수 효
 uv run python -m unittest discover -s tests -v
 ```
 
+### sim-gpu: 그래프에서 GPU 실행까지
+
+CPU C backend에 더해, 같은 float32 그래프를 `sim-gpu`의 작은 SIMT ISA로
+컴파일하고 실제 시뮬레이터에서 실행할 수 있다. float32 ISA가 추가된 simulator
+checkout이 필요하며 C backend만 사용할 때는 설치하지 않아도 된다.
+
+두 worktree가 나란히 있는 현재 구성에서는 compiler worktree에서 실행한다:
+
+```sh
+uv run --with-editable ../sim-gpu-worktree python -m toy.web --port 8010
+```
+
+브라우저에서 `http://127.0.0.1:8010`을 열고 실행 대상을 **sim-gpu · SIMT**로
+선택한다. 예제/shape/fusion을 바꾼 뒤 **컴파일 & 실행**을 누르면 다음을 확인한다:
+
+- Python 모델, 추적 그래프, fusion 이후 그래프, 생성된 NumPy/C 코드
+- NumPy reference와 simulator 출력 비교 및 최대 절대 오차
+- 커널별 assembly, word 단위 메모리 배치, launch 구성, simulated cycles
+- graph node → kernel 선택, assembly 명령어 → warp timeline 강조, active-lane mask
+
+Linear + ReLU는 fusion 없음/epilogue/full에서 각각 4/2/1개 커널이 된다.
+브로드캐스트도 fusion이 없으면 별도 커널이며, fusion 안에서는 인덱스 변환으로
+처리된다. 다른 연산이 함께 사용하는 중간값은 글로벌 메모리 버퍼로 남는다.
+
+Python에서 직접 사용하기:
+
+```python
+import numpy as np
+import toy
+from simgpu import GPUConfig
+
+@toy.jit(backend="simgpu")
+def forward(x, w, b):
+    return toy.relu(x @ w + b)
+
+rng = np.random.default_rng(0)
+x = rng.standard_normal((3, 5), dtype=np.float32)
+w = rng.standard_normal((5, 4), dtype=np.float32)
+b = rng.standard_normal((4,), dtype=np.float32)
+y = forward(x, w, b)                         # 같은 shape/dtype은 컴파일 캐시 재사용
+np.testing.assert_allclose(y, np.maximum(x @ w + b, 0), rtol=1e-4, atol=1e-4)
+
+gm = toy.symbolic_trace(forward.fn, x, w, b)
+compiled = toy.compile_simgpu(toy.fuse(gm.graph), config=GPUConfig(block_size=8))
+execution = compiled.run(x, w, b, record=True)
+print(execution.stats)                        # 순차 launch들의 합계
+print(compiled.kernels[0].source)             # 개별 커널의 실행 가능한 assembly
+print(compiled.layout)                        # 버퍼 주소는 byte가 아니라 word 단위
+report = execution.kernels[0].report          # JSON 호환 timeline/통계/명령어 표
+```
+
+`compiled(*args)`는 C compiled object처럼 배열 리스트를 반환한다.
+`.run(..., record=True)`는 `outputs`, `kernels`, `stats`를 가진 `SimulationRun`을
+반환한다. 각 `KernelRun`은 `kernel`, `stats`, `report`를 포함한다. 기록을 끄면
+`report`는 `None`이다. `kernel.source_map[pc]`는 웹 그래프와 동일한 node ID이며,
+fusion 내부 연산까지 구분한다. `compiled.source`는 검사하기 위한 전체 커널
+소스의 연결본이다. 커널마다 labels/grid가 별개이므로 실행하려면 개별
+`kernel.source`와 `kernel.config`를 사용한다.
+
+`GPUConfig`의 block/warp/SM/메모리 지연 설정을 사용하며, grid와 최소 글로벌
+메모리 용량은 그래프에서 계산한다. JIT에는 `sim_config=GPUConfig(...)`로 전달한다.
+매 실행은 새 메모리에서 시작하고, 그 실행 안의 커널들만 중간 버퍼를 공유한다.
+
+지원 범위와 제한:
+
+- `matmul`(2-D), `add`, `relu`, 명시적 broadcast, fusion, 다중 출력, float32.
+  입력은 C-contiguous float32로 변환하고 shape을 검사한다.
+- 출력 원소 하나당 스레드 하나; matmul의 K reduction은 스레드 안의 순차 루프다.
+  `fmul` 뒤 `fadd`를 실행하며 fused multiply-add는 사용하지 않는다.
+- CPU `tile`과 `tile="auto"`는 지원하지 않는다. 16개 레지스터를 초과하는
+  복잡한 fusion은 명시적인 compile error이며, 메모리 spilling은 구현하지 않았다.
+- 브라우저는 M/K/N ≤ 16, kernel당 50,000 cycles, 요청당 100,000 samples,
+  worker 실행 30초로 제한한다. Python API는 GPUConfig의 cycle 한도를 사용하고,
+  기록 시 기본 `max_samples=100_000`을 적용한다.
+- 통계는 교육용 simulator 측정값이다. 실제 GPU 시간, Tensor Core, shared-memory
+  tiling 또는 launch overhead를 모델링하지 않는다. 각 커널의 timeline은 cycle 0부터 시작한다.
+
+검증:
+
+```sh
+uv run --with-editable ../sim-gpu-worktree python -m unittest discover -s tests -v
+# sim-gpu worktree에서는 uv run pytest
+```
+
+simulator 없이 실행하는 기존 테스트는 simulator 전용 사례만 건너뛴다.
+
 i7-10700K(AVX2) 1코어에서 M=N=K=1024 기준(`uv run -m toy.bench`):
 
 | 스케줄 | ms | GFLOP/s |

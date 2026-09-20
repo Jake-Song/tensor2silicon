@@ -9,6 +9,7 @@ and later calls with the same shapes hit the cache.
 
 from __future__ import annotations
 
+import copy
 import inspect
 import time
 from typing import Callable
@@ -16,6 +17,7 @@ from typing import Callable
 import numpy as np
 
 from .codegen_c import Compiled, compile_graph
+from .codegen_simgpu import CompiledSimGPU, compile_simgpu
 from .ir import F32, Graph, Node
 from .passes import TILE_CANDIDATES, Tile, fuse as fuse_pass, tile_matmuls
 
@@ -140,12 +142,22 @@ class Jitted:
         fuse: bool = True,
         fuse_matmul: bool = True,
         tile: Tile | str | None = None,
+        backend: str = "c",
+        sim_config=None,
     ):
+        if backend not in ("c", "simgpu"):
+            raise ValueError(f"unknown backend: {backend!r}; choose 'c' or 'simgpu'")
+        if backend == "simgpu" and tile is not None:
+            raise ValueError("simgpu does not support CPU tiling or autotuning; use tile=None")
+        if backend == "c" and sim_config is not None:
+            raise ValueError("sim_config requires backend='simgpu'")
+        self.backend = backend
+        self.sim_config = copy.deepcopy(sim_config)
         self.fn = fn
         self.fuse = fuse
         self.fuse_matmul = fuse_matmul
         self.tile = tile
-        self.cache: dict[tuple, Compiled] = {}
+        self.cache: dict[tuple, Compiled | CompiledSimGPU] = {}
         self.tuning: dict[tuple, dict[Tile | None, float]] = {}
         self.__name__ = getattr(fn, "__name__", "jitted")
         self.__doc__ = fn.__doc__
@@ -166,12 +178,16 @@ class Jitted:
         if self.fuse:
             g = fuse_pass(g, fuse_matmul=self.fuse_matmul)
         tile = self.tile if tile == "default" else tile
+        if self.backend == "simgpu" and tile is not None:
+            raise ValueError("simgpu does not support CPU tile schedules")
         return tile_matmuls(g, None if tile == "auto" else tile)
 
-    def compile(self, *args) -> Compiled:
+    def compile(self, *args) -> Compiled | CompiledSimGPU:
         key = self._key(args)
         if key not in self.cache:
-            if self.tile == "auto":
+            if self.backend == "simgpu":
+                self.cache[key] = compile_simgpu(self.lower(*args), config=self.sim_config)
+            elif self.tile == "auto":
                 self.cache[key] = self._autotune(key, args)
             else:
                 self.cache[key] = compile_graph(self.lower(*args))
