@@ -1,35 +1,77 @@
 <!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tensor to Silicon · Compiler Lab</title>
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/style.css">
-  <script src="/app.js" defer></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0c1119">
+  <title>Tensor to Silicon — Compiler Playground</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/architecture.css">
+  <script type="module" src="/app.js"></script>
 </head>
 <body>
-<header><a class="brand" href="/">t<span>→</span>s <span class="brand-name">TENSOR TO SILICON</span></a><span class="badge">INTERACTIVE COMPILER LAB</span></header>
-<main>
-  <section class="intro"><div><p class="eyebrow">FROM A TENSOR EXPRESSION TO EXECUTING THREADS</p><h1>코드가 연산이 되고,<br>스레드가 실행하기까지.</h1><p class="lead">작은 모델 하나로 컴파일러와 GPU의 연결을 살펴보세요.<br>그래프의 연산이 어떤 명령어가 되고, 언제 실행되는지 확인합니다.</p></div><div class="formula">Y = ReLU(XW + b)<span>TRACE → FUSE → LOWER → EXECUTE</span></div></section>
-  <form id="controls" class="controls">
-    <label>예제<select id="example" name="example"></select></label>
-    <fieldset><legend>입력 shape</legend><label>M<input id="m" type="number" min="1" max="128" value="16" required></label><label>K<input id="k" type="number" min="1" max="128" value="8" required></label><label>N<input id="n" type="number" min="1" max="128" value="4" required></label></fieldset>
-    <label>Fusion<select id="fusion"><option value="none">없음 · 개별 연산</option><option value="epilogue">Epilogue · 원소별 연산</option><option value="full" selected>Full · matmul + epilogue</option></select></label>
-    <label>실행 대상<select id="backend"><option value="c">C · CPU</option><option value="simgpu">sim-gpu · SIMT</option></select></label>
-    <label class="checkbox"><input id="tiled" type="checkbox"> CPU tiling</label>
-    <button id="run" type="submit">컴파일 & 실행 <span>↗</span></button>
-  </form>
-  <p id="backend-note" class="note"></p><div id="status" role="status" aria-live="polite">예제를 불러오는 중…</div>
-  <div id="results" hidden>
-    <nav class="pipeline" aria-label="컴파일 단계"><a href="#model"><b>01</b> Python 모델</a><a href="#graphs"><b>02</b> 그래프 & Fusion</a><a href="#code"><b>03</b> 코드 생성</a><a href="#execution"><b>04</b> 실행 & 검증</a><a href="#gpu"><b>05</b> GPU 내부</a></nav>
-    <section class="two-col" id="model"><article class="panel"><div class="section-head"><h2><small>01</small> Python 모델</h2><span id="seed" class="muted"></span></div><pre id="model-source"></pre><p id="description" class="note"></p></article><article class="panel" id="execution"><div class="section-head"><h2><small>04</small> 실행 결과</h2><span id="output-shape" class="tag"></span></div><div id="checks" class="checks"></div><pre id="output"></pre><p id="tolerance" class="note"></p></article></section>
-    <section class="panel" id="graphs"><div class="section-head"><h2><small>02</small> 그래프 & Fusion</h2><span class="muted">최적화된 노드를 선택하면 해당 커널을 표시합니다</span></div><div class="graph-columns"><div><h3>추적된 그래프 <span id="raw-count"></span></h3><div id="raw-graph" class="graph"></div></div><div><h3>최적화된 그래프 <span id="optimized-count"></span></h3><div id="optimized-graph" class="graph"></div></div></div><details><summary>그래프 IR 보기</summary><pre id="ir"></pre></details></section>
-    <section class="panel" id="code"><div class="section-head"><h2><small>03</small> 생성된 코드</h2><div class="tabs"><button id="python-tab" class="tab active" type="button">NumPy Python</button><button id="c-tab" class="tab" type="button">C · CPU</button></div></div><pre id="generated-code" class="code-scroll"></pre></section>
-    <section id="gpu" class="panel" hidden><div class="section-head"><h2><small>05</small> GPU에서 실행된 명령어</h2><span class="tag">SIMULATED · FLOAT32</span></div><p class="note">출력 원소 하나를 스레드 하나가 계산합니다. 블록은 8 threads, warp는 4 threads, SM은 2개입니다. Cycle은 이 시뮬레이터의 측정값이며 실제 GPU 시간 예측이 아닙니다.</p><div id="stats" class="stats"></div><div class="kernel-toolbar"><label>실행 커널<select id="kernel"></select></label><span id="launch" class="muted"></span></div>
-      <div class="gpu-columns"><div><h3>SIMT assembly</h3><p class="note">명령어를 선택하면 timeline에 실행 위치가 표시됩니다.</p><div class="assembly-scroll"><table class="assembly"><thead><tr><th>PC</th><th>명령어</th><th>issue</th></tr></thead><tbody id="instructions"></tbody></table></div><details><summary>원본 assembly · labels 포함</summary><pre id="assembly-source"></pre></details></div><div class="timeline-panel"><div class="section-head"><h3>Warp timeline</h3><label class="window-label">표시 cycles<select id="window"><option>64</option><option selected>128</option><option>256</option><option>512</option></select></label></div><div class="legend"><span><i class="issue"></i>명령어 실행</span><span><i class="memory"></i>메모리 대기</span><span><i class="ready"></i>스케줄 대기</span><span><i class="barrier"></i>barrier</span></div><canvas id="timeline" height="200" aria-label="Warp별 명령어 실행과 메모리 대기 timeline"></canvas><div class="timeline-controls"><label for="start">시작 cycle</label><input id="start" type="range" value="0" min="0" max="0"><output id="cycle-range"></output></div><p id="hover" class="timeline-detail">셀에 마우스를 올리면 cycle, warp와 active lanes가 표시됩니다.</p><div id="insights" class="insights"></div></div></div>
-      <details><summary>글로벌 메모리 · word 단위 버퍼 배치</summary><div class="table-scroll"><table><thead><tr><th>Graph node</th><th>Address</th><th>Words</th><th>Shape</th></tr></thead><tbody id="memory-layout"></tbody></table></div></details>
-    </section>
-    <details class="panel"><summary>추적할 수 없는 코드: 데이터에 의존하는 Python 분기</summary><pre id="branch-source"></pre><p id="branch-error" class="note"></p></details>
+  <a class="skip-link" href="#lesson">본문으로 건너뛰기</a>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Tensor to Silicon 처음으로">
+      <svg viewBox="0 0 36 36" aria-hidden="true"><path d="M5 10 18 3l13 7v16l-13 7-13-7Z M5 10l13 8 13-8 M18 18v15"/></svg>
+      <span>tensor<span class="brand-to">2</span>silicon</span>
+      <span class="brand-divider"></span><span class="lab-label">LEARNING LAB</span>
+    </a>
+    <nav class="view-switcher" aria-label="학습 화면"><a href="#compiler" data-view="compiler" aria-current="page">컴파일러 실험실</a><a href="#architecture" data-view="architecture">GPU / TPU 구조</a><a href="/simulator">GPU 실행</a></nav>
+    <div class="environment"><span class="live-dot"></span><span id="environment-label">LOCAL CPU / FLOAT32</span></div>
+  </header>
+
+  <div class="app-shell">
+    <aside class="sidebar compiler-sidebar">
+      <div class="rail-label">THE COMPILER JOURNEY</div>
+      <p class="rail-title">작은 식 하나,<br>다섯 번의 변환.</p>
+      <nav class="stages" aria-label="학습 단계">
+        <button class="stage-nav active" data-step="0" aria-current="step"><span class="step-number">01</span><span>Python 코드<small>Start with a function</small></span></button>
+        <button class="stage-nav" data-step="1"><span class="step-number">02</span><span>그래프 추출<small>Capture the operations</small></span></button>
+        <button class="stage-nav" data-step="2"><span class="step-number">03</span><span>연산 합치기<small>Fuse the graph</small></span></button>
+        <button class="stage-nav" data-step="3"><span class="step-number">04</span><span>코드 생성<small>Lower to executable code</small></span></button>
+        <button class="stage-nav" data-step="4"><span class="step-number">05</span><span>실행과 검증<small>Close the loop</small></span></button>
+      </nav>
+      <div class="rail-note"><span class="note-symbol">↳</span><p>직접 바꾸고, 살펴보고,<br>같은 결과인지 확인하세요.</p><span class="small-tag">INTERACTIVE LESSON</span></div>
+      <div class="rail-footer"><span class="mini-chip">ƒ</span><span>Built on the toy compiler<br><small>NumPy · Graph IR · C</small></span></div>
+    </aside>
+
+    <aside class="sidebar architecture-sidebar" hidden>
+      <div class="rail-label">HARDWARE ATLAS</div>
+      <p class="rail-title">칩 안에는<br>무엇이 있을까요?</p>
+      <nav class="architecture-depth-nav stages" aria-label="구조 확대 수준">
+        <button class="stage-nav active" data-depth="0" aria-current="step"><span class="step-number">01</span><span>전체 구조<small>Chip & external memory</small></span></button>
+        <button class="stage-nav" data-depth="1"><span class="step-number">02</span><span>주요 블록 내부<small>SM & TPU TensorCore</small></span></button>
+        <button class="stage-nav" data-depth="2"><span class="step-number">03</span><span>행렬 연산 유닛<small>Tensor Core & MXU</small></span></button>
+      </nav>
+      <div class="rail-note"><span class="note-symbol">⊞</span><p>큰 테두리는 포함 관계,<br>선은 구조적 연결입니다.</p><span class="small-tag">CLICK TO EXPLORE</span></div>
+      <div class="rail-footer"><span class="mini-chip">▦</span><span>A100 · TPU v5e<br><small>구조를 단순화한 개념도</small></span></div>
+    </aside>
+
+    <main id="lesson" tabindex="-1">
+      <div id="compiler-view">
+      <div class="lesson-heading"><div><p id="eyebrow" class="eyebrow">01 / THE SOURCE</p><h1 id="lesson-title">모든 것은 함수에서 시작됩니다.</h1><p id="lesson-description" class="lesson-description">익숙한 Python 식이 컴파일러의 언어로 바뀌는 과정을 따라가 보세요.</p></div><span class="chapter-count" aria-hidden="true"><b id="chapter-number">01</b> / 05</span></div>
+
+      <section class="controls" aria-label="실험 설정">
+        <div class="controls-heading"><h2><span class="control-icon">⊞</span> 실험 설정</h2><span class="muted">변경 후 실행하면 모든 단계가 갱신됩니다</span></div>
+        <form id="config-form">
+          <label class="example-control">예제 <select id="example" name="example" disabled><option>불러오는 중…</option></select></label>
+          <fieldset class="dimensions"><legend>텐서 차원</legend><label>M<input id="m" name="m" type="number" min="1" max="128" step="1" value="16" required></label><span>×</span><label>K<input id="k" name="k" type="number" min="1" max="128" step="1" value="8" required></label><span>×</span><label>N<input id="n" name="n" type="number" min="1" max="128" step="1" value="4" required></label></fieldset>
+          <label class="fusion-control">Fusion <select id="fusion" name="fusion"><option value="full">Matmul까지 합치기</option><option value="epilogue">원소별 연산만</option><option value="none">합치지 않기</option></select></label>
+          <label class="tile-control"><input id="tiled" name="tiled" type="checkbox"><span>Tiling<small>16 × 16 × 16</small></span></label>
+          <button id="run-button" class="primary-button" type="submit" disabled><span>↻</span> 실행하기</button>
+        </form>
+      </section>
+      <div class="status-line"><span id="run-status" role="status" aria-live="polite">로컬 컴파일러에 연결하는 중…</span><span class="seed-note">DETERMINISTIC · SEED 0</span></div>
+      <div id="error-message" class="error-banner" role="alert" hidden></div>
+      <div id="stage-content" aria-busy="true"><div class="empty-state"><span class="spinner"></span><p>첫 번째 실험을 준비하고 있습니다.</p></div></div>
+
+      <footer class="lesson-footer"><button id="previous" class="quiet-button" disabled>← 이전 단계</button><span id="footer-step">STEP 01 OF 05</span><button id="next" class="next-button">그래프 추출 살펴보기 <span>→</span></button></footer>
+      <p class="method-note">실제 toy 컴파일러로 계산합니다. CPU float32 예제이며, 실행 검증은 성능 벤치마크가 아닙니다.</p>
+      </div>
+      <section id="architecture-view" aria-label="GPU와 TPU 구조 탐색" hidden></section>
+    </main>
   </div>
-</main><footer>TENSOR TO SILICON <span>작은 컴파일러로 연결하는 모델과 하드웨어</span></footer>
 </body>
 </html>

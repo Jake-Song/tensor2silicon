@@ -9,7 +9,8 @@ import json
 import shutil
 import subprocess
 import sys
-from http.server import BaseHTTPRequestHandler, HTTPServer
+import threading
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -23,6 +24,7 @@ WEB_ROOT = ROOT / "web"
 DEFAULTS = {"example": "relu_linear", "m": 16, "k": 8, "n": 4, "fusion": "full", "tiled": False, "backend": "c"}
 RTOL, ATOL = 1e-4, 1e-4
 WORKER_TIMEOUT = 30
+WORKER_LOCK = threading.Lock()
 
 
 def matmul(x, w):
@@ -95,7 +97,8 @@ def serialize_graph(graph) -> dict:
         item = {"id": mapping[node], "name": node.name, "op": node.op,
                 "inputs": [mapping[n] for n in node.inputs], "shape": list(node.shape),
                 "dtype": node.dtype,
-                "attrs": {k: v for k, v in node.attrs.items() if k not in ("body", "root")}}
+                "attrs": {k: list(v) if isinstance(v, tuple) else v
+                          for k, v in node.attrs.items() if k not in ("body", "root")}}
         if node.op == "fusion":
             inner_ids = {n: f"{mapping[node]}/{i}" for i, n in enumerate(node.attrs["body"])}
             item["body"] = [record(n, inner_ids) for n in node.attrs["body"]]
@@ -194,6 +197,13 @@ class Handler(BaseHTTPRequestHandler):
     ASSETS = {"/": ("index.html", "text/html; charset=utf-8"),
               "/style.css": ("style.css", "text/css; charset=utf-8"),
               "/app.js": ("app.js", "text/javascript; charset=utf-8"),
+              "/architecture.js": ("architecture.js", "text/javascript; charset=utf-8"),
+              "/architecture.css": ("architecture.css", "text/css; charset=utf-8"),
+              "/simulator": ("simulator/index.html", "text/html; charset=utf-8"),
+              "/simulator/": ("simulator/index.html", "text/html; charset=utf-8"),
+              "/simulator/app.js": ("simulator/app.js", "text/javascript; charset=utf-8"),
+              "/simulator/style.css": ("simulator/style.css", "text/css; charset=utf-8"),
+              "/simulator/favicon.svg": ("simulator/favicon.svg", "image/svg+xml"),
               "/favicon.svg": ("favicon.svg", "image/svg+xml")}
 
     def send_body(self, status, data: bytes, content_type):
@@ -238,7 +248,9 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(400, {"error": str(exc)})
             return
         try:
-            self.send_json(200, run_worker(config))
+            with WORKER_LOCK:
+                result = run_worker(config)
+            self.send_json(200, result)
         except subprocess.TimeoutExpired:
             self.send_json(504, {"error": "실행 제한 시간(30초)을 초과했습니다. 다시 실행해 주세요."})
         except (RuntimeError, OSError, ValueError) as exc:
@@ -253,12 +265,12 @@ def main():
     if args.worker:
         json.dump(run_lesson(json.load(sys.stdin)), sys.stdout, ensure_ascii=False, allow_nan=False)
         return
-    # A single request handler serializes compilation; each run gets fresh
-    # process-local C scratch buffers and a bounded lifetime.
+    # Keep asset requests responsive while serializing compiler workers.
+    # Each worker gets fresh C scratch buffers and a bounded lifetime.
     if not 1 <= args.port <= 65535:
         parser.error("port must be between 1 and 65535")
     try:
-        server = HTTPServer(("127.0.0.1", args.port), Handler)
+        server = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
     except OSError as exc:
         parser.exit(1, f"Could not start localhost:{args.port}: {exc}. Try another --port.\n")
     print(f"Tensor to Silicon · http://127.0.0.1:{server.server_port} · Ctrl+C to stop", flush=True)

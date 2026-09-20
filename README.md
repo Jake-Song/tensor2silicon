@@ -2,6 +2,89 @@
 
 텐서 연산이 Python 코드에서 출발해 실리콘 위에서 실행되기까지의 흐름을 정리한 학습 노트.
 
+## 로컬 웹으로 배우기
+
+```bash
+uv run python -m toy.web
+# 브라우저에서 http://127.0.0.1:8000 열기
+```
+
+포트를 이미 사용 중이면 `uv run python -m toy.web --port 8001`로 실행한다.
+종료는 터미널에서 `Ctrl+C`. Python 3.13 이상과 NumPy가 필요하며 `uv run`이
+프로젝트 의존성을 준비한다. 기존 환경에서는 `.venv/bin/python -m toy.web`도 가능하다.
+C 실행에는 GCC가 필요하다. GCC가 없거나 C 컴파일에 실패해도 그래프와 Python 결과는
+볼 수 있고, C 검증은 `UNAVAILABLE`로 표시한다.
+
+**Python → 그래프 추출 → 연산 합치기 → 코드 생성 → 실행과 검증**의 다섯 단계를
+한국어 설명과 English technical terms로 따라가는 학습 페이지다.
+
+- 예제: 행렬 곱, `ReLU(XW + b)`, 두 연산이 공유하는 중간값.
+- M/K/N은 1–128 범위에서 변경. Fusion은 끄기 / 원소별 연산만 / matmul 포함을 선택하고,
+  tiling은 `(16, 16, 16)` 블록으로 켜거나 끈다. 변경한 설정은 **실행하기**로 적용한다.
+- 그래프 노드를 클릭하거나 키보드로 선택하면 입력 의존 관계, shape, dtype과 설명이 나온다.
+  Fusion 노드에서는 내부 연산을 펼쳐 볼 수 있다.
+- 실제 생성한 NumPy 소스와 C 소스를 확인하고 복사한다. 퓨전 전 그래프는 Python으로,
+  최적화된 그래프는 C로 생성한다.
+- 원래 함수의 NumPy 결과를 기준으로 생성 Python, 원본·최적화 IR 인터프리터, 컴파일된 C를
+  비교한다. 최대 절대 오차와 `rtol=1e-4, atol=1e-4` 기준 결과를 표시한다.
+  출력 미리보기는 NumPy 기준 왼쪽 위 최대 4×4 원소다.
+- 마지막 단계에서 실제 `if x` 추적 오류를 확인한다. 이 tracer는 텐서 값 의존 분기에서
+  중단하며, 부분 그래프 실행이나 eager fallback은 구현하지 않는다.
+
+서버는 `127.0.0.1`에만 바인딩한다. 추가 프런트엔드 빌드나 외부 웹 서비스가 필요 없다.
+입력은 seed 0의 float32 배열이며, preset만 실행한다. 각 실험은 별도 프로세스에서
+최대 30초 동안 실행하고 컴파일 작업은 순서대로 처리한다. 지원하는 연산은
+`matmul`, `add`, `relu`, `broadcast_in_dim`이다. 실제 GPU 하드웨어 실행과 성능 벤치마크는 포함하지 않는다.
+상단 **GPU 실행**에서는 별도 sim-gpu backend로 assembly와 warp timeline을 확인한다.
+
+구현: [`toy/web.py`](toy/web.py)의 로컬 API와 [`web/`](web/)의 HTML/CSS/JavaScript.
+기존 compiler API는 그대로 사용한다.
+
+### GPU / TPU 구조 탐색
+
+상단의 **GPU / TPU 구조** 탭 또는 `http://127.0.0.1:8000/#architecture`에서 연다.
+NVIDIA A100과 Google TPU v5e를 기준으로, SVG 구조도를 좌우에 놓고 세 단계로 확대한다.
+
+1. **전체 구조:** GPU의 반복되는 SM·공유 L2, TPU의 TensorCore, 프로세서 die 밖의 HBM.
+2. **주요 블록 내부:** SM의 scheduler·CUDA core·Tensor Core·메모리와 TPU 코어의 MXU·vector/scalar unit·메모리.
+3. **행렬 연산 유닛:** GPU Tensor Core의 포함 관계와 TPU MXU 안의 MAC 격자.
+
+블록을 누르면 역할·상위 블록·공식 자료가 표시된다. SM, TPU TensorCore, 행렬 유닛을 누르면
+안쪽으로 확대하며 상단 단계 버튼으로 돌아갈 수 있다. 키보드 Tab과 Enter/Space도 지원한다.
+연산은 청록, 메모리는 파랑, 제어는 주황으로 구분한다.
+
+도형은 **포함 관계와 구성 요소를 설명하는 개념도**다. 실제 면적·배치·모든 배선을 재현하지
+않으며, MAC 격자는 8×8로 축약 표시한다. GPU Tensor Core와 TPU TensorCore의 계층 차이도
+별도로 설명한다. 공식 NVIDIA, Google, JAX 문서는 화면에서 바로 열 수 있다.
+이 화면은 컴파일러 API를 호출하지 않고, 브라우저에서 구조만 탐색한다.
+컴파일러 실험실로 돌아가면 기존 단계와 설정이 유지된다.
+
+```bash
+# 기존 compiler와 웹 API 테스트
+uv run python -m unittest discover -s tests -v
+
+# 선택: 실행 중인 서버에 대해 Playwright 브라우저 검증 (개발 도구 별도 설치)
+npm install --prefix /tmp/tensor2silicon-browser-tools playwright
+/tmp/tensor2silicon-browser-tools/node_modules/.bin/playwright install chromium
+BASE_URL=http://127.0.0.1:8000 \
+PLAYWRIGHT_MODULE=/tmp/tensor2silicon-browser-tools/node_modules/playwright/index.mjs \
+node web/tests/smoke.mjs
+
+# GPU/TPU 구조 화면의 확대·선택·키보드·화면 전환 검증
+BASE_URL=http://127.0.0.1:8000 \
+PLAYWRIGHT_MODULE=/tmp/tensor2silicon-browser-tools/node_modules/playwright/index.mjs \
+node web/tests/architecture.mjs
+
+# GPU 실행 화면: assembly, timeline, fusion 비교와 화면 간 이동
+BASE_URL=http://127.0.0.1:8000 \
+PLAYWRIGHT_MODULE=/tmp/tensor2silicon-browser-tools/node_modules/playwright/index.mjs \
+node web/tests/simulator.mjs
+```
+
+브라우저 검증은 실제 예제 실행, 단계 이동, 노드·fusion 검사, 키보드 탐색, 소스 복사,
+입력 검증, 오류 복구, 좁은 화면을 확인하고 `/tmp/tensor2silicon-browser/`에 스크린샷을 저장한다.
+오류 UI 검증에는 명시적인 timeout/GCC 없음 응답 모의 테스트도 포함한다.
+
 ## 모델 → 칩 5단계
 
 | # | 문서 | 질문 |
@@ -112,7 +195,8 @@ checkout이 필요하며 C backend만 사용할 때는 설치하지 않아도 �
 uv run --with-editable ../sim-gpu python -m toy.web --port 8010
 ```
 
-브라우저에서 `http://127.0.0.1:8010`을 열고 실행 대상을 **sim-gpu · SIMT**로
+브라우저에서 `http://127.0.0.1:8010/simulator` 또는 상단 **GPU 실행**을 열고
+실행 대상을 **sim-gpu · SIMT**로
 선택한다. 예제/shape/fusion을 바꾼 뒤 **컴파일 & 실행**을 누르면 다음을 확인한다:
 
 - Python 모델, 추적 그래프, fusion 이후 그래프, 생성된 NumPy/C 코드
