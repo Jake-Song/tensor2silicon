@@ -43,6 +43,22 @@ y.sum().backward()
 
 JAX와 가장 다른 지점이다. JAX는 함수를 Tracer로 실행해 추적하지만, Dynamo는 **CPython의 프레임 평가 API(PEP 523)** 를 후킹해 함수의 **바이트코드 자체**를 심볼릭하게 해석한다.
 
+간단히 말해, `@torch.compile`로 감싼 함수가 호출되면 CPython이 바이트코드를 실행하기 직전에 Dynamo가 그 실행을 받는다. 예를 들어 `x * 2 + 1`이라는 Python 코드는 먼저 실제 곱셈·덧셈을 수행하는 대신, `mul`과 `add`라는 FX 그래프 노드로 기록된다. 이후 호출에서는 입력의 shape·dtype 같은 가드가 통과하면 Python 바이트코드 해석을 다시 하지 않고, 이 그래프를 컴파일한 함수를 바로 실행한다.
+
+```python
+import torch
+
+@torch.compile
+def twice_plus_one(x):
+    return x * 2 + 1
+
+x = torch.tensor([1.0, 2.0])
+y = twice_plus_one(x)  # Dynamo: LOAD_FAST → multiply → add를 FX 그래프로 기록
+# 결과: tensor([3., 5.])
+```
+
+용어: 프레임 평가는 CPython이 함수의 지역 변수·스택·바이트코드를 실행하는 과정이다. 후킹은 그 실행 함수를 Dynamo의 처리로 가로채는 방식이다. PEP(Python Enhancement Proposal) 523은 프레임 평가 함수를 교체할 수 있게 한 Python 제안이다. FX는 PyTorch의 그래프 표현 도구이며, 가드는 이전에 만든 그래프를 재사용해도 되는지 확인하는 조건이다.
+
 ### 동작 순서
 
 1. 함수가 호출되면 CPython이 프레임을 실행하기 직전에 Dynamo가 끼어든다.
