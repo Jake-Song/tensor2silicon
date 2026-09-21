@@ -89,6 +89,8 @@ GPU는 **SM**이라는 작은 코어를 수백 개 갖는다. H100은 132개, B2
 
 **SIMT 모델**: CUDA 프로그래밍 모델에서 각 스레드는 자기 명령 포인터를 갖는 것처럼 프로그래밍하지만, 실제로는 32개 스레드가 **warp** 하나로 묶여 같은 명령을 실행한다. 스레드마다 분기가 갈리면 일부 코어가 마스킹되어 논다. SM은 멀티스레드 CPU처럼 warp를 여러 개(SM당 최대 64개) 동시에 붙잡고 있다가, 어떤 warp가 메모리를 기다리면 다른 warp를 실행해 지연을 숨긴다.
 
+**CTA와 SM의 수용량을 혼동하면 안 된다.** CUDA에서 CTA(= thread block) 하나는 최대 **1,024 threads = 32 warps**이고, SM 하나는 여러 CTA를 동시에 상주시킬 수 있다. H100과 A100 모두 SM당 최대 **2,048 resident threads = 64 warps**를 지원하므로, 1,024-thread CTA라면 이론상 2개가 한 SM에 상주한다. 실제 상주 CTA 수는 레지스터·shared memory 사용량과 CTA 개수 제한에도 좌우된다. `gridDim`이 정하는 것은 CTA의 총 개수이며, CTA가 한 SM에 영구적으로 하나씩 대응하는 것은 아니다.
+
 ### 2-2. 메모리 계층
 
 | 메모리 | 위치 | 크기 | 대역폭 | 누가 관리 |
@@ -143,7 +145,7 @@ VMEM 대역폭이 HBM의 22배이므로, 가중치가 VMEM에 들어가면 훨�
 
 | 커널 코드 | 칩에서 벌어지는 일 |
 |---|---|
-| `add_kernel[grid](...)`, grid = ⌈n / BLOCK_SIZE⌉ | 프로그램 인스턴스(CTA) 그리드 크기만큼 생성. 각 CTA가 SM 하나에 배정된다. SM 132개보다 CTA가 많으면 순서대로 채워진다. |
+| `add_kernel[grid](...)`, grid = ⌈n / BLOCK_SIZE⌉ | 프로그램 인스턴스(CTA)가 그리드 크기만큼 생성된다. CTA는 실행 가능한 SM에 배정되며, SM 132개보다 CTA가 많으면 여러 wave로 나뉘어 순서대로 실행된다. 한 SM에는 자원 한도 내에서 여러 CTA가 동시에 상주할 수 있다. |
 | `pid = tl.program_id(0)` | 이 CTA의 인덱스. |
 | `tl.load(x_ptr + offsets, mask)` | HBM → (L2 → L1) → 레지스터. `BLOCK_SIZE=1024`개 원소를 CTA의 warp들이 나눠 읽는다(coalesced access). |
 | `output = x + y` | CUDA core에서 레지스터끼리 덧셈. Tensor Core는 쓰이지 않는다. |
