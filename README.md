@@ -74,6 +74,8 @@ sim-gpu 설치 후 `@toy.jit(backend="simgpu")`로 시뮬레이터를 사용할 
 
 ## CPU에서 XLA / PyTorch 그래프 비교
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jake-Song/tensor2silicon/blob/main/notebooks/xla_fx_graphviz.ipynb)
+
 [XLA HLO / PyTorch FX 시각화 노트북](notebooks/xla_fx_graphviz.ipynb)에서 작은 `ReLU(XW + b)` 예제를 실행하고 실제 그래프를 Graphviz로 그립니다.
 GPU·TPU 없이 실행할 수 있으며, 패키지 설치 안내와 실행 결과, DOT·SVG 저장 코드가 포함되어 있습니다.
 순전파 비교에 이어 PyTorch AOTAutograd의 조인트 그래프와 분리된 순전파·역전파 FX 그래프, JAX의 손실·gradient 통합 HLO를 그리고 미분 결과를 검증합니다.
@@ -82,8 +84,8 @@ GPU·TPU 없이 실행할 수 있으며, 패키지 설치 안내와 실행 결�
 
 노트북을 Colab에서 열고 해당 가속기 런타임을 선택한 뒤 셀을 순서대로 실행하세요.
 
-- [PyTorch GPU 노트북](notebooks/pytorch_gpu_relu_linear.ipynb): Dynamo → Inductor → Triton → PTX·SASS 확인
-- [JAX TPU 노트북](notebooks/jax_tpu_relu_linear.ipynb): jaxpr → StableHLO → HLO와 Pallas 커널 확인
+- [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jake-Song/tensor2silicon/blob/main/notebooks/pytorch_gpu_relu_linear.ipynb) [PyTorch GPU 노트북](notebooks/pytorch_gpu_relu_linear.ipynb): Dynamo → Inductor → Triton → PTX·SASS 확인
+- [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jake-Song/tensor2silicon/blob/main/notebooks/jax_tpu_relu_linear.ipynb) [JAX TPU 노트북](notebooks/jax_tpu_relu_linear.ipynb): jaxpr → StableHLO → HLO와 Pallas 커널 확인
 
 ## 학습 문서
 
