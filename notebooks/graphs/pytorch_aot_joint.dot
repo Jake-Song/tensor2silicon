@@ -1,0 +1,116 @@
+digraph pytorch_aot_joint {
+	graph [rankdir=TB]
+	node [fontname=Helvetica shape=box style="rounded,filled"]
+	primals_1 [label="primals_1
+placeholder: primals_1
+shape=(2, 3)
+torch.float32" fillcolor="#DBEAFE"]
+	primals_2 [label="primals_2
+placeholder: primals_2
+shape=(3, 2)
+torch.float32" fillcolor="#DBEAFE"]
+	primals_3 [label="primals_3
+placeholder: primals_3
+shape=(2,)
+torch.float32" fillcolor="#DBEAFE"]
+	tangents_1 [label="tangents_1
+placeholder: tangents_1
+shape=()
+torch.float32" fillcolor="#DBEAFE"]
+	mm [label="mm
+call_function: mm.default
+shape=(2, 2)
+torch.float32" fillcolor="#FEF3C7"]
+	primals_1 -> mm
+	primals_2 -> mm
+	add [label="add
+call_function: add.Tensor
+shape=(2, 2)
+torch.float32" fillcolor="#FEF3C7"]
+	mm -> add
+	primals_3 -> add
+	relu [label="relu
+call_function: relu.default
+shape=(2, 2)
+torch.float32" fillcolor="#FEF3C7"]
+	add -> relu
+	detach [label="detach
+call_function: detach.default
+shape=(2, 2)
+torch.float32" fillcolor="#FEF3C7"]
+	relu -> detach
+	sum_1 [label="sum_1
+call_function: sum.default
+shape=()
+torch.float32" fillcolor="#FEF3C7"]
+	relu -> sum_1
+	expand [label="expand
+call_function: expand.default
+shape=(2, 2)
+torch.float32" fillcolor="#FEF3C7"]
+	tangents_1 -> expand
+	detach_1 [label="detach_1
+call_function: detach.default
+shape=(2, 2)
+torch.float32" fillcolor="#FEF3C7"]
+	detach -> detach_1
+	threshold_backward [label="threshold_backward
+call_function: threshold_backward.default
+shape=(2, 2)
+torch.float32" fillcolor="#FEF3C7"]
+	expand -> threshold_backward
+	detach_1 -> threshold_backward
+	sum_2 [label="sum_2
+call_function: sum.dim_IntList
+shape=(1, 2)
+torch.float32" fillcolor="#FEF3C7"]
+	threshold_backward -> sum_2
+	view [label="view
+call_function: view.default
+shape=(2,)
+torch.float32" fillcolor="#FEF3C7"]
+	sum_2 -> view
+	t [label="t
+call_function: t.default
+shape=(3, 2)
+torch.float32" fillcolor="#FEF3C7"]
+	primals_1 -> t
+	mm_1 [label="mm_1
+call_function: mm.default
+shape=(3, 2)
+torch.float32" fillcolor="#FEF3C7"]
+	t -> mm_1
+	threshold_backward -> mm_1
+	t_1 [label="t_1
+call_function: t.default
+shape=(2, 3)
+torch.float32" fillcolor="#FEF3C7"]
+	primals_2 -> t_1
+	mm_2 [label="mm_2
+call_function: mm.default
+shape=(2, 3)
+torch.float32" fillcolor="#FEF3C7"]
+	threshold_backward -> mm_2
+	t_1 -> mm_2
+	output [label="output
+output: output
+[sum_1, mm_2, mm_1, view]" fillcolor="#DCFCE7"]
+	sum_1 -> output
+	mm_2 -> output
+	mm_1 -> output
+	view -> output
+	mm [fillcolor="#FEF3C7"]
+	add [fillcolor="#FEF3C7"]
+	relu [fillcolor="#FEF3C7"]
+	detach [fillcolor="#EDE9FE"]
+	sum_1 [fillcolor="#FEF3C7"]
+	expand [fillcolor="#EDE9FE"]
+	detach_1 [fillcolor="#EDE9FE"]
+	threshold_backward [fillcolor="#EDE9FE"]
+	sum_2 [fillcolor="#EDE9FE"]
+	view [fillcolor="#EDE9FE"]
+	t [fillcolor="#EDE9FE"]
+	mm_1 [fillcolor="#EDE9FE"]
+	t_1 [fillcolor="#EDE9FE"]
+	mm_2 [fillcolor="#EDE9FE"]
+}

@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml-stylesheet href="
+  data:text/css,
+  @import url(https://fonts.googleapis.com/css?family=Roboto:400,700);
+  svg text {
+    font-family: 'Roboto';
+    font-size: 12px;
+  }
+
+    %23node10:hover ~ %23edge9 text { fill: %231976d2; }
+  %23node10:hover ~ %23edge9 path { stroke: %231976d2; stroke-width: .2em; }
+  %23node10:hover ~ %23edge9 polygon { fill: %231976d2; stroke: %231976d2; stroke-width: .2em; }
+
+  %23node11:hover ~ %23edge9 text { fill: %23d32f2f; }
+  %23node11:hover ~ %23edge9 path { stroke: %23d32f2f; stroke-width: .2em; }
+  %23node11:hover ~ %23edge9 polygon { fill: %23d32f2f; stroke: %23d32f2f; stroke-width: .2em; }
+
+  %23node5:hover ~ %23edge7 text { fill: %231976d2; }
+  %23node5:hover ~ %23edge7 path { stroke: %231976d2; stroke-width: .2em; }
+  %23node5:hover ~ %23edge7 polygon { fill: %231976d2; stroke: %231976d2; stroke-width: .2em; }
+
+  %23node10:hover ~ %23edge7 text { fill: %23d32f2f; }
+  %23node10:hover ~ %23edge7 path { stroke: %23d32f2f; stroke-width: .2em; }
+  %23node10:hover ~ %23edge7 polygon { fill: %23d32f2f; stroke: %23d32f2f; stroke-width: .2em; }
+
+  %23node11:hover ~ %23edge11 text { fill: %231976d2; }
+  %23node11:hover ~ %23edge11 path { stroke: %231976d2; stroke-width: .2em; }
+  %23node11:hover ~ %23edge11 polygon { fill: %231976d2; stroke: %231976d2; stroke-width: .2em; }
+
+  %23node12:hover ~ %23edge11 text { fill: %23d32f2f; }
+  %23node12:hover ~ %23edge11 path { stroke: %23d32f2f; stroke-width: .2em; }
+  %23node12:hover ~ %23edge11 polygon { fill: %23d32f2f; stroke: %23d32f2f; stroke-width: .2em; }
+
+  %23node8:hover ~ %23edge6 text { fill: %231976d2; }
+  %23node8:hover ~ %23edge6 path { stroke: %231976d2; stroke-width: .2em; }
+  %23node8:hover ~ %23edge6 polygon { fill: %231976d2; stroke: %231976d2; stroke-width: .2em; }
+
+  %23node9:hover ~ %23edge6 text { fill: %23d32f2f; }
+  %23node9:hover ~ %23edge6 path { stroke: %23d32f2f; stroke-width: .2em; }
+  %23node9:hover ~ %23edge6 polygon { fill: %23d32f2f; stroke: %23d32f2f; stroke-width: .2em; }
+
+  %23node7:hover ~ %23edge5 text { fill: %231976d2; }
+  %23node7:hover ~ %23edge5 path { stroke: %231976d2; stroke-width: .2em; }
+  %23node7:hover ~ %23edge5 polygon { fill: %231976d2; stroke: %231976d2; stroke-width: .2em; }
+
+  %23node8:hover ~ %23edge5 text { fill: %23d32f2f; }
+  %23node8:hover ~ %23edge5 path { stroke: %23d32f2f; stroke-width: .2em; }
+  %23node8:hover ~ %23edge5 polygon { fill: %23d32f2f; stroke: %23d32f2f; stroke-width: .2em; }
+
+  %23node4:hover ~ %23edge10 text { fill: %231976d2; }
+  %23node4:hover ~ %23edge10 path { stroke: %231976d2; stroke-width: .2em; }
+  %23node4:hover ~ %23edge10 polygon { fill: %231976d2; stroke: %231976d2; stroke-width: .2em; }
+
+  %23node11:hover ~ %23edge10 text { fill: %23d32f2f; }
+  %23node11:hover ~ %23edge10 path { stroke: %23d32f2f; stroke-width: .2em; }
+  %23node11:hover ~ %23edge10 polygon { fill: %23d32f2f; stroke: %23d32f2f; stroke-width: .2em; }
+
+  %23node6:hover ~ %23edge4 text { fill: %231976d2; }
+  %23node6:hover ~ %23edge4 path { stroke: %231976d2; stroke-width: .2em; }
+  %23node6:hover ~ %23edge4 polygon { fill: %231976d2; stroke: %231976d2; stroke-width: .2em; }
+
+  %23node7:hover ~ %23edge4 text { fill: %23d32f2f; }
+  %23node7:hover ~ %23edge4 path { stroke: %23d32f2f; stroke-width: .2em; }
+  %23node7:hover ~ %23edge4 polygon { fill: %23d32f2f; stroke: %23d32f2f; stroke-width: .2em; }
+
+  %23node3:hover ~ %23edge3 text { fill: %231976d2; }
+  %23node3:hover ~ %23edge3 path { stroke: %231976d2; stroke-width: .2em; }
+  %23node3:hover ~ %23edge3 polygon { fill: %231976d2; stroke: %231976d2; stroke-width: .2em; }
+
+  %23node6:hover ~ %23edge3 text { fill: %23d32f2f; }
+  %23node6:hover ~ %23edge3 path { stroke: %23d32f2f; stroke-width: .2em; }
+  %23node6:hover ~ %23edge3 polygon { fill: %23d32f2f; stroke: %23d32f2f; stroke-width: .2em; }
+
+  %23node9:hover ~ %23edge8 text { fill: %231976d2; }
+  %23node9:hover ~ %23edge8 path { stroke: %231976d2; stroke-width: .2em; }
+  %23node9:hover ~ %23edge8 polygon { fill: %231976d2; stroke: %231976d2; stroke-width: .2em; }
+
+  %23node10:hover ~ %23edge8 text { fill: %23d32f2f; }
+  %23node10:hover ~ %23edge8 path { stroke: %23d32f2f; stroke-width: .2em; }
+  %23node10:hover ~ %23edge8 polygon { fill: %23d32f2f; stroke: %23d32f2f; stroke-width: .2em; }
+
+  %23node2:hover ~ %23edge2 text { fill: %231976d2; }
+  %23node2:hover ~ %23edge2 path { stroke: %231976d2; stroke-width: .2em; }
+  %23node2:hover ~ %23edge2 polygon { fill: %231976d2; stroke: %231976d2; stroke-width: .2em; }
+
+  %23node5:hover ~ %23edge2 text { fill: %23d32f2f; }
+  %23node5:hover ~ %23edge2 path { stroke: %23d32f2f; stroke-width: .2em; }
+  %23node5:hover ~ %23edge2 polygon { fill: %23d32f2f; stroke: %23d32f2f; stroke-width: .2em; }
+
+  %23node1:hover ~ %23edge1 text { fill: %231976d2; }
+  %23node1:hover ~ %23edge1 path { stroke: %231976d2; stroke-width: .2em; }
+  %23node1:hover ~ %23edge1 polygon { fill: %231976d2; stroke: %231976d2; stroke-width: .2em; }
+
+  %23node5:hover ~ %23edge1 text { fill: %23d32f2f; }
+  %23node5:hover ~ %23edge1 path { stroke: %23d32f2f; stroke-width: .2em; }
+  %23node5:hover ~ %23edge1 polygon { fill: %23d32f2f; stroke: %23d32f2f; stroke-width: .2em; }
+
+" type="text/css"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: G Pages: 1 -->
+<svg width="1623pt" height="807pt"
+ viewBox="0.00 0.00 1622.50 806.69" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 802.69)">
+<title>G</title>
+<g id="a_graph0"><a xlink:title=" ">
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-802.69 1618.5,-802.69 1618.5,4 -4,4"/>
+<text text-anchor="start" x="726.25" y="-770.49" font-family="Times,serif" font-weight="bold" font-size="14.00">Computation main.1</text>
+<text text-anchor="start" x="727.25" y="-756.49" font-family="Times,serif" font-weight="bold" font-size="14.00">ENTRY computation</text>
+</a>
+</g>
+<!-- 397297168 -->
+<g id="node1" class="node">
+<title>397297168</title>
+<g id="a_node1"><a xlink:title="x">
+<polygon fill="#ffe0b2" stroke="#cbae82" points="622,-462.69 0,-462.69 0,-398.69 622,-398.69 622,-462.69"/>
+<text text-anchor="start" x="262" y="-448.49" font-family="Times,serif" font-weight="bold" font-size="14.00">Parameter 0</text>
+<text text-anchor="start" x="228" y="-434.49" font-family="Times,serif" font-size="14.00">sharding={replicated}</text>
+<text text-anchor="start" x="8" y="-420.49" font-family="Times,serif" font-size="14.00">frontend_attributes={xla.sdy.sharding=&quot;#sdy.sharding&lt;@empty_mesh, [{}, {}]&gt;&quot;}</text>
+<text text-anchor="start" x="262.5" y="-406.49" font-family="Times,serif" font-size="14.00">f32[2,3]{1,0}</text>
+</a>
+</g>
+</g>
+<!-- 397328624 -->
+<g id="node5" class="node">
+<title>397328624</title>
+<g id="a_node5"><a xlink:title="jit(jax_forward)/dot_general&#10;/tmp/ipykernel_46424/36137623.py:jax_forward:12:23&#10;/tmp/ipykernel_46424/2309388702.py:&lt;module&gt;:1:10&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_code:3823:20&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_ast_nodes:3762:19&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_cell_async:3518:29&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/async_helpers.py:_pseudo_sync_runner:140:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell._run_cell:3305:21&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_cell:3248:25&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/zmqshell.py:ZMQInteractiveShell.run_cell:665:15&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/ipkernel.py:IPythonKernel.do_execute:460:22&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelbase.py:Kernel.execute_request:834:28&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/ipkernel.py:IPythonKernel.execute_request:372:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelbase.py:Kernel.dispatch_shell:478:20&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelbase.py:Kernel.shell_main:621:12&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/tornado/platform/asyncio.py:BaseAsyncIOLoop.start:211:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelapp.py:IPKernelApp.start:807:16&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/traitlets/config/application.py:Application.launch_instance:1080:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel_launcher.py:&lt;module&gt;:18:4&#10;&lt;frozen runpy&gt;:_run_code:88:4&#10;&lt;frozen runpy&gt;:_run_module_as_main:198:11">
+<polygon fill="#1565c0" stroke="#003c8f" points="1154.5,-355.69 747.5,-355.69 747.5,-305.69 1154.5,-305.69 1154.5,-355.69"/>
+<text text-anchor="start" x="897.5" y="-341.49" font-family="Times,serif" font-weight="bold" font-size="14.00" fill="white">dot_general.1</text>
+<text text-anchor="start" x="755.5" y="-327.49" font-family="Times,serif" font-size="14.00" fill="white">lhs_contracting_dims={1}, rhs_contracting_dims={0}</text>
+<text text-anchor="start" x="902.5" y="-313.49" font-family="Times,serif" font-size="14.00" fill="white">f32[2,2]{1,0}</text>
+</a>
+</g>
+</g>
+<!-- 397297168&#45;&gt;397328624 -->
+<g id="edge1" class="edge">
+<title>397297168&#45;&gt;397328624</title>
+<g id="a_edge1"><a xlink:title="x.1 &#45;&gt; dot_general.1">
+<path fill="none" stroke="black" d="M513.5,-398.69C600.68,-385.34 701.38,-369.92 784.18,-357.24"/>
+<polygon fill="none" stroke="black" points="784.83,-360.68 794.18,-355.71 783.77,-353.76 784.83,-360.68"/>
+</a>
+</g>
+<text text-anchor="middle" x="777.54" y="-363.1" font-family="Times,serif" font-size="14.00">0</text>
+</g>
+<!-- 380245328 -->
+<g id="node2" class="node">
+<title>380245328</title>
+<g id="a_node2"><a xlink:title="w">
+<polygon fill="#ffe0b2" stroke="#cbae82" points="1262,-462.69 640,-462.69 640,-398.69 1262,-398.69 1262,-462.69"/>
+<text text-anchor="start" x="902" y="-448.49" font-family="Times,serif" font-weight="bold" font-size="14.00">Parameter 1</text>
+<text text-anchor="start" x="868" y="-434.49" font-family="Times,serif" font-size="14.00">sharding={replicated}</text>
+<text text-anchor="start" x="648" y="-420.49" font-family="Times,serif" font-size="14.00">frontend_attributes={xla.sdy.sharding=&quot;#sdy.sharding&lt;@empty_mesh, [{}, {}]&gt;&quot;}</text>
+<text text-anchor="start" x="902.5" y="-406.49" font-family="Times,serif" font-size="14.00">f32[3,2]{1,0}</text>
+</a>
+</g>
+</g>
+<!-- 380245328&#45;&gt;397328624 -->
+<g id="edge2" class="edge">
+<title>380245328&#45;&gt;397328624</title>
+<g id="a_edge2"><a xlink:title="w.1 &#45;&gt; dot_general.1">
+<path fill="none" stroke="black" d="M951,-398.69C951,-388.34 951,-376.75 951,-366.16"/>
+<polygon fill="none" stroke="black" points="954.5,-365.98 951,-355.98 947.5,-365.98 954.5,-365.98"/>
+</a>
+</g>
+<text text-anchor="middle" x="959.45" y="-370.41" font-family="Times,serif" font-size="14.00">1</text>
+</g>
+<!-- 396862688 -->
+<g id="node3" class="node">
+<title>396862688</title>
+<g id="a_node3"><a xlink:title="b">
+<polygon fill="#ffe0b2" stroke="#cbae82" points="1614.5,-748.69 1019.5,-748.69 1019.5,-684.69 1614.5,-684.69 1614.5,-748.69"/>
+<text text-anchor="start" x="1268" y="-734.49" font-family="Times,serif" font-weight="bold" font-size="14.00">Parameter 2</text>
+<text text-anchor="start" x="1234" y="-720.49" font-family="Times,serif" font-size="14.00">sharding={replicated}</text>
+<text text-anchor="start" x="1027.5" y="-706.49" font-family="Times,serif" font-size="14.00">frontend_attributes={xla.sdy.sharding=&quot;#sdy.sharding&lt;@empty_mesh, [{}]&gt;&quot;}</text>
+<text text-anchor="start" x="1295.5" y="-692.49" font-family="Times,serif" font-size="14.00">f32[2]</text>
+</a>
+</g>
+</g>
+<!-- 397312976 -->
+<g id="node6" class="node">
+<title>397312976</title>
+<g id="a_node6"><a xlink:title="jit(jax_forward)/broadcast_in_dim&#10;/tmp/ipykernel_46424/36137623.py:jax_forward:12:23&#10;/tmp/ipykernel_46424/2309388702.py:&lt;module&gt;:1:10&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_code:3823:20&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_ast_nodes:3762:19&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_cell_async:3518:29&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/async_helpers.py:_pseudo_sync_runner:140:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell._run_cell:3305:21&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_cell:3248:25&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/zmqshell.py:ZMQInteractiveShell.run_cell:665:15&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/ipkernel.py:IPythonKernel.do_execute:460:22&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelbase.py:Kernel.execute_request:834:28&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/ipkernel.py:IPythonKernel.execute_request:372:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelbase.py:Kernel.dispatch_shell:478:20&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelbase.py:Kernel.shell_main:621:12&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/tornado/platform/asyncio.py:BaseAsyncIOLoop.start:211:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelapp.py:IPKernelApp.start:807:16&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/traitlets/config/application.py:Application.launch_instance:1080:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel_launcher.py:&lt;module&gt;:18:4&#10;&lt;frozen runpy&gt;:_run_code:88:4&#10;&lt;frozen runpy&gt;:_run_module_as_main:198:11">
+<polygon fill="#c8e6c9" stroke="#97b498" points="1400.5,-648.69 1233.5,-648.69 1233.5,-598.69 1400.5,-598.69 1400.5,-648.69"/>
+<text text-anchor="start" x="1241.5" y="-634.49" font-family="Times,serif" font-weight="bold" font-size="14.00">broadcast_in_dim.1</text>
+<text text-anchor="start" x="1288" y="-620.49" font-family="Times,serif" font-size="14.00">reshape</text>
+<text text-anchor="start" x="1268.5" y="-606.49" font-family="Times,serif" font-size="14.00">f32[1,2]{1,0}</text>
+</a>
+</g>
+</g>
+<!-- 396862688&#45;&gt;397312976 -->
+<g id="edge3" class="edge">
+<title>396862688&#45;&gt;397312976</title>
+<g id="a_edge3"><a xlink:title="b.1 &#45;&gt; broadcast_in_dim.1">
+<path fill="none" stroke="black" d="M1317,-684.63C1317,-676.38 1317,-667.42 1317,-659"/>
+<polygon fill="none" stroke="black" points="1320.5,-658.72 1317,-648.72 1313.5,-658.72 1320.5,-658.72"/>
+</a>
+</g>
+</g>
+<!-- 396593584 -->
+<g id="node4" class="node">
+<title>396593584</title>
+<polygon fill="#fff9c4" stroke="#cbc693" points="1321,-262.69 1171,-262.69 1171,-198.69 1321,-198.69 1321,-262.69"/>
+<text text-anchor="start" x="1200" y="-248.49" font-family="Times,serif" font-weight="bold" font-size="14.00">broadcast.1</text>
+<text text-anchor="start" x="1190" y="-234.49" font-family="Times,serif" font-size="14.00">dimensions={}</text>
+<text text-anchor="start" x="1197.5" y="-220.49" font-family="Times,serif" font-size="14.00">f32[2,2]{1,0}</text>
+<text text-anchor="start" x="1179" y="-206.49" font-family="Times,serif" font-weight="bold" font-size="14.00">operand</text>
+<text text-anchor="start" x="1244" y="-206.49" font-family="Times,serif" font-size="14.00"> = f32[] 0</text>
+</g>
+<!-- 396053552 -->
+<g id="node11" class="node">
+<title>396053552</title>
+<g id="a_node11"><a xlink:title="jit(jax_forward)/max&#10;/tmp/ipykernel_46424/36137623.py:jax_forward:12:11&#10;/tmp/ipykernel_46424/2309388702.py:&lt;module&gt;:1:10&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_code:3823:20&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_ast_nodes:3762:19&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_cell_async:3518:29&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/async_helpers.py:_pseudo_sync_runner:140:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell._run_cell:3305:21&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_cell:3248:25&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/zmqshell.py:ZMQInteractiveShell.run_cell:665:15&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/ipkernel.py:IPythonKernel.do_execute:460:22&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelbase.py:Kernel.execute_request:834:28&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/ipkernel.py:IPythonKernel.execute_request:372:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelbase.py:Kernel.dispatch_shell:478:20&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelbase.py:Kernel.shell_main:621:12&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/tornado/platform/asyncio.py:BaseAsyncIOLoop.start:211:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelapp.py:IPKernelApp.start:807:16&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/traitlets/config/application.py:Application.launch_instance:1080:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel_launcher.py:&lt;module&gt;:18:4&#10;&lt;frozen runpy&gt;:_run_code:88:4&#10;&lt;frozen runpy&gt;:_run_module_as_main:198:11">
+<polygon fill="white" stroke="#9e9e9e" points="1227.5,-162.69 1114.5,-162.69 1114.5,-112.69 1227.5,-112.69 1227.5,-162.69"/>
+<text text-anchor="start" x="1147.5" y="-148.49" font-family="Times,serif" font-weight="bold" font-size="14.00">max.1</text>
+<text text-anchor="start" x="1135.5" y="-134.49" font-family="Times,serif" font-size="14.00">maximum</text>
+<text text-anchor="start" x="1122.5" y="-120.49" font-family="Times,serif" font-size="14.00">f32[2,2]{1,0}</text>
+</a>
+</g>
+</g>
+<!-- 396593584&#45;&gt;396053552 -->
+<g id="edge10" class="edge">
+<title>396593584&#45;&gt;396053552</title>
+<g id="a_edge10"><a xlink:title="broadcast.1 &#45;&gt; max.1">
+<path fill="none" stroke="black" d="M1220.4,-198.63C1212.92,-189.55 1204.73,-179.62 1197.21,-170.49"/>
+<polygon fill="none" stroke="black" points="1199.87,-168.21 1190.81,-162.72 1194.46,-172.67 1199.87,-168.21"/>
+</a>
+</g>
+<text text-anchor="middle" x="1208.86" y="-167.64" font-family="Times,serif" font-size="14.00">1</text>
+</g>
+<!-- 397300048 -->
+<g id="node10" class="node">
+<title>397300048</title>
+<g id="a_node10"><a xlink:title="jit(jax_forward)/add&#10;/tmp/ipykernel_46424/36137623.py:jax_forward:12:23&#10;/tmp/ipykernel_46424/2309388702.py:&lt;module&gt;:1:10&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_code:3823:20&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_ast_nodes:3762:19&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_cell_async:3518:29&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/async_helpers.py:_pseudo_sync_runner:140:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell._run_cell:3305:21&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_cell:3248:25&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/zmqshell.py:ZMQInteractiveShell.run_cell:665:15&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/ipkernel.py:IPythonKernel.do_execute:460:22&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelbase.py:Kernel.execute_request:834:28&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/ipkernel.py:IPythonKernel.execute_request:372:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelbase.py:Kernel.dispatch_shell:478:20&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelbase.py:Kernel.shell_main:621:12&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/tornado/platform/asyncio.py:BaseAsyncIOLoop.start:211:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelapp.py:IPKernelApp.start:807:16&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/traitlets/config/application.py:Application.launch_instance:1080:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel_launcher.py:&lt;module&gt;:18:4&#10;&lt;frozen runpy&gt;:_run_code:88:4&#10;&lt;frozen runpy&gt;:_run_module_as_main:198:11">
+<polygon fill="white" stroke="#9e9e9e" points="1152.5,-248.69 1039.5,-248.69 1039.5,-212.69 1152.5,-212.69 1152.5,-248.69"/>
+<text text-anchor="start" x="1074.5" y="-234.49" font-family="Times,serif" font-weight="bold" font-size="14.00">add.7</text>
+<text text-anchor="start" x="1047.5" y="-220.49" font-family="Times,serif" font-size="14.00">f32[2,2]{1,0}</text>
+</a>
+</g>
+</g>
+<!-- 397328624&#45;&gt;397300048 -->
+<g id="edge7" class="edge">
+<title>397328624&#45;&gt;397300048</title>
+<g id="a_edge7"><a xlink:title="dot_general.1 &#45;&gt; add.7">
+<path fill="none" stroke="black" d="M986.84,-305.47C1009.9,-289.89 1039.66,-269.77 1062.28,-254.48"/>
+<polygon fill="none" stroke="black" points="1064.25,-257.38 1070.57,-248.88 1060.33,-251.58 1064.25,-257.38"/>
+</a>
+</g>
+<text text-anchor="middle" x="1060.29" y="-262.33" font-family="Times,serif" font-size="14.00">0</text>
+</g>
+<!-- 397303728 -->
+<g id="node7" class="node">
+<title>397303728</title>
+<g id="a_node7"><a xlink:title="jit(jax_forward)/add&#10;/tmp/ipykernel_46424/36137623.py:jax_forward:12:23&#10;/tmp/ipykernel_46424/2309388702.py:&lt;module&gt;:1:10&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_code:3823:20&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_ast_nodes:3762:19&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_cell_async:3518:29&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/async_helpers.py:_pseudo_sync_runner:140:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell._run_cell:3305:21&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_cell:3248:25&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/zmqshell.py:ZMQInteractiveShell.run_cell:665:15&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/ipkernel.py:IPythonKernel.do_execute:460:22&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelbase.py:Kernel.execute_request:834:28&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/ipkernel.py:IPythonKernel.execute_request:372:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelbase.py:Kernel.dispatch_shell:478:20&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelbase.py:Kernel.shell_main:621:12&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/tornado/platform/asyncio.py:BaseAsyncIOLoop.start:211:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelapp.py:IPKernelApp.start:807:16&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/traitlets/config/application.py:Application.launch_instance:1080:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel_launcher.py:&lt;module&gt;:18:4&#10;&lt;frozen runpy&gt;:_run_code:88:4&#10;&lt;frozen runpy&gt;:_run_module_as_main:198:11">
+<polygon fill="#fff9c4" stroke="#cbc693" points="1392,-562.69 1242,-562.69 1242,-498.69 1392,-498.69 1392,-562.69"/>
+<text text-anchor="start" x="1295.5" y="-548.49" font-family="Times,serif" font-weight="bold" font-size="14.00">add.4</text>
+<text text-anchor="start" x="1281.5" y="-534.49" font-family="Times,serif" font-size="14.00">broadcast</text>
+<text text-anchor="start" x="1250" y="-520.49" font-family="Times,serif" font-size="14.00">dimensions={0,1}</text>
+<text text-anchor="start" x="1268.5" y="-506.49" font-family="Times,serif" font-size="14.00">f32[1,2]{1,0}</text>
+</a>
+</g>
+</g>
+<!-- 397312976&#45;&gt;397303728 -->
+<g id="edge4" class="edge">
+<title>397312976&#45;&gt;397303728</title>
+<g id="a_edge4"><a xlink:title="broadcast_in_dim.1 &#45;&gt; add.4">
+<path fill="none" stroke="black" d="M1317,-598.31C1317,-590.6 1317,-581.85 1317,-573.28"/>
+<polygon fill="none" stroke="black" points="1320.5,-573.01 1317,-563.01 1313.5,-573.01 1320.5,-573.01"/>
+</a>
+</g>
+</g>
+<!-- 396594320 -->
+<g id="node8" class="node">
+<title>396594320</title>
+<g id="a_node8"><a xlink:title="jit(jax_forward)/add&#10;/tmp/ipykernel_46424/36137623.py:jax_forward:12:23&#10;/tmp/ipykernel_46424/2309388702.py:&lt;module&gt;:1:10&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_code:3823:20&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_ast_nodes:3762:19&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_cell_async:3518:29&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/async_helpers.py:_pseudo_sync_runner:140:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell._run_cell:3305:21&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_cell:3248:25&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/zmqshell.py:ZMQInteractiveShell.run_cell:665:15&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/ipkernel.py:IPythonKernel.do_execute:460:22&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelbase.py:Kernel.execute_request:834:28&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/ipkernel.py:IPythonKernel.execute_request:372:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelbase.py:Kernel.dispatch_shell:478:20&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelbase.py:Kernel.shell_main:621:12&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/tornado/platform/asyncio.py:BaseAsyncIOLoop.start:211:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelapp.py:IPKernelApp.start:807:16&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/traitlets/config/application.py:Application.launch_instance:1080:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel_launcher.py:&lt;module&gt;:18:4&#10;&lt;frozen runpy&gt;:_run_code:88:4&#10;&lt;frozen runpy&gt;:_run_module_as_main:198:11">
+<polygon fill="#c8e6c9" stroke="#97b498" points="1354,-455.69 1280,-455.69 1280,-405.69 1354,-405.69 1354,-455.69"/>
+<text text-anchor="start" x="1295.5" y="-441.49" font-family="Times,serif" font-weight="bold" font-size="14.00">add.5</text>
+<text text-anchor="start" x="1288" y="-427.49" font-family="Times,serif" font-size="14.00">reshape</text>
+<text text-anchor="start" x="1295.5" y="-413.49" font-family="Times,serif" font-size="14.00">f32[2]</text>
+</a>
+</g>
+</g>
+<!-- 397303728&#45;&gt;396594320 -->
+<g id="edge5" class="edge">
+<title>397303728&#45;&gt;396594320</title>
+<g id="a_edge5"><a xlink:title="add.4 &#45;&gt; add.5">
+<path fill="none" stroke="black" d="M1317,-498.69C1317,-488.34 1317,-476.75 1317,-466.16"/>
+<polygon fill="none" stroke="black" points="1320.5,-465.98 1317,-455.98 1313.5,-465.98 1320.5,-465.98"/>
+</a>
+</g>
+</g>
+<!-- 397271424 -->
+<g id="node9" class="node">
+<title>397271424</title>
+<g id="a_node9"><a xlink:title="jit(jax_forward)/add&#10;/tmp/ipykernel_46424/36137623.py:jax_forward:12:23&#10;/tmp/ipykernel_46424/2309388702.py:&lt;module&gt;:1:10&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_code:3823:20&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_ast_nodes:3762:19&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_cell_async:3518:29&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/async_helpers.py:_pseudo_sync_runner:140:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell._run_cell:3305:21&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/IPython/core/interactiveshell.py:InteractiveShell.run_cell:3248:25&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/zmqshell.py:ZMQInteractiveShell.run_cell:665:15&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/ipkernel.py:IPythonKernel.do_execute:460:22&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelbase.py:Kernel.execute_request:834:28&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/ipkernel.py:IPythonKernel.execute_request:372:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelbase.py:Kernel.dispatch_shell:478:20&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelbase.py:Kernel.shell_main:621:12&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/tornado/platform/asyncio.py:BaseAsyncIOLoop.start:211:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel/kernelapp.py:IPKernelApp.start:807:16&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/traitlets/config/application.py:Application.launch_instance:1080:8&#10;/tmp/tensor2silicon&#45;graphviz&#45;venv/lib/python3.13/site&#45;packages/ipykernel_launcher.py:&lt;module&gt;:18:4&#10;&lt;frozen runpy&gt;:_run_code:88:4&#10;&lt;frozen runpy&gt;:_run_module_as_main:198:11">
+<polygon fill="#fff9c4" stroke="#cbc693" points="1347.5,-362.69 1210.5,-362.69 1210.5,-298.69 1347.5,-298.69 1347.5,-362.69"/>
+<text text-anchor="start" x="1257.5" y="-348.49" font-family="Times,serif" font-weight="bold" font-size="14.00">add.6</text>
+<text text-anchor="start" x="1243.5" y="-334.49" font-family="Times,serif" font-size="14.00">broadcast</text>
+<text text-anchor="start" x="1218.5" y="-320.49" font-family="Times,serif" font-size="14.00">dimensions={1}</text>
+<text text-anchor="start" x="1230.5" y="-306.49" font-family="Times,serif" font-size="14.00">f32[2,2]{1,0}</text>
+</a>
+</g>
+</g>
+<!-- 396594320&#45;&gt;397271424 -->
+<g id="edge6" class="edge">
+<title>396594320&#45;&gt;397271424</title>
+<g id="a_edge6"><a xlink:title="add.5 &#45;&gt; add.6">
+<path fill="none" stroke="black" d="M1307.61,-405.47C1303.77,-395.56 1299.21,-383.82 1294.88,-372.65"/>
+<polygon fill="none" stroke="black" points="1298.04,-371.1 1291.16,-363.04 1291.51,-373.63 1298.04,-371.1"/>
+</a>
+</g>
+</g>
+<!-- 397271424&#45;&gt;397300048 -->
+<g id="edge8" class="edge">
+<title>397271424&#45;&gt;397300048</title>
+<g id="a_edge8"><a xlink:title="add.6 &#45;&gt; add.7">
+<path fill="none" stroke="black" d="M1221.1,-298.69C1193.8,-284.07 1161.87,-266.97 1137.1,-253.7"/>
+<polygon fill="none" stroke="black" points="1138.45,-250.46 1127.98,-248.82 1135.14,-256.63 1138.45,-250.46"/>
+</a>
+</g>
+<text text-anchor="middle" x="1147.95" y="-246.23" font-family="Times,serif" font-size="14.00">1</text>
+</g>
+<!-- 397300048&#45;&gt;396053552 -->
+<g id="edge9" class="edge">
+<title>397300048&#45;&gt;396053552</title>
+<g id="a_edge9"><a xlink:title="add.7 &#45;&gt; max.1">
+<path fill="none" stroke="black" d="M1110.11,-212.58C1119.76,-200.87 1132.84,-184.99 1144.41,-170.95"/>
+<polygon fill="none" stroke="black" points="1147.35,-172.89 1151.01,-162.95 1141.95,-168.44 1147.35,-172.89"/>
+</a>
+</g>
+<text text-anchor="middle" x="1146.01" y="-178.61" font-family="Times,serif" font-size="14.00">0</text>
+</g>
+<!-- cluster_396863360 -->
+<g id="node12" class="node">
+<title>cluster_396863360</title>
+<g id="a_node12"><a xlink:title=" ">
+<ellipse fill="#bcaaa4" stroke="#8c7b75" cx="1171" cy="-38.35" rx="38.19" ry="38.19"/>
+<text text-anchor="start" x="1149.5" y="-34.65" font-family="Times,serif" font-size="14.00">ROOT</text>
+</a>
+</g>
+</g>
+<!-- 396053552&#45;&gt;cluster_396863360 -->
+<g id="edge11" class="edge">
+<title>396053552&#45;&gt;cluster_396863360</title>
+<g id="a_edge11"><a xlink:title=" ">
+<path fill="none" stroke="black" d="M1171,-112.63C1171,-104.78 1171,-95.76 1171,-86.8"/>
+<polygon fill="black" stroke="black" points="1174.5,-86.77 1171,-76.77 1167.5,-86.77 1174.5,-86.77"/>
+</a>
+</g>
+</g>
+</g>
+</svg>

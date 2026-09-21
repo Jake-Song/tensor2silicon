@@ -72,6 +72,12 @@ print(gm.code)
 sim-gpu 설치 후 `@toy.jit(backend="simgpu")`로 시뮬레이터를 사용할 수 있습니다.
 지원 연산은 `matmul`, `add`, `relu`, `broadcast_in_dim`이며 텐서 값에 의존하는 분기는 지원하지 않습니다.
 
+## CPU에서 XLA / PyTorch 그래프 비교
+
+[XLA HLO / PyTorch FX 시각화 노트북](notebooks/xla_fx_graphviz.ipynb)에서 작은 `ReLU(XW + b)` 예제를 실행하고 실제 그래프를 Graphviz로 그립니다.
+GPU·TPU 없이 실행할 수 있으며, 패키지 설치 안내와 실행 결과, DOT·SVG 저장 코드가 포함되어 있습니다.
+순전파 비교에 이어 PyTorch AOTAutograd의 조인트 그래프와 분리된 순전파·역전파 FX 그래프, JAX의 손실·gradient 통합 HLO를 그리고 미분 결과를 검증합니다.
+
 ## Colab에서 실제 GPU / TPU 실행
 
 노트북을 Colab에서 열고 해당 가속기 런타임을 선택한 뒤 셀을 순서대로 실행하세요.

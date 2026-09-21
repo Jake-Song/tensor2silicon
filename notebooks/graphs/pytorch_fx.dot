@@ -1,0 +1,39 @@
+digraph pytorch_fx {
+	graph [rankdir=LR]
+	node [fontname=Helvetica shape=box style="rounded,filled"]
+	x [label="x
+placeholder: x
+shape=(2, 3)
+torch.float32" fillcolor="#DBEAFE"]
+	w [label="w
+placeholder: w
+shape=(3, 2)
+torch.float32" fillcolor="#DBEAFE"]
+	b [label="b
+placeholder: b
+shape=(2,)
+torch.float32" fillcolor="#DBEAFE"]
+	matmul [label="matmul
+call_function: matmul
+shape=(2, 2)
+torch.float32" fillcolor="#FEF3C7"]
+	x -> matmul
+	w -> matmul
+	add [label="add
+call_function: add
+shape=(2, 2)
+torch.float32" fillcolor="#FEF3C7"]
+	matmul -> add
+	b -> add
+	relu [label="relu
+call_function: relu
+shape=(2, 2)
+torch.float32" fillcolor="#FEF3C7"]
+	add -> relu
+	output [label="output
+output: output
+shape=(2, 2)
+torch.float32
+relu" fillcolor="#DCFCE7"]
+	relu -> output
+}

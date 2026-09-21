@@ -1,0 +1,74 @@
+digraph pytorch_aot_backward {
+	graph [rankdir=TB]
+	node [fontname=Helvetica shape=box style="rounded,filled"]
+	primals_1 [label="primals_1
+placeholder: primals_1
+shape=(2, 3)
+torch.float32" fillcolor="#DBEAFE"]
+	primals_2 [label="primals_2
+placeholder: primals_2
+shape=(3, 2)
+torch.float32" fillcolor="#DBEAFE"]
+	detach [label="detach
+placeholder: detach
+shape=(2, 2)
+torch.float32" fillcolor="#DBEAFE"]
+	tangents_1 [label="tangents_1
+placeholder: tangents_1
+shape=()
+torch.float32" fillcolor="#DBEAFE"]
+	expand [label="expand
+call_function: expand.default
+shape=(2, 2)
+torch.float32" fillcolor="#FEF3C7"]
+	tangents_1 -> expand
+	detach_1 [label="detach_1
+call_function: detach.default
+shape=(2, 2)
+torch.float32" fillcolor="#FEF3C7"]
+	detach -> detach_1
+	threshold_backward [label="threshold_backward
+call_function: threshold_backward.default
+shape=(2, 2)
+torch.float32" fillcolor="#FEF3C7"]
+	expand -> threshold_backward
+	detach_1 -> threshold_backward
+	sum_2 [label="sum_2
+call_function: sum.dim_IntList
+shape=(1, 2)
+torch.float32" fillcolor="#FEF3C7"]
+	threshold_backward -> sum_2
+	view [label="view
+call_function: view.default
+shape=(2,)
+torch.float32" fillcolor="#FEF3C7"]
+	sum_2 -> view
+	t [label="t
+call_function: t.default
+shape=(3, 2)
+torch.float32" fillcolor="#FEF3C7"]
+	primals_1 -> t
+	mm_1 [label="mm_1
+call_function: mm.default
+shape=(3, 2)
+torch.float32" fillcolor="#FEF3C7"]
+	t -> mm_1
+	threshold_backward -> mm_1
+	t_1 [label="t_1
+call_function: t.default
+shape=(2, 3)
+torch.float32" fillcolor="#FEF3C7"]
+	primals_2 -> t_1
+	mm_2 [label="mm_2
+call_function: mm.default
+shape=(2, 3)
+torch.float32" fillcolor="#FEF3C7"]
+	threshold_backward -> mm_2
+	t_1 -> mm_2
+	output [label="output
+output: output
+(mm_2, mm_1, view)" fillcolor="#DCFCE7"]
+	mm_2 -> output
+	mm_1 -> output
+	view -> output
+}
