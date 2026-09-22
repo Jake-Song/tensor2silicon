@@ -180,6 +180,8 @@ y.block_until_ready()     # 여기서 실제 계산 완료를 기다림
 
 두 번째 호출부터는 A-1~A-4를 전부 건너뛰고, `(f32[16,8], f32[8,4], f32[4])` 캐시 키로 컴파일된 실행 파일을 찾아 PjRt 큐에 넣는다.
 
+PjRt 큐는 컴파일된 XLA executable과 디바이스 버퍼를 받아 GPU/TPU 같은 장치에 비동기 실행을 제출하는 런타임 내부의 작업 흐름이며, 실제 CUDA stream이나 TPU command queue는 각 PjRt 플러그인이 구현합니다.
+
 ---
 
 ## B. PyTorch 경로
