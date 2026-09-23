@@ -87,6 +87,22 @@ GPU·TPU 없이 실행할 수 있으며, 패키지 설치 안내와 실행 결�
 - [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jake-Song/tensor2silicon/blob/main/notebooks/pytorch_gpu_relu_linear.ipynb) [PyTorch GPU 노트북](notebooks/pytorch_gpu_relu_linear.ipynb): Dynamo → Inductor → Triton → PTX·SASS 확인
 - [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jake-Song/tensor2silicon/blob/main/notebooks/jax_tpu_relu_linear.ipynb) [JAX TPU 노트북](notebooks/jax_tpu_relu_linear.ipynb): jaxpr → StableHLO → HLO와 Pallas 커널 확인
 
+## 기본 LLM의 연산별 Roofline (PyTorch · JAX)
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jake-Song/tensor2silicon/blob/main/notebooks/llm_roofline.ipynb) [LLM roofline 노트북](notebooks/llm_roofline.ipynb)
+
+LLaMA 형태의 작은 LLM(LayerNorm, RoPE, SwiGLU)을 PyTorch와 JAX로 똑같이 만든다.
+한 층의 9개 matmul과 LayerNorm·softmax·elementwise 연산을 따로 재서 compute-bound인지 memory-bound인지 roofline으로 판정한다.
+prefill(토큰 2048개)과 decode(토큰 1개 + KV cache)를 비교하면, 같은 가중치 matmul이 compute-bound에서 memory-bound로 바뀌는 것이 보인다.
+GPU 런타임에서는 PyTorch, TPU 런타임에서는 JAX 버전이 실행된다.
+A100과 TPU v5e에서 미리 잰 결과는 `llm_roofline/results/`에 있다.
+
+```bash
+uv run --with torch python -m llm_roofline.torch_llm --preset small --dtype fp16   # 로컬 GPU (8 GB급)
+uv run --with jax python -m llm_roofline.jax_llm --preset tiny                    # CPU에서 동작 확인
+uv run --with matplotlib python -m llm_roofline.plot llm_roofline/results/*.json --out-dir plots
+```
+
 ## autoresearch: 에이전트가 커널을 최적화하는 실험
 
 Claude Code가 Colab 터미널에서 `kernel.py`만 고치며 fused `ReLU(XW + b)` 커널을 반복 실험으로 빠르게 만든다.
