@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Bash(timeout 300 python bench.py:*)",
+      "Bash(python bench.py:*)",
+      "Bash(git:*)",
+      "Bash(grep:*)",
+      "Bash(tail:*)",
+      "Bash(head:*)",
+      "Bash(cat:*)",
+      "Edit(./kernel.py)",
+      "Edit(./results.tsv)",
+      "Edit(./report.md)"
+    ],
+    "deny": [
+      "Edit(./bench.py)",
+      "Edit(./program.md)",
+      "Edit(./.claude/**)"
+    ]
+  }
+}

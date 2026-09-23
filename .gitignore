@@ -14,3 +14,7 @@ wheels/
 
 # toy compiler build outputs
 toy/_build/
+
+# autoresearch run outputs
+autoresearch/*/results.tsv
+autoresearch/*/run.log

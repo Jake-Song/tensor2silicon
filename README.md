@@ -87,6 +87,14 @@ GPU·TPU 없이 실행할 수 있으며, 패키지 설치 안내와 실행 결�
 - [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jake-Song/tensor2silicon/blob/main/notebooks/pytorch_gpu_relu_linear.ipynb) [PyTorch GPU 노트북](notebooks/pytorch_gpu_relu_linear.ipynb): Dynamo → Inductor → Triton → PTX·SASS 확인
 - [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jake-Song/tensor2silicon/blob/main/notebooks/jax_tpu_relu_linear.ipynb) [JAX TPU 노트북](notebooks/jax_tpu_relu_linear.ipynb): jaxpr → StableHLO → HLO와 Pallas 커널 확인
 
+## autoresearch: 에이전트가 커널을 최적화하는 실험
+
+Claude Code가 Colab 터미널에서 `kernel.py`만 고치며 fused `ReLU(XW + b)` 커널을 반복 실험으로 빠르게 만든다.
+고정된 `bench.py`가 정확도·반칙 여부·속도를 채점하고, 빨라진 커밋만 남긴다. 느려지거나 실패한 시도까지 모든 실험의 가설·결과·교훈은 `report.md`에 기록된다. 자세한 내용은 [autoresearch/README.md](autoresearch/README.md)를 보세요.
+
+- [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jake-Song/tensor2silicon/blob/main/notebooks/autoresearch_gpu_a100.ipynb) [A100 · Triton launcher](notebooks/autoresearch_gpu_a100.ipynb): cuBLAS 대비 `speedup`
+- [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jake-Song/tensor2silicon/blob/main/notebooks/autoresearch_tpu_v6e.ipynb) [TPU v6e · Pallas launcher](notebooks/autoresearch_tpu_v6e.ipynb): XLA 대비 `speedup`
+
 ## 학습 문서
 
 순서대로 읽기:
