@@ -113,16 +113,25 @@ Claude Code가 Colab 터미널에서 `kernel.py`만 고치며 fused `ReLU(XW + b
 
 ## 학습 문서
 
-순서대로 읽기:
-[① 모델 → 연산](docs/01-model-to-ops.md) →
-[② 그래프·IR](docs/02-ops-to-graph-ir.md) →
-[③ 실행 코드](docs/03-ir-to-executable.md) →
-[④ 커널 실행](docs/04-dispatch-to-kernel.md) →
-[⑤ 칩 내부](docs/05-kernel-to-chip.md)
+### 2주차: 모델에서 실리콘까지
 
-- [ReLU(XW + b) 단계별 예제](docs/example-relu-linear.md)
-- [PyTorch / A100 실행 예제](docs/example-pytorch-gpu-a100.md) · [JAX / TPU v5e 실행 예제](docs/example-jax-tpu-v5e.md)
-- [PyTorch 컴파일 파이프라인](docs/pytorch-compile.md) · [JAX → TPU 파이프라인](docs/jax-to-tpu.md)
+순서대로 읽기:
+[① 모델 → 연산](week2/01-model-to-ops.md) →
+[② 그래프·IR](week2/02-ops-to-graph-ir.md) →
+[③ 실행 코드](week2/03-ir-to-executable.md) →
+[④ 커널 실행](week2/04-dispatch-to-kernel.md) →
+[⑤ 칩 내부](week2/05-kernel-to-chip.md)
+
+- [ReLU(XW + b) 단계별 예제](week2/example-relu-linear.md)
+- [PyTorch / A100 실행 예제](week2/example-pytorch-gpu-a100.md) · [JAX / TPU v5e 실행 예제](week2/example-jax-tpu-v5e.md)
+- [PyTorch 컴파일 파이프라인](week2/pytorch-compile.md) · [JAX → TPU 파이프라인](week2/jax-to-tpu.md)
+
+### 3주차: 커널의 시간은 어디에서 소비되는가
+
+[3주차 학습 안내와 목차](week3/README.md)에서 읽을 자료와 준비 질문을 확인하세요.
+FLOPs·연산 성능, 메모리 용량·대역폭, GPU 메모리 계층을 구분하고,
+Vector Add의 연산 시간과 메모리 시간을 손계산해 병목을 판단합니다.
+개념 문서 5개와 풀이 문서 1개로 구성되며, GPU 실행 없이 읽고 계산할 수 있습니다.
 
 ## 테스트
 
