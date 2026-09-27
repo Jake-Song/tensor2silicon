@@ -18,3 +18,6 @@ toy/_build/
 # autoresearch run outputs
 autoresearch/*/results.tsv
 autoresearch/*/run.log
+autoresearch/llm_*/runs/
+autoresearch/llm_*/baseline.json
+autoresearch/llm_*/baseline.log

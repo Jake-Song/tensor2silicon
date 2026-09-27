@@ -92,3 +92,63 @@ colab console               # 원격 tmux 셸: git clone 후 위 명령 실행
 ## 새 과제 추가
 
 `gpu/`나 `tpu/`를 복사한 뒤 `bench.py`의 `SHAPES`/`reference`/벤더 기준선, `kernel.py`의 시작 커널, `program.md`의 과제 설명을 바꾼다. 요약 블록 형식은 그대로 둔다.
+
+## LLM 모델 전체 최적화
+
+실제 실행 기록: [2026-09-27 A100·TPU v6e 결과](results/2026-09-27/README.md).
+
+단일 ReLU 커널과 별도로, [roofline 결과 노트북](../notebooks/llm_roofline_results.ipynb)의
+Transformer 전체 forward를 최적화하는 실험이다. 학습이나 모델 품질 개선이 아니라,
+**같은 가중치·같은 계산 결과를 유지하면서 추론 시간을 줄이는 것**이 목표다.
+
+| | A100 | TPU v6e / v5e |
+|---|---|---|
+| 실험 디렉터리 | [`llm_gpu/`](llm_gpu) | [`llm_tpu/`](llm_tpu) |
+| 구현 | PyTorch + Triton | JAX + Pallas |
+| 고정 비교 기준 | eager PyTorch 전체 모델 | JIT JAX 전체 모델 |
+| 에이전트 수정 파일 | `model.py` | `model.py` |
+| 허용 최적화 | cuBLAS, SDPA, torch.compile, Triton, CUDA graph | XLA, JAX 연산 재구성, Pallas |
+
+- [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jake-Song/tensor2silicon/blob/main/notebooks/autoresearch_llm_gpu_a100.ipynb) [LLM A100 launcher](../notebooks/autoresearch_llm_gpu_a100.ipynb)
+- [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jake-Song/tensor2silicon/blob/main/notebooks/autoresearch_llm_tpu_v5e.ipynb) [LLM TPU v6e / v5e launcher](../notebooks/autoresearch_llm_tpu_v5e.ipynb)
+
+```bash
+cd autoresearch/llm_gpu  # TPU는 llm_tpu
+python bench.py --phase decode --smoke       # 작은 모델 검사: 점수로 사용하지 않음
+timeout 900 python bench.py --phase decode --json baseline.json > baseline.log 2>&1
+# prefill 실험은 --phase prefill로 별도 실행
+```
+
+`colab` 크기(bf16, D=2048, F=5632, 8개 층)에서 prefill은 `B=1,T=S=2048`,
+decode는 `B=8,T=1,S=2048`이다. decode는 고정 길이 cache의 마지막 슬롯을 갱신하는
+한 단계이며, 여러 토큰을 연속 생성하는 서비스 전체의 지연 시간은 아니다.
+
+전체 logits와 모든 층의 KV cache를 검사한다. 측정 전 장치 입력 준비를 끝내고,
+컴파일·warmup 후 호출마다 장치 완료를 기다린다. JAX는 logits와 cache 모두를 반환하고
+완료를 확인하므로, logits를 버려 일부 계산이 제거되는 측정을 피한다.
+`compile_and_first_call_s`는 컴파일과 최초 실행을 합친 시간이며 `time_ms`와 분리된다.
+기존 roofline의 타이밍 방식과 다르므로 저장된 수치와 직접 비교하지 않는다.
+
+실험 시작 프롬프트:
+
+```text
+Read program.md and run full-model autoresearch. Tag: llm01. Phase: decode. Stop after 30 experiments.
+```
+
+태그·단계를 포함한 시작 지시가 있으면 별도 재확인 없이 준비하고 진행한다.
+단계별 독립 worktree에서 `model.py`만 수정한다. 1% 초과 개선을 **두 번의 별도 실행**에서
+확인해야 유지하며, 폐기할 때도 후보 파일만 복구해 기존 작업과 실험 기록을 보존한다.
+모든 실패 시도도 `results.tsv`, `runs/`, `report.md`에 남긴다.
+
+로컬 검증:
+
+```bash
+uv run python -m unittest discover -s tests -p 'test_llm_autoresearch.py' -v
+# 해당 backend 패키지와 장치가 있는 환경에서:
+RUN_LLM_GPU_TESTS=1 python -m unittest discover -s tests -p 'test_llm_autoresearch.py' -v
+RUN_LLM_TPU_TESTS=1 python -m unittest discover -s tests -p 'test_llm_autoresearch.py' -v
+```
+
+기본 테스트는 scoring·출력 검사·timing 계약·실패 처리·launcher 구조를 확인한다.
+장치 테스트는 명시적으로 켜며, TPU track의 tiny `--smoke`는 JAX CPU에서도 실행할 수 있다.
+실제 성능 검증은 각 대상 장치에서 두 단계의 scored 명령을 실행해야 한다.

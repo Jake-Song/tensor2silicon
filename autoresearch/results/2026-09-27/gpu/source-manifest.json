@@ -1,0 +1,9 @@
+{
+  "autoresearch/llm_common.py": "046379c4a8c418f97502850489d685452f62a184e4115d8686530985580044d2",
+  "autoresearch/llm_gpu/model.py": "66fee7b24f5e3f859e92f58e092092530878e31809ff6105bcacfd077ba282c7",
+  "autoresearch/llm_gpu/bench.py": "3ce15e49766620fb70eb47346f3ee11f2b74fa0c5828b649ab36e5070c3ebdb1",
+  "autoresearch/llm_gpu/program.md": "aae78a97778a140498a4be5222b58155cf26e928e78afda8ddd04cae138dd787",
+  "llm_roofline/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "llm_roofline/spec.py": "c89e60a38674773f8f3f31884862678410ebaea31586e5666f9d1bea57aad900",
+  "llm_roofline/torch_llm.py": "704880735490a8f3f1baba453afc8bce1c1211cfef2a434cffec5ce4192171da"
+}

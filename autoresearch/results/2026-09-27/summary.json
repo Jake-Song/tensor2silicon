@@ -1,0 +1,191 @@
+{
+  "gpu": {
+    "device": "NVIDIA A100-SXM4-40GB",
+    "versions": {
+      "torch": "2.11.0+cu128",
+      "triton": "3.6.0"
+    },
+    "initial_ms": 7.513504100006685,
+    "best_confirmed_ms": 2.4385327999880246,
+    "reduction_pct": 67.54466667575446,
+    "speedup_vs_initial": 3.0811576945135135,
+    "best_commit": "123039c",
+    "best_method": "graph-rope-preserve-bf16-b128-w4",
+    "counts": {
+      "incorrect": 15,
+      "keep": 3,
+      "discard": 12
+    },
+    "final_validation": {
+      "prefill": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "prefill",
+        "preset": "colab",
+        "device": "NVIDIA A100-SXM4-40GB",
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "triton": "3.6.0"
+        },
+        "time_ms": 21.081852499992237,
+        "baseline_ms": 22.638571900006355,
+        "speedup": 1.0738416797107697,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 0.24995181200029037,
+        "baseline_compile_and_first_call_s": 0.02780924499984394,
+        "samples_ms": [
+          21.092292699995596,
+          21.07588610001585,
+          21.100760699982857,
+          21.07963270000255,
+          21.081852499992237,
+          21.088427699987733,
+          21.076397199976782
+        ],
+        "baseline_samples_ms": [
+          23.25476810001419,
+          22.59630990001824,
+          22.632071999987602,
+          22.676736999983405,
+          22.67841450002379,
+          22.633141200003593,
+          22.638571900006355
+        ]
+      },
+      "decode": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "NVIDIA A100-SXM4-40GB",
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "triton": "3.6.0"
+        },
+        "time_ms": 2.436258000034286,
+        "baseline_ms": 6.877832199961631,
+        "speedup": 2.8231132334362115,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 0.040780447000088316,
+        "baseline_compile_and_first_call_s": 0.01900550300024406,
+        "samples_ms": [
+          2.437171200017474,
+          2.435126800037324,
+          2.4349394999717333,
+          2.4413365999862435,
+          2.4377215999720647,
+          2.436258000034286,
+          2.43047850003677
+        ],
+        "baseline_samples_ms": [
+          6.895114500002819,
+          7.309818599969731,
+          6.926417800013951,
+          6.877832199961631,
+          6.863999500001228,
+          6.874957499985612,
+          6.8515195999680145
+        ]
+      }
+    },
+    "archive_sha256": "7f154b582f66fe200598f952bfe54195b665ff546bcd3bda7cca808b66d1a045"
+  },
+  "tpu": {
+    "device": "TPU v6 lite",
+    "versions": {
+      "jax": "0.7.2",
+      "jaxlib": "0.7.2",
+      "libtpu": "0.0.21.1"
+    },
+    "initial_ms": 1.9000259999984337,
+    "best_confirmed_ms": 1.8504220000068017,
+    "reduction_pct": 2.6107011162832983,
+    "speedup_vs_initial": 1.026806858106664,
+    "best_commit": "82c9b67",
+    "best_method": "fused-qkv-projection",
+    "counts": {
+      "incorrect": 15,
+      "keep": 1,
+      "discard": 14
+    },
+    "final_validation": {
+      "prefill": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "prefill",
+        "preset": "colab",
+        "device": "TPU v6 lite",
+        "versions": {
+          "jax": "0.7.2",
+          "jaxlib": "0.7.2",
+          "libtpu": "0.0.21.1"
+        },
+        "time_ms": 9.23010090000389,
+        "baseline_ms": 6.9803948999833665,
+        "speedup": 0.756264202916831,
+        "max_abs_err": 0.03125,
+        "compile_and_first_call_s": 5.962380453999685,
+        "baseline_compile_and_first_call_s": 6.408595529000195,
+        "samples_ms": [
+          9.299068899963459,
+          9.310558899960597,
+          9.313511900018057,
+          9.224906899999041,
+          9.23010090000389,
+          9.219503900021664,
+          9.208126900011848
+        ],
+        "baseline_samples_ms": [
+          7.0048120000137715,
+          6.997049900019192,
+          6.985528800032625,
+          6.970590099990659,
+          6.976159799978632,
+          6.971408999925188,
+          6.9803948999833665
+        ]
+      },
+      "decode": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "TPU v6 lite",
+        "versions": {
+          "jax": "0.7.2",
+          "jaxlib": "0.7.2",
+          "libtpu": "0.0.21.1"
+        },
+        "time_ms": 1.8529498999669158,
+        "baseline_ms": 1.943840999956592,
+        "speedup": 1.0490521087436304,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 2.6215772010000364,
+        "baseline_compile_and_first_call_s": 2.4542856819998633,
+        "samples_ms": [
+          1.8985340000654105,
+          1.8334170000343875,
+          1.8564619999779097,
+          1.8529498999669158,
+          1.8171429999711108,
+          1.8687040000259003,
+          1.8327009999666188
+        ],
+        "baseline_samples_ms": [
+          1.9347020000168413,
+          1.938995000000432,
+          1.960313000017777,
+          1.943840999956592,
+          1.9332998999743722,
+          1.9509480000124313,
+          1.950596000006044
+        ]
+      }
+    },
+    "archive_sha256": "5c1e6a5b0a181ce03b04352d6d10da33db21e228ed24e5413b4f937fcdf14444"
+  }
+}

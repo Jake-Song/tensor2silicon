@@ -1,0 +1,9 @@
+{
+  "autoresearch/llm_common.py": "046379c4a8c418f97502850489d685452f62a184e4115d8686530985580044d2",
+  "autoresearch/llm_tpu/model.py": "e453e2671a635c64a2fc80df399dc7ed67f6e9f11eb03c8d668177523595c36d",
+  "autoresearch/llm_tpu/bench.py": "88fcf48a0a79426727c0e666d697814fbe831433f70e37593b1c180631f0eaeb",
+  "autoresearch/llm_tpu/program.md": "e646f8a060b9cbcaad2fc7df8c14231ed3ee495effeca27e6ff2a8a61131eb80",
+  "llm_roofline/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "llm_roofline/spec.py": "c89e60a38674773f8f3f31884862678410ebaea31586e5666f9d1bea57aad900",
+  "llm_roofline/jax_llm.py": "95200c3e1397c1ad124181dd9698d3e36c486b975c0d77cc99feafa9df803aea"
+}

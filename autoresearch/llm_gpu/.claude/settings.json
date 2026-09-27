@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Bash(timeout 900 python bench.py:*)",
+      "Bash(python bench.py:*)",
+      "Bash(git:*)",
+      "Bash(grep:*)",
+      "Bash(tail:*)",
+      "Bash(cat:*)",
+      "Edit(./model.py)",
+      "Edit(./results.tsv)",
+      "Edit(./report.md)"
+    ],
+    "deny": [
+      "Edit(./bench.py)",
+      "Edit(./program.md)",
+      "Edit(./.claude/**)",
+      "Edit(../llm_common.py)",
+      "Edit(../../llm_roofline/**)"
+    ]
+  }
+}

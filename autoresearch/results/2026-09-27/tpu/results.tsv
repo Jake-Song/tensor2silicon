@@ -1,0 +1,32 @@
+experiment	commit	phase	time_ms	confirmation_ms	baseline_ms	speedup	status	description
+0	ec48765	decode	1.9000259999984337		1.9326640000144835	1.017177659682592	keep	baseline
+1	d5a05f1	decode					incorrect	xla-sdpa
+2	82c9b67	decode	1.8504220000068017	1.8434738999985711	1.8718348999982481	1.011571900891455	keep	fused-qkv-projection
+3	daf1cb1	decode					incorrect	fused-gate-up-projection
+4	861930c	decode					incorrect	matmul-fp32-output
+5	d653cf8	decode					incorrect	layer-scan-unroll-1
+6	3124570	decode					incorrect	layer-scan-unroll-2
+7	e02fa1b	decode					incorrect	layer-scan-unroll-4
+8	a47e944	decode	1.9339200000104029		1.9110458999875846	0.9881721580920124	discard	layer-scan-unroll-8
+9	c2e2e5b	decode	1.9115600000077393		1.954802899990682	1.0226217853390778	discard	dot-precision-high
+10	b7290f1	decode	1.9421988999965834		1.9239509999806614	0.9906045153171728	discard	dot-precision-highest
+11	6edcf8d	decode	1.9271939000191196		1.9380130000172358	1.0056139135755924	discard	dot-einsum
+12	2162436	decode					incorrect	layernorm-second-moment
+13	2fec615	decode					incorrect	decode-only-sdpa
+14	593df2e	decode					incorrect	decode-only-layer-scan-unroll-1
+15	4b74724	decode					incorrect	decode-only-layer-scan-unroll-2
+16	774c071	decode					incorrect	decode-only-layer-scan-unroll-4
+17	e851bfb	decode	1.9279758999800833		1.9035758999962127	0.9873442401514859	discard	decode-only-layer-scan-unroll-8
+18	859d72d	decode					incorrect	decode-only-gate-up
+19	3f8b394	decode					incorrect	decode-only-qkv-gate-up
+20	2e19082	decode					incorrect	qkv-layernorm-second-moment
+21	6e17dbe	decode					incorrect	qkv-dot-precision-high
+22	9c6c331	decode	1.8414869000025647		1.9161820000135776	1.0405623846745307	discard	qkv-dot-einsum
+23	94361b0	decode	1.8848500000331114		1.9185929999821383	1.0179022203084775	discard	qkv-flat-head-attention
+24	fceaede	decode	1.8614289999732136		1.9369420000202808	1.04056722015621	discard	qkv-flat-head-qk
+25	4423c3f	decode	1.8475759000011749		1.898685000014666	1.0276627877715112	discard	qkv-flat-head-pv
+26	e3e6cfb	decode	1.872893000017939		1.8862930000068445	1.0071547066430262	discard	qkv-flat-token-projection
+27	bc0373a	decode	1.8823069999598374		1.9248149000304693	1.022582873076251	discard	qkv-flat-token-norm
+28	35cab11	decode	1.822083000024577	1.8713649999881454	1.890376999926957	1.0374812782411444	discard	qkv-explicit-swiglu-rounding
+29	4322647	decode	1.8691139000111434		1.9178369000655948	1.0260674323026333	discard	qkv-einsum-attention
+30	a1472c6	decode	1.8770270000459277		1.8997410000338277	1.0121010512834094	discard	qkv-decode-only-projection

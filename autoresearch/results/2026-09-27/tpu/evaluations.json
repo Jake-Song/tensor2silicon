@@ -1,0 +1,1055 @@
+{
+  "baseline": {
+    "status": "ok",
+    "correct": true,
+    "scored": true,
+    "phase": "decode",
+    "preset": "colab",
+    "device": "TPU v6 lite",
+    "versions": {
+      "jax": "0.7.2",
+      "jaxlib": "0.7.2",
+      "libtpu": "0.0.21.1"
+    },
+    "time_ms": 1.9000259999984337,
+    "baseline_ms": 1.9326640000144835,
+    "speedup": 1.017177659682592,
+    "max_abs_err": 0.0,
+    "compile_and_first_call_s": 2.249696677999964,
+    "baseline_compile_and_first_call_s": 2.4708690749998823,
+    "samples_ms": [
+      1.899462999995194,
+      1.8789789000038581,
+      1.9096179999905871,
+      1.9000259999984337,
+      1.9013279999853694,
+      1.9052629000043453,
+      1.8986549999908675
+    ],
+    "baseline_samples_ms": [
+      1.937384000007114,
+      1.946139000006042,
+      1.9331499000145413,
+      1.9326640000144835,
+      1.9309989000021233,
+      1.9276579999996102,
+      1.9306950000100187
+    ]
+  },
+  "best_ms": 1.8504220000068017,
+  "best_commit": "82c9b67",
+  "trials": [
+    {
+      "experiment": 1,
+      "name": "xla-sdpa",
+      "hypothesis": "Expose attention as the JAX attention primitive so XLA can optimize score/softmax/value execution; preserve already-scaled Q.",
+      "commit": "d5a05f1",
+      "status": "incorrect",
+      "incumbent_before_ms": 1.9000259999984337,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.050293"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 2,
+      "name": "fused-qkv-projection",
+      "hypothesis": "A wider projection may improve MXU utilization at batch 8; measure whether runtime weight concatenation outweighs it.",
+      "commit": "82c9b67",
+      "status": "keep",
+      "incumbent_before_ms": 1.9000259999984337,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "TPU v6 lite",
+        "versions": {
+          "jax": "0.7.2",
+          "jaxlib": "0.7.2",
+          "libtpu": "0.0.21.1"
+        },
+        "time_ms": 1.8504220000068017,
+        "baseline_ms": 1.8718348999982481,
+        "speedup": 1.011571900891455,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 2.5701267930000995,
+        "baseline_compile_and_first_call_s": 2.37590050599988,
+        "samples_ms": [
+          1.8850919999977123,
+          1.8504220000068017,
+          1.8540819999998348,
+          1.8002430000024106,
+          1.8412658999977793,
+          1.9080399999893416,
+          1.8045779999965816
+        ],
+        "baseline_samples_ms": [
+          1.8821968999873206,
+          1.8701519999922311,
+          1.8677659999866592,
+          1.8718348999982481,
+          1.89224099999592,
+          1.8844989999934114,
+          1.863541000011537
+        ]
+      },
+      "confirmation": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "TPU v6 lite",
+        "versions": {
+          "jax": "0.7.2",
+          "jaxlib": "0.7.2",
+          "libtpu": "0.0.21.1"
+        },
+        "time_ms": 1.8434738999985711,
+        "baseline_ms": 1.90899490000902,
+        "speedup": 1.0355421359697579,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 2.5120600840000407,
+        "baseline_compile_and_first_call_s": 2.4370216150000488,
+        "samples_ms": [
+          1.8414579999898706,
+          1.841428999978234,
+          1.8454540000220732,
+          1.8434738999985711,
+          1.8445639999754349,
+          1.8477770000117744,
+          1.8430789999911212
+        ],
+        "baseline_samples_ms": [
+          1.9024140000055922,
+          1.904754000020148,
+          1.9062529999928302,
+          1.90899490000902,
+          1.912648999996236,
+          1.9095280000101411,
+          1.910053999995398
+        ]
+      }
+    },
+    {
+      "experiment": 3,
+      "name": "fused-gate-up-projection",
+      "hypothesis": "Combine the parallel gate/up matmuls into one wider MXU operation while keeping SwiGLU bf16 semantics.",
+      "commit": "daf1cb1",
+      "status": "incorrect",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.0224609"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 4,
+      "name": "matmul-fp32-output",
+      "hypothesis": "Explicit fp32 dot accumulation/output then bf16 rounding may change XLA scheduling without reducing input precision.",
+      "commit": "861930c",
+      "status": "incorrect",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.0332031"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 5,
+      "name": "layer-scan-unroll-1",
+      "hypothesis": "Replace the fully unrolled layer graph with a structured loop; compare code size/scheduling against runtime stacking and cache-copy costs.",
+      "commit": "d653cf8",
+      "status": "incorrect",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.0239258"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 6,
+      "name": "layer-scan-unroll-2",
+      "hypothesis": "Replace the fully unrolled layer graph with a structured loop; compare code size/scheduling against runtime stacking and cache-copy costs.",
+      "commit": "3124570",
+      "status": "incorrect",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.046875"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 7,
+      "name": "layer-scan-unroll-4",
+      "hypothesis": "Replace the fully unrolled layer graph with a structured loop; compare code size/scheduling against runtime stacking and cache-copy costs.",
+      "commit": "e02fa1b",
+      "status": "incorrect",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.046875"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 8,
+      "name": "layer-scan-unroll-8",
+      "hypothesis": "Replace the fully unrolled layer graph with a structured loop; compare code size/scheduling against runtime stacking and cache-copy costs.",
+      "commit": "a47e944",
+      "status": "discard",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "TPU v6 lite",
+        "versions": {
+          "jax": "0.7.2",
+          "jaxlib": "0.7.2",
+          "libtpu": "0.0.21.1"
+        },
+        "time_ms": 1.9339200000104029,
+        "baseline_ms": 1.9110458999875846,
+        "speedup": 0.9881721580920124,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 2.12746968700003,
+        "baseline_compile_and_first_call_s": 2.4396409020000647,
+        "samples_ms": [
+          1.9404390000090643,
+          1.936823000005461,
+          1.9317179000154283,
+          1.9339200000104029,
+          1.9324470000356087,
+          1.9335258999944926,
+          1.9443499999852065
+        ],
+        "baseline_samples_ms": [
+          1.9095989000106783,
+          1.922963000015443,
+          1.9070389999797044,
+          1.9104290000086621,
+          1.9110458999875846,
+          1.918630000000121,
+          1.9228499999826454
+        ]
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 9,
+      "name": "dot-precision-high",
+      "hypothesis": "Test explicit dot accumulation precision as an XLA lowering choice without reducing bf16 input precision.",
+      "commit": "c2e2e5b",
+      "status": "discard",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "TPU v6 lite",
+        "versions": {
+          "jax": "0.7.2",
+          "jaxlib": "0.7.2",
+          "libtpu": "0.0.21.1"
+        },
+        "time_ms": 1.9115600000077393,
+        "baseline_ms": 1.954802899990682,
+        "speedup": 1.0226217853390778,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 2.429803813000035,
+        "baseline_compile_and_first_call_s": 2.474167282000053,
+        "samples_ms": [
+          1.9115600000077393,
+          1.9272998999895208,
+          1.9027440000172646,
+          1.9030159000067215,
+          1.9060699999954522,
+          1.9218959999761864,
+          1.9230038999921817
+        ],
+        "baseline_samples_ms": [
+          1.954559900013919,
+          1.9609920000220882,
+          1.9786959999692044,
+          1.964527000018279,
+          1.9506010000441165,
+          1.954802899990682,
+          1.950693999970099
+        ]
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 10,
+      "name": "dot-precision-highest",
+      "hypothesis": "Test explicit dot accumulation precision as an XLA lowering choice without reducing bf16 input precision.",
+      "commit": "b7290f1",
+      "status": "discard",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "TPU v6 lite",
+        "versions": {
+          "jax": "0.7.2",
+          "jaxlib": "0.7.2",
+          "libtpu": "0.0.21.1"
+        },
+        "time_ms": 1.9421988999965834,
+        "baseline_ms": 1.9239509999806614,
+        "speedup": 0.9906045153171728,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 2.474417562000326,
+        "baseline_compile_and_first_call_s": 2.5026441319996593,
+        "samples_ms": [
+          1.938970999981393,
+          1.931508000006943,
+          1.940981899997496,
+          1.9465740000214282,
+          1.951547999988179,
+          1.944258000003174,
+          1.9421988999965834
+        ],
+        "baseline_samples_ms": [
+          1.9185789999937697,
+          1.9239509999806614,
+          1.924780900026235,
+          1.930428000014217,
+          1.920213999983389,
+          1.9262170000274637,
+          1.9160399000156758
+        ]
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 11,
+      "name": "dot-einsum",
+      "hypothesis": "Express projections as einsum to test whether XLA selects a better batch-8 contraction layout.",
+      "commit": "6edcf8d",
+      "status": "discard",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "TPU v6 lite",
+        "versions": {
+          "jax": "0.7.2",
+          "jaxlib": "0.7.2",
+          "libtpu": "0.0.21.1"
+        },
+        "time_ms": 1.9271939000191196,
+        "baseline_ms": 1.9380130000172358,
+        "speedup": 1.0056139135755924,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 2.26183720500012,
+        "baseline_compile_and_first_call_s": 2.427060834999793,
+        "samples_ms": [
+          1.9249389999913546,
+          1.9349090000105207,
+          1.9351769999957469,
+          1.92474300001777,
+          1.9271939000191196,
+          1.9257120000020223,
+          1.9323129999975208
+        ],
+        "baseline_samples_ms": [
+          1.9324149000112811,
+          1.9401600000037433,
+          1.942118000033588,
+          1.9349789999978384,
+          1.9498770000154764,
+          1.9340818999808107,
+          1.9380130000172358
+        ]
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 12,
+      "name": "layernorm-second-moment",
+      "hypothesis": "Compute LayerNorm variance using E[x\u00b2]-E[x]\u00b2 to reduce reduction dependencies, retaining fp32 statistics and correctness gates.",
+      "commit": "2162436",
+      "status": "incorrect",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.0546875"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 13,
+      "name": "decode-only-sdpa",
+      "hypothesis": "Earlier SDPA failed the prefill gate; keep prefill reference semantics and test whether the decode specialization stays within tolerance.",
+      "commit": "2fec615",
+      "status": "incorrect",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.050293"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 14,
+      "name": "decode-only-layer-scan-unroll-1",
+      "hypothesis": "Structured loops failed with the prompt shape; test a decode-only loop while leaving prefill untouched.",
+      "commit": "593df2e",
+      "status": "incorrect",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.046875"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 15,
+      "name": "decode-only-layer-scan-unroll-2",
+      "hypothesis": "Structured loops failed with the prompt shape; test a decode-only loop while leaving prefill untouched.",
+      "commit": "4b74724",
+      "status": "incorrect",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.046875"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 16,
+      "name": "decode-only-layer-scan-unroll-4",
+      "hypothesis": "Structured loops failed with the prompt shape; test a decode-only loop while leaving prefill untouched.",
+      "commit": "774c071",
+      "status": "incorrect",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.046875"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 17,
+      "name": "decode-only-layer-scan-unroll-8",
+      "hypothesis": "Structured loops failed with the prompt shape; test a decode-only loop while leaving prefill untouched.",
+      "commit": "e851bfb",
+      "status": "discard",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "TPU v6 lite",
+        "versions": {
+          "jax": "0.7.2",
+          "jaxlib": "0.7.2",
+          "libtpu": "0.0.21.1"
+        },
+        "time_ms": 1.9279758999800833,
+        "baseline_ms": 1.9035758999962127,
+        "speedup": 0.9873442401514859,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 2.1163019919999897,
+        "baseline_compile_and_first_call_s": 2.4290097990001414,
+        "samples_ms": [
+          1.9238840000070923,
+          1.9171450000158075,
+          1.9446079000317695,
+          1.937950000001365,
+          1.9387510000342445,
+          1.9279758999800833,
+          1.9268020000254182
+        ],
+        "baseline_samples_ms": [
+          1.8957880000016303,
+          1.9035758999962127,
+          1.9186940000054165,
+          1.8952809999973397,
+          1.9205280000278435,
+          1.9021008999970945,
+          1.9158319999860396
+        ]
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 18,
+      "name": "decode-only-gate-up",
+      "hypothesis": "Test a decode-only wider MLP projection, retaining the original prefill to isolate the numerical failure.",
+      "commit": "859d72d",
+      "status": "incorrect",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.0507812"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 19,
+      "name": "decode-only-qkv-gate-up",
+      "hypothesis": "Combine the confirmed QKV benefit with a decode-only wide gate/up projection.",
+      "commit": "3f8b394",
+      "status": "incorrect",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.0507812"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 20,
+      "name": "qkv-layernorm-second-moment",
+      "hypothesis": "Combine the confirmed QKV layout with this independent lowering/reduction choice; retain only a confirmed overall gain.",
+      "commit": "2e19082",
+      "status": "incorrect",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.0546875"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 21,
+      "name": "qkv-dot-precision-high",
+      "hypothesis": "Combine the confirmed QKV layout with this independent lowering/reduction choice; retain only a confirmed overall gain.",
+      "commit": "6e17dbe",
+      "status": "incorrect",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.0351562"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 22,
+      "name": "qkv-dot-einsum",
+      "hypothesis": "Combine the confirmed QKV layout with this independent lowering/reduction choice; retain only a confirmed overall gain.",
+      "commit": "9c6c331",
+      "status": "discard",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "TPU v6 lite",
+        "versions": {
+          "jax": "0.7.2",
+          "jaxlib": "0.7.2",
+          "libtpu": "0.0.21.1"
+        },
+        "time_ms": 1.8414869000025647,
+        "baseline_ms": 1.9161820000135776,
+        "speedup": 1.0405623846745307,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 2.610359851999874,
+        "baseline_compile_and_first_call_s": 2.4412842189999537,
+        "samples_ms": [
+          1.8342139999731444,
+          1.8432748999657633,
+          1.842586000020674,
+          1.828045000002021,
+          1.8460179999692627,
+          1.8353199999637582,
+          1.8414869000025647
+        ],
+        "baseline_samples_ms": [
+          1.918597999974736,
+          1.9112069999664527,
+          1.916743999981918,
+          1.9124388999898656,
+          1.9161820000135776,
+          1.9067100000029313,
+          1.9238190000123723
+        ]
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 23,
+      "name": "qkv-flat-head-attention",
+      "hypothesis": "Flatten batch and heads to expose larger batched attention contractions to the MXU scheduler.",
+      "commit": "94361b0",
+      "status": "discard",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "TPU v6 lite",
+        "versions": {
+          "jax": "0.7.2",
+          "jaxlib": "0.7.2",
+          "libtpu": "0.0.21.1"
+        },
+        "time_ms": 1.8848500000331114,
+        "baseline_ms": 1.9185929999821383,
+        "speedup": 1.0179022203084775,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 2.71184606099996,
+        "baseline_compile_and_first_call_s": 2.4734453729997767,
+        "samples_ms": [
+          1.8866930000058346,
+          1.8818989000010333,
+          1.895055000022694,
+          1.8848500000331114,
+          1.8720609999945736,
+          1.8760529999781284,
+          1.8918139999641426
+        ],
+        "baseline_samples_ms": [
+          1.9185929999821383,
+          1.9279180000012275,
+          1.9198059000245848,
+          1.9153480000113632,
+          1.9149409999954514,
+          1.91210489997502,
+          1.9202589999622433
+        ]
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 24,
+      "name": "qkv-flat-head-qk",
+      "hypothesis": "Isolate the score contraction layout from the value contraction layout.",
+      "commit": "fceaede",
+      "status": "discard",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "TPU v6 lite",
+        "versions": {
+          "jax": "0.7.2",
+          "jaxlib": "0.7.2",
+          "libtpu": "0.0.21.1"
+        },
+        "time_ms": 1.8614289999732136,
+        "baseline_ms": 1.9369420000202808,
+        "speedup": 1.04056722015621,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 2.5570723720002206,
+        "baseline_compile_and_first_call_s": 2.427834234000329,
+        "samples_ms": [
+          1.8615240000144695,
+          1.8583119000140869,
+          1.8614289999732136,
+          1.8565610000223387,
+          1.8555229999947187,
+          1.8641390000084357,
+          1.8759448999844608
+        ],
+        "baseline_samples_ms": [
+          1.9440560000020923,
+          1.924856000005093,
+          2.1136549999937415,
+          1.9240669999817328,
+          1.9318119000217848,
+          1.9369420000202808,
+          1.9387080000342394
+        ]
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 25,
+      "name": "qkv-flat-head-pv",
+      "hypothesis": "Isolate the value contraction layout to identify which attention contraction benefits.",
+      "commit": "4423c3f",
+      "status": "discard",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "TPU v6 lite",
+        "versions": {
+          "jax": "0.7.2",
+          "jaxlib": "0.7.2",
+          "libtpu": "0.0.21.1"
+        },
+        "time_ms": 1.8475759000011749,
+        "baseline_ms": 1.898685000014666,
+        "speedup": 1.0276627877715112,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 2.6341181610000604,
+        "baseline_compile_and_first_call_s": 2.580687173000115,
+        "samples_ms": [
+          1.8459639999946376,
+          1.9845880000048055,
+          1.8516170000111742,
+          1.8475759000011749,
+          1.8684930000290478,
+          1.8434980000165524,
+          1.8346159999964584
+        ],
+        "baseline_samples_ms": [
+          1.8943399999898247,
+          1.9106079999801295,
+          1.8835029999991093,
+          1.907083900005091,
+          1.9037500000194996,
+          1.898685000014666,
+          1.882780999994793
+        ]
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 26,
+      "name": "qkv-flat-token-projection",
+      "hypothesis": "Flatten B*T before all projections to expose explicit 2D GEMMs for batch-8 decode.",
+      "commit": "e3e6cfb",
+      "status": "discard",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "TPU v6 lite",
+        "versions": {
+          "jax": "0.7.2",
+          "jaxlib": "0.7.2",
+          "libtpu": "0.0.21.1"
+        },
+        "time_ms": 1.872893000017939,
+        "baseline_ms": 1.8862930000068445,
+        "speedup": 1.0071547066430262,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 2.655265090999819,
+        "baseline_compile_and_first_call_s": 2.424778764000166,
+        "samples_ms": [
+          1.8689949999497912,
+          1.8447020000166958,
+          1.8969779999679304,
+          1.8262390000018058,
+          1.890007899964985,
+          1.872893000017939,
+          1.873875000001135
+        ],
+        "baseline_samples_ms": [
+          1.9273379999958706,
+          1.9250110000029963,
+          1.9000288999905024,
+          1.8862930000068445,
+          1.8705449999742996,
+          1.8732569999883708,
+          1.8768989000363945
+        ]
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 27,
+      "name": "qkv-flat-token-norm",
+      "hypothesis": "Flatten token dimensions around LayerNorm to test reduction layout without changing its arithmetic.",
+      "commit": "bc0373a",
+      "status": "discard",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "TPU v6 lite",
+        "versions": {
+          "jax": "0.7.2",
+          "jaxlib": "0.7.2",
+          "libtpu": "0.0.21.1"
+        },
+        "time_ms": 1.8823069999598374,
+        "baseline_ms": 1.9248149000304693,
+        "speedup": 1.022582873076251,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 2.470178964000297,
+        "baseline_compile_and_first_call_s": 2.412447143999998,
+        "samples_ms": [
+          1.8954509000650432,
+          1.8808029999490827,
+          1.8689900000026682,
+          1.8734760000370443,
+          1.9006630000149016,
+          1.937675999943167,
+          1.8823069999598374
+        ],
+        "baseline_samples_ms": [
+          1.9199219000256562,
+          1.9156130000737903,
+          1.9279469999673893,
+          1.9373849999283266,
+          1.9248149000304693,
+          1.9252970000707137,
+          1.9122900000184018
+        ]
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 28,
+      "name": "qkv-explicit-swiglu-rounding",
+      "hypothesis": "Make the BF16 sigmoid/multiply boundaries explicit to explore fusion that preserves the reference precision contract.",
+      "commit": "35cab11",
+      "status": "discard",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "TPU v6 lite",
+        "versions": {
+          "jax": "0.7.2",
+          "jaxlib": "0.7.2",
+          "libtpu": "0.0.21.1"
+        },
+        "time_ms": 1.822083000024577,
+        "baseline_ms": 1.890376999926957,
+        "speedup": 1.0374812782411444,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 2.6212408809997214,
+        "baseline_compile_and_first_call_s": 2.4494931330000327,
+        "samples_ms": [
+          1.820953000060399,
+          1.828699899942876,
+          1.8659440000192262,
+          1.8204469999545836,
+          1.822083000024577,
+          1.824226999997336,
+          1.8166329999985464
+        ],
+        "baseline_samples_ms": [
+          1.8853190000299946,
+          1.8778450000354496,
+          1.8946589999359276,
+          1.8792329999996582,
+          1.890376999926957,
+          1.9022638999558694,
+          1.890778000051796
+        ]
+      },
+      "confirmation": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "TPU v6 lite",
+        "versions": {
+          "jax": "0.7.2",
+          "jaxlib": "0.7.2",
+          "libtpu": "0.0.21.1"
+        },
+        "time_ms": 1.8713649999881454,
+        "baseline_ms": 1.9369599999663478,
+        "speedup": 1.035051954043502,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 2.5898180620006315,
+        "baseline_compile_and_first_call_s": 2.3933089729998756,
+        "samples_ms": [
+          1.8882549999943876,
+          1.873432899992622,
+          1.8713649999881454,
+          1.8539949999649252,
+          1.8618510000123933,
+          1.8819029000042065,
+          1.8707530000028783
+        ],
+        "baseline_samples_ms": [
+          1.935021000008419,
+          1.9326149999869813,
+          1.9283999999970547,
+          1.9369599999663478,
+          1.9382929000130389,
+          1.9641089999822725,
+          1.9533259999661823
+        ]
+      }
+    },
+    {
+      "experiment": 29,
+      "name": "qkv-einsum-attention",
+      "hypothesis": "Express the ordinary multi-head score and value products as einsum, keeping GQA on the reference path.",
+      "commit": "4322647",
+      "status": "discard",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "TPU v6 lite",
+        "versions": {
+          "jax": "0.7.2",
+          "jaxlib": "0.7.2",
+          "libtpu": "0.0.21.1"
+        },
+        "time_ms": 1.8691139000111434,
+        "baseline_ms": 1.9178369000655948,
+        "speedup": 1.0260674323026333,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 2.5601873210007398,
+        "baseline_compile_and_first_call_s": 2.4746489329991164,
+        "samples_ms": [
+          1.8838809999579098,
+          1.8602610000016284,
+          1.8697889999202744,
+          1.8691139000111434,
+          1.8639999999322754,
+          1.8694790000154171,
+          1.865421000002243
+        ],
+        "baseline_samples_ms": [
+          1.9178369000655948,
+          1.9181210000169813,
+          1.9198779999896942,
+          1.9200130000172067,
+          1.9161198999427143,
+          1.9111260000499897,
+          1.9172539999999572
+        ]
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 30,
+      "name": "qkv-decode-only-projection",
+      "hypothesis": "Limit the confirmed packed-QKV projection to decode, keeping prefill exactly on the original path.",
+      "commit": "a1472c6",
+      "status": "discard",
+      "incumbent_before_ms": 1.8504220000068017,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "TPU v6 lite",
+        "versions": {
+          "jax": "0.7.2",
+          "jaxlib": "0.7.2",
+          "libtpu": "0.0.21.1"
+        },
+        "time_ms": 1.8770270000459277,
+        "baseline_ms": 1.8997410000338277,
+        "speedup": 1.0121010512834094,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 2.61493197100026,
+        "baseline_compile_and_first_call_s": 2.4595512429996234,
+        "samples_ms": [
+          1.8852409999453812,
+          1.8596939999952156,
+          1.8836599999303871,
+          1.8680269000469707,
+          1.8770270000459277,
+          1.8810319999829517,
+          1.867898000000423
+        ],
+        "baseline_samples_ms": [
+          1.890224999988277,
+          1.8997410000338277,
+          1.9042609000280208,
+          1.9046319999688421,
+          1.9096519999948214,
+          1.895254000010027,
+          1.8902169999819307
+        ]
+      },
+      "confirmation": null
+    }
+  ],
+  "frozen": {
+    "autoresearch/llm_common.py": "046379c4a8c418f97502850489d685452f62a184e4115d8686530985580044d2",
+    "llm_roofline/spec.py": "c89e60a38674773f8f3f31884862678410ebaea31586e5666f9d1bea57aad900",
+    "llm_roofline/jax_llm.py": "95200c3e1397c1ad124181dd9698d3e36c486b975c0d77cc99feafa9df803aea",
+    "llm_roofline/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "autoresearch/llm_tpu/bench.py": "88fcf48a0a79426727c0e666d697814fbe831433f70e37593b1c180631f0eaeb"
+  },
+  "running": false,
+  "pid": 48982,
+  "current": null
+}

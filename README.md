@@ -111,6 +111,15 @@ Claude Code가 Colab 터미널에서 `kernel.py`만 고치며 fused `ReLU(XW + b
 - [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jake-Song/tensor2silicon/blob/main/notebooks/autoresearch_gpu_a100.ipynb) [A100 · Triton launcher](notebooks/autoresearch_gpu_a100.ipynb): cuBLAS 대비 `speedup`
 - [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jake-Song/tensor2silicon/blob/main/notebooks/autoresearch_tpu_v6e.ipynb) [TPU v6e · Pallas launcher](notebooks/autoresearch_tpu_v6e.ipynb): XLA 대비 `speedup`
 
+### LLM 전체 모델 autoresearch
+
+Roofline 노트북의 Transformer를 대상으로 `model.py`를 최적화한다. prefill·decode를 별도 실험으로 실행하며,
+전체 logits와 KV cache 정확도를 유지한 채 forward 지연 시간을 줄인다. framework 연산과 직접 만든 커널을 함께 허용한다.
+
+- [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jake-Song/tensor2silicon/blob/main/notebooks/autoresearch_llm_gpu_a100.ipynb) [LLM A100 · PyTorch + Triton](notebooks/autoresearch_llm_gpu_a100.ipynb)
+- [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jake-Song/tensor2silicon/blob/main/notebooks/autoresearch_llm_tpu_v5e.ipynb) [LLM TPU v6e / v5e · JAX + Pallas](notebooks/autoresearch_llm_tpu_v5e.ipynb)
+- 실행 방법과 고정 평가 규칙: [autoresearch 안내](autoresearch/README.md#llm-모델-전체-최적화)
+
 ## 학습 문서
 
 ### 2주차: 모델에서 실리콘까지
@@ -123,7 +132,7 @@ Claude Code가 Colab 터미널에서 `kernel.py`만 고치며 fused `ReLU(XW + b
 [⑤ 칩 내부](week2/05-kernel-to-chip.md)
 
 - [ReLU(XW + b) 단계별 예제](week2/example-relu-linear.md)
-- [PyTorch / A100 실행 예제](week2/example-pytorch-gpu-a100.md) · [JAX / TPU v5e 실행 예제](week2/example-jax-tpu-v5e.md)
+- [PyTorch / A100 실행 예제](week2/example-pytorch-gpu-a100.md) · [JAX / TPU v6e / v5e 실행 예제](week2/example-jax-tpu-v5e.md)
 - [PyTorch 컴파일 파이프라인](week2/pytorch-compile.md) · [JAX → TPU 파이프라인](week2/jax-to-tpu.md)
 
 ### 3주차: 커널의 시간은 어디에서 소비되는가

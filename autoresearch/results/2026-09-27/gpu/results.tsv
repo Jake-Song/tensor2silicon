@@ -1,0 +1,32 @@
+experiment	commit	phase	time_ms	confirmation_ms	baseline_ms	speedup	status	description
+0	000009a	decode	7.513504100006685		6.859053400012272	0.9128967401516649	keep	baseline
+1	b949f44	decode					incorrect	compile-default
+2	5b6bcb0	decode					incorrect	compile-reduce-overhead
+3	6589ac6	decode					incorrect	sdpa-auto
+4	4f412e2	decode					incorrect	sdpa-math
+5	a809a4b	decode					incorrect	compile-preserve-bf16
+6	e38a731	decode					incorrect	compile-preserve-bf16-graphs
+7	2af0783	decode	6.675696799993602	6.675696799993602	6.531332899999143	0.9823554135964375	keep	native-swiglu
+8	c5731a6	decode					incorrect	native-swiglu-compile-precise
+9	fa01486	decode					incorrect	triton-layernorm-w4
+10	1da7a46	decode					incorrect	triton-layernorm-w8
+11	2913af3	decode	7.370046899995941		6.898506199991061	0.9360193080989566	discard	swiglu-block-128
+12	f03bbd1	decode	7.267645900014941		6.652447199985545	0.9153510354669135	discard	swiglu-block-512
+13	85b1e09	decode	2.662419600028443	2.6566129000002547	6.982447600012165	2.6225947254661026	keep	cuda-graph-eager
+14	16a651d	decode	2.678101900028196		6.657543500023166	2.485918664989213	discard	cuda-graph-native-swiglu
+15	1c95482	decode	6.103391399983593		6.8582636000428465	1.1236807785358944	discard	rope-preserve-bf16-b128-w4
+16	390aed5	decode	5.914121600017097		6.680940999967788	1.1296590519796674	discard	rope-preserve-bf16-b256-w4
+17	38a3ddb	decode	5.977686200003518		6.881665800028713	1.1512256698962657	discard	rope-preserve-bf16-b512-w4
+18	545c28a	decode	5.957094599989432		6.692051800018817	1.12337510974405	discard	rope-preserve-bf16-b256-w8
+19	4e0300c	decode					incorrect	layernorm-fma-w4
+20	2cf3b13	decode					incorrect	layernorm-fma-w8
+21	abfa52f	decode					incorrect	softmax-fused-w1
+22	6bcecf6	decode					incorrect	softmax-fused-w2
+23	e863ca3	decode					incorrect	softmax-fused-w4
+24	af87e80	decode					incorrect	softmax-fused-w8
+25	123039c	decode	2.4385327999880246	2.436531700004707	6.649614299976747	2.7268914734341085	keep	graph-rope-preserve-bf16-b128-w4
+26	80a9154	decode	2.436740799976178		6.631925200008482	2.721637525038903	discard	graph-rope-preserve-bf16-b256-w4
+27	18c107b	decode	2.435143699995024		6.547236500000508	2.6886448220751356	discard	graph-rope-preserve-bf16-b512-w4
+28	c28d6a0	decode	2.430806400025176		6.597357900000134	2.714061432424978	discard	graph-rope-preserve-bf16-b256-w8
+29	31cc20c	decode	2.435809899998276		6.5801746000033745	2.701431913881306	discard	graph-rope-swiglu-b512
+30	2a46355	decode	2.4479988000166486		6.859125199980554	2.8019316022270537	discard	graph-rope-swiglu-b1024

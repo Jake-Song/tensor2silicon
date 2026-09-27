@@ -1,0 +1,1072 @@
+{
+  "baseline": {
+    "status": "ok",
+    "correct": true,
+    "scored": true,
+    "phase": "decode",
+    "preset": "colab",
+    "device": "NVIDIA A100-SXM4-40GB",
+    "versions": {
+      "torch": "2.11.0+cu128",
+      "triton": "3.6.0"
+    },
+    "time_ms": 7.513504100006685,
+    "baseline_ms": 6.859053400012272,
+    "speedup": 0.9128967401516649,
+    "max_abs_err": 0.0,
+    "compile_and_first_call_s": 0.06531166600007055,
+    "baseline_compile_and_first_call_s": 0.04728876600006515,
+    "samples_ms": [
+      7.514035400004104,
+      7.509570000001986,
+      7.522712500008311,
+      7.495987499987677,
+      7.513504100006685,
+      7.514925700002095,
+      7.502942399992207
+    ],
+    "baseline_samples_ms": [
+      6.877022699995905,
+      6.859053400012272,
+      6.878654699994513,
+      6.837321800003338,
+      6.839278999996168,
+      6.831116900002598,
+      6.887106899989703
+    ]
+  },
+  "best_ms": 2.4385327999880246,
+  "best_commit": "123039c",
+  "trials": [
+    {
+      "experiment": 1,
+      "name": "compile-default",
+      "hypothesis": "Decode takes 7.51 ms and is dominated by many small launches; whole-model compiler fusion should reduce those costs.",
+      "commit": "b949f44",
+      "status": "incorrect",
+      "incumbent_before_ms": 7.513504100006685,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.0351562"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 2,
+      "name": "compile-reduce-overhead",
+      "hypothesis": "CUDA graph replay plus fusion should remove more host dispatch overhead than compilation alone.",
+      "commit": "5b6bcb0",
+      "status": "incorrect",
+      "incumbent_before_ms": 7.513504100006685,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.0351562"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 3,
+      "name": "sdpa-auto",
+      "hypothesis": "Fuse attention score/softmax/value operations while respecting the already-scaled query and causal mask.",
+      "commit": "6589ac6",
+      "status": "incorrect",
+      "incumbent_before_ms": 7.513504100006685,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.03125"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 4,
+      "name": "sdpa-math",
+      "hypothesis": "Fuse attention score/softmax/value operations while respecting the already-scaled query and causal mask.",
+      "commit": "4f412e2",
+      "status": "incorrect",
+      "incumbent_before_ms": 7.513504100006685,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.03125"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 5,
+      "name": "compile-preserve-bf16",
+      "hypothesis": "Earlier compilation failed because fusion can remove bf16 rounding; emulate_precision_casts preserves eager rounding while reducing launch count.",
+      "commit": "a809a4b",
+      "status": "incorrect",
+      "incumbent_before_ms": 7.513504100006685,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.046875"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 6,
+      "name": "compile-preserve-bf16-graphs",
+      "hypothesis": "Earlier compilation failed because fusion can remove bf16 rounding; emulate_precision_casts preserves eager rounding while reducing launch count.",
+      "commit": "e38a731",
+      "status": "incorrect",
+      "incumbent_before_ms": 7.513504100006685,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.046875"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 7,
+      "name": "native-swiglu",
+      "hypothesis": "The initial custom SwiGLU adds Python Triton launch overhead; test the native two-operation path against the 7.51 ms incumbent.",
+      "commit": "2af0783",
+      "status": "keep",
+      "incumbent_before_ms": 7.513504100006685,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "NVIDIA A100-SXM4-40GB",
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "triton": "3.6.0"
+        },
+        "time_ms": 6.64864549999038,
+        "baseline_ms": 6.531332899999143,
+        "speedup": 0.9823554135964375,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 0.007472305999954187,
+        "baseline_compile_and_first_call_s": 0.018288450999989436,
+        "samples_ms": [
+          6.630483999992975,
+          6.64864549999038,
+          6.666328699998303,
+          6.82965379999132,
+          6.620585599989681,
+          6.608219600002485,
+          6.656382799997118
+        ],
+        "baseline_samples_ms": [
+          6.5440304000048855,
+          6.520751499988364,
+          6.515591700008372,
+          6.539952999992238,
+          6.4892498000062915,
+          6.531332899999143,
+          6.742675899999995
+        ]
+      },
+      "confirmation": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "NVIDIA A100-SXM4-40GB",
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "triton": "3.6.0"
+        },
+        "time_ms": 6.675696799993602,
+        "baseline_ms": 6.650968700000703,
+        "speedup": 0.9962958024107802,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 0.007326521000095454,
+        "baseline_compile_and_first_call_s": 0.01879513600010796,
+        "samples_ms": [
+          6.675696799993602,
+          6.670801100017343,
+          6.670490800001971,
+          6.69021139999586,
+          6.678022500000225,
+          6.671692700001586,
+          6.811004899986983
+        ],
+        "baseline_samples_ms": [
+          6.873489200006588,
+          6.663169400007973,
+          6.6665273000126035,
+          6.650968700000703,
+          6.624721200000749,
+          6.632363399990027,
+          6.631238800014216
+        ]
+      }
+    },
+    {
+      "experiment": 8,
+      "name": "native-swiglu-compile-precise",
+      "hypothesis": "Combine native SwiGLU with rounding-preserving compiler fusion to remove its two launches.",
+      "commit": "c5731a6",
+      "status": "incorrect",
+      "incumbent_before_ms": 6.675696799993602,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.046875"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 9,
+      "name": "triton-layernorm-w4",
+      "hypothesis": "Fuse LayerNorm reduction and affine transform in one Triton kernel; disable FMA to preserve eager rounding and tune occupancy.",
+      "commit": "fa01486",
+      "status": "incorrect",
+      "incumbent_before_ms": 6.675696799993602,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.03125"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 10,
+      "name": "triton-layernorm-w8",
+      "hypothesis": "Fuse LayerNorm reduction and affine transform in one Triton kernel; disable FMA to preserve eager rounding and tune occupancy.",
+      "commit": "1da7a46",
+      "status": "incorrect",
+      "incumbent_before_ms": 6.675696799993602,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.03125"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 11,
+      "name": "swiglu-block-128",
+      "hypothesis": "Reduce Triton launch/tile overhead while preserving the exactly-correct baseline arithmetic.",
+      "commit": "2913af3",
+      "status": "discard",
+      "incumbent_before_ms": 6.675696799993602,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "NVIDIA A100-SXM4-40GB",
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "triton": "3.6.0"
+        },
+        "time_ms": 7.370046899995941,
+        "baseline_ms": 6.898506199991061,
+        "speedup": 0.9360193080989566,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 0.05839243500008706,
+        "baseline_compile_and_first_call_s": 0.01781842900004449,
+        "samples_ms": [
+          7.894048999992265,
+          7.534405199999128,
+          7.402295600013531,
+          7.370046899995941,
+          7.360512799982644,
+          7.3474252000096385,
+          7.347321299994292
+        ],
+        "baseline_samples_ms": [
+          7.158769800003029,
+          6.9224827999960326,
+          6.898506199991061,
+          6.8979119000005085,
+          6.873570399989148,
+          6.898727599991616,
+          6.878896299986081
+        ]
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 12,
+      "name": "swiglu-block-512",
+      "hypothesis": "Reduce Triton launch/tile overhead while preserving the exactly-correct baseline arithmetic.",
+      "commit": "f03bbd1",
+      "status": "discard",
+      "incumbent_before_ms": 6.675696799993602,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "NVIDIA A100-SXM4-40GB",
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "triton": "3.6.0"
+        },
+        "time_ms": 7.267645900014941,
+        "baseline_ms": 6.652447199985545,
+        "speedup": 0.9153510354669135,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 0.06463176599982035,
+        "baseline_compile_and_first_call_s": 0.017480093999893143,
+        "samples_ms": [
+          7.288308700003654,
+          7.267397200007508,
+          7.330984000009266,
+          7.27117429998998,
+          7.267617499996959,
+          7.267645900014941,
+          7.258409800010668
+        ],
+        "baseline_samples_ms": [
+          6.673424499990688,
+          6.652447199985545,
+          6.684373500002039,
+          6.657770700007859,
+          6.6141092999941975,
+          6.576503800010869,
+          6.576745000006667
+        ]
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 13,
+      "name": "cuda-graph-eager",
+      "hypothesis": "Whole-model compiler fusion failed bf16 correctness. CUDA graph replay removes host launches without changing the original kernels or rounding.",
+      "commit": "85b1e09",
+      "status": "keep",
+      "incumbent_before_ms": 6.675696799993602,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "NVIDIA A100-SXM4-40GB",
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "triton": "3.6.0"
+        },
+        "time_ms": 2.662419600028443,
+        "baseline_ms": 6.982447600012165,
+        "speedup": 2.6225947254661026,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 0.03802722699992955,
+        "baseline_compile_and_first_call_s": 0.01925494199986133,
+        "samples_ms": [
+          2.660188300023947,
+          2.663413300024331,
+          2.662419600028443,
+          2.6598762000048737,
+          2.693344499994055,
+          2.690086299980976,
+          2.662207399998806
+        ],
+        "baseline_samples_ms": [
+          7.193219700002373,
+          6.979357599993818,
+          6.949440700009291,
+          6.982447600012165,
+          7.024195800022426,
+          7.275411199998416,
+          6.910602500011009
+        ]
+      },
+      "confirmation": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "NVIDIA A100-SXM4-40GB",
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "triton": "3.6.0"
+        },
+        "time_ms": 2.6566129000002547,
+        "baseline_ms": 6.45778979996976,
+        "speedup": 2.4308358210445866,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 0.03613367100024334,
+        "baseline_compile_and_first_call_s": 0.018710134999764705,
+        "samples_ms": [
+          2.6574004999929457,
+          2.6566129000002547,
+          2.660444399998596,
+          2.6560190000054718,
+          2.6553909000085696,
+          2.657798999962324,
+          2.655319400037115
+        ],
+        "baseline_samples_ms": [
+          6.4655713999854925,
+          6.4653040999928635,
+          6.455020200019135,
+          6.45778979996976,
+          6.437728299988521,
+          6.456028599995989,
+          6.704252100007579
+        ]
+      }
+    },
+    {
+      "experiment": 14,
+      "name": "cuda-graph-native-swiglu",
+      "hypothesis": "Replay native SwiGLU operations with CUDA graphs to avoid Python overhead while keeping reference arithmetic.",
+      "commit": "16a651d",
+      "status": "discard",
+      "incumbent_before_ms": 2.662419600028443,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "NVIDIA A100-SXM4-40GB",
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "triton": "3.6.0"
+        },
+        "time_ms": 2.678101900028196,
+        "baseline_ms": 6.657543500023166,
+        "speedup": 2.485918664989213,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 0.032305676999840216,
+        "baseline_compile_and_first_call_s": 0.018914403000053426,
+        "samples_ms": [
+          2.6789430000007997,
+          2.679152999962753,
+          2.674292500023512,
+          2.675490899991928,
+          2.6745862000097986,
+          2.6806217999819637,
+          2.678101900028196
+        ],
+        "baseline_samples_ms": [
+          6.692627900019943,
+          6.684545200005232,
+          6.6561406999881,
+          6.622945199978858,
+          6.638391400019827,
+          6.657543500023166,
+          6.698468200011121
+        ]
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 15,
+      "name": "rope-preserve-bf16-b128-w4",
+      "hypothesis": "Fuse rotation and head transpose but explicitly round each multiply to bf16, preserving the eager RoPE arithmetic that whole-graph fusion changed.",
+      "commit": "1c95482",
+      "status": "discard",
+      "incumbent_before_ms": 2.662419600028443,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "NVIDIA A100-SXM4-40GB",
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "triton": "3.6.0"
+        },
+        "time_ms": 6.103391399983593,
+        "baseline_ms": 6.8582636000428465,
+        "speedup": 1.1236807785358944,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 0.15535817199997837,
+        "baseline_compile_and_first_call_s": 0.017966506999982812,
+        "samples_ms": [
+          6.103391399983593,
+          6.083881899985499,
+          6.066838000015196,
+          6.0852193999835436,
+          6.556341700024859,
+          6.395967800017388,
+          6.248218800010363
+        ],
+        "baseline_samples_ms": [
+          6.8911785000182135,
+          6.852795299982972,
+          6.932663199995659,
+          6.8384169999717415,
+          6.8506931999763765,
+          6.8582636000428465,
+          7.056243000033646
+        ]
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 16,
+      "name": "rope-preserve-bf16-b256-w4",
+      "hypothesis": "Fuse rotation and head transpose but explicitly round each multiply to bf16, preserving the eager RoPE arithmetic that whole-graph fusion changed.",
+      "commit": "390aed5",
+      "status": "discard",
+      "incumbent_before_ms": 2.662419600028443,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "NVIDIA A100-SXM4-40GB",
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "triton": "3.6.0"
+        },
+        "time_ms": 5.914121600017097,
+        "baseline_ms": 6.680940999967788,
+        "speedup": 1.1296590519796674,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 0.16229454199992688,
+        "baseline_compile_and_first_call_s": 0.017539508000027126,
+        "samples_ms": [
+          5.920112100011465,
+          5.914121600017097,
+          7.277269500036709,
+          6.030444299994997,
+          5.903781400002117,
+          5.87900069999705,
+          5.901440100024047
+        ],
+        "baseline_samples_ms": [
+          6.680940999967788,
+          6.668331299988495,
+          6.673754900020867,
+          6.699435900009121,
+          6.660236999960034,
+          6.68246199998066,
+          6.69458030001806
+        ]
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 17,
+      "name": "rope-preserve-bf16-b512-w4",
+      "hypothesis": "Fuse rotation and head transpose but explicitly round each multiply to bf16, preserving the eager RoPE arithmetic that whole-graph fusion changed.",
+      "commit": "38a3ddb",
+      "status": "discard",
+      "incumbent_before_ms": 2.662419600028443,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "NVIDIA A100-SXM4-40GB",
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "triton": "3.6.0"
+        },
+        "time_ms": 5.977686200003518,
+        "baseline_ms": 6.881665800028713,
+        "speedup": 1.1512256698962657,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 0.18384366000009322,
+        "baseline_compile_and_first_call_s": 0.017801582000174676,
+        "samples_ms": [
+          6.36275229999228,
+          6.1242987000241556,
+          5.997428899991064,
+          5.971260299975256,
+          5.975392799973633,
+          5.977686200003518,
+          5.969060100005663
+        ],
+        "baseline_samples_ms": [
+          6.916815900012807,
+          6.89142430001084,
+          6.881665800028713,
+          6.839197299996158,
+          6.834068399984972,
+          7.203357499975027,
+          6.857540400005746
+        ]
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 18,
+      "name": "rope-preserve-bf16-b256-w8",
+      "hypothesis": "Fuse rotation and head transpose but explicitly round each multiply to bf16, preserving the eager RoPE arithmetic that whole-graph fusion changed.",
+      "commit": "545c28a",
+      "status": "discard",
+      "incumbent_before_ms": 2.662419600028443,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "NVIDIA A100-SXM4-40GB",
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "triton": "3.6.0"
+        },
+        "time_ms": 5.957094599989432,
+        "baseline_ms": 6.692051800018817,
+        "speedup": 1.12337510974405,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 0.15133023199996387,
+        "baseline_compile_and_first_call_s": 0.017730129000028683,
+        "samples_ms": [
+          6.324632499990912,
+          5.967354499989597,
+          5.963899599964861,
+          5.946688999983962,
+          5.952765800020643,
+          5.9532288999889715,
+          5.957094599989432
+        ],
+        "baseline_samples_ms": [
+          6.752347600013309,
+          6.739064999965194,
+          6.699310299973149,
+          6.686567199994897,
+          6.677908800020305,
+          6.692051800018817,
+          6.688048400019397
+        ]
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 19,
+      "name": "layernorm-fma-w4",
+      "hypothesis": "Check whether fused multiply-add matches the reference LayerNorm implementation better than the earlier non-FMA reduction.",
+      "commit": "4e0300c",
+      "status": "incorrect",
+      "incumbent_before_ms": 2.662419600028443,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.03125"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 20,
+      "name": "layernorm-fma-w8",
+      "hypothesis": "Check whether fused multiply-add matches the reference LayerNorm implementation better than the earlier non-FMA reduction.",
+      "commit": "2cf3b13",
+      "status": "incorrect",
+      "incumbent_before_ms": 2.662419600028443,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.03125"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 21,
+      "name": "softmax-fused-w1",
+      "hypothesis": "Fuse masking and softmax in one launch, keeping bf16 probabilities before the value matmul; test reduction occupancy.",
+      "commit": "abfa52f",
+      "status": "incorrect",
+      "incumbent_before_ms": 2.662419600028443,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.0546875"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 22,
+      "name": "softmax-fused-w2",
+      "hypothesis": "Fuse masking and softmax in one launch, keeping bf16 probabilities before the value matmul; test reduction occupancy.",
+      "commit": "6bcecf6",
+      "status": "incorrect",
+      "incumbent_before_ms": 2.662419600028443,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.0546875"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 23,
+      "name": "softmax-fused-w4",
+      "hypothesis": "Fuse masking and softmax in one launch, keeping bf16 probabilities before the value matmul; test reduction occupancy.",
+      "commit": "e863ca3",
+      "status": "incorrect",
+      "incumbent_before_ms": 2.662419600028443,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.0546875"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 24,
+      "name": "softmax-fused-w8",
+      "hypothesis": "Fuse masking and softmax in one launch, keeping bf16 probabilities before the value matmul; test reduction occupancy.",
+      "commit": "af87e80",
+      "status": "incorrect",
+      "incumbent_before_ms": 2.662419600028443,
+      "first": {
+        "status": "incorrect",
+        "correct": false,
+        "scored": false,
+        "phase": "decode",
+        "error": "output/0: max_abs_err=0.0546875"
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 25,
+      "name": "graph-rope-preserve-bf16-b128-w4",
+      "hypothesis": "The standalone RoPE kernel passed correctness; combine it with the confirmed CUDA graph improvement to reduce device-side kernel launches as well.",
+      "commit": "123039c",
+      "status": "keep",
+      "incumbent_before_ms": 2.662419600028443,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "NVIDIA A100-SXM4-40GB",
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "triton": "3.6.0"
+        },
+        "time_ms": 2.4385327999880246,
+        "baseline_ms": 6.649614299976747,
+        "speedup": 2.7268914734341085,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 0.03406583800006047,
+        "baseline_compile_and_first_call_s": 0.018882182000197645,
+        "samples_ms": [
+          2.43323749996307,
+          2.440547400010473,
+          2.4628746999951545,
+          2.4473178000334883,
+          2.4313149000136036,
+          2.4385327999880246,
+          2.4322277000010217
+        ],
+        "baseline_samples_ms": [
+          6.786650100002589,
+          6.580959200027792,
+          6.557432299996435,
+          6.5792603000318195,
+          6.665057700001853,
+          6.649614299976747,
+          6.8374895000033575
+        ]
+      },
+      "confirmation": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "NVIDIA A100-SXM4-40GB",
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "triton": "3.6.0"
+        },
+        "time_ms": 2.436531700004707,
+        "baseline_ms": 6.845050700030697,
+        "speedup": 2.8093419429008346,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 0.033929168000213394,
+        "baseline_compile_and_first_call_s": 0.018845592999696237,
+        "samples_ms": [
+          2.443940000011935,
+          2.4351448999823333,
+          2.4392920000082086,
+          2.436195099971883,
+          2.436531700004707,
+          2.4389166999753797,
+          2.432824100014841
+        ],
+        "baseline_samples_ms": [
+          6.880210400004216,
+          6.857679299992014,
+          6.845050700030697,
+          6.814864400030274,
+          7.124602000021696,
+          6.821139000021503,
+          6.819994400029827
+        ]
+      }
+    },
+    {
+      "experiment": 26,
+      "name": "graph-rope-preserve-bf16-b256-w4",
+      "hypothesis": "The standalone RoPE kernel passed correctness; combine it with the confirmed CUDA graph improvement to reduce device-side kernel launches as well.",
+      "commit": "80a9154",
+      "status": "discard",
+      "incumbent_before_ms": 2.4385327999880246,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "NVIDIA A100-SXM4-40GB",
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "triton": "3.6.0"
+        },
+        "time_ms": 2.436740799976178,
+        "baseline_ms": 6.631925200008482,
+        "speedup": 2.721637525038903,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 0.03406492199974309,
+        "baseline_compile_and_first_call_s": 0.02127866599994377,
+        "samples_ms": [
+          2.4331542999789235,
+          2.440665899985106,
+          2.430190199993376,
+          2.436740799976178,
+          2.4442593999992823,
+          2.4420187000032456,
+          2.4292200000218145
+        ],
+        "baseline_samples_ms": [
+          6.631925200008482,
+          6.635039899992989,
+          6.605428600005325,
+          6.602041399992231,
+          6.778989799977353,
+          6.6501590000370925,
+          6.589103399983287
+        ]
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 27,
+      "name": "graph-rope-preserve-bf16-b512-w4",
+      "hypothesis": "The standalone RoPE kernel passed correctness; combine it with the confirmed CUDA graph improvement to reduce device-side kernel launches as well.",
+      "commit": "18c107b",
+      "status": "discard",
+      "incumbent_before_ms": 2.4385327999880246,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "NVIDIA A100-SXM4-40GB",
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "triton": "3.6.0"
+        },
+        "time_ms": 2.435143699995024,
+        "baseline_ms": 6.547236500000508,
+        "speedup": 2.6886448220751356,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 0.033458167999924626,
+        "baseline_compile_and_first_call_s": 0.018671067000013863,
+        "samples_ms": [
+          2.44622770001115,
+          2.445731500029069,
+          2.435143699995024,
+          2.432437800007392,
+          2.4333075000413373,
+          2.4330999000085285,
+          2.44394490000559
+        ],
+        "baseline_samples_ms": [
+          6.516850500020155,
+          6.515208900009384,
+          6.509246800032997,
+          7.001917600018714,
+          6.571965600005569,
+          6.547236500000508,
+          6.561741499990603
+        ]
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 28,
+      "name": "graph-rope-preserve-bf16-b256-w8",
+      "hypothesis": "The standalone RoPE kernel passed correctness; combine it with the confirmed CUDA graph improvement to reduce device-side kernel launches as well.",
+      "commit": "c28d6a0",
+      "status": "discard",
+      "incumbent_before_ms": 2.4385327999880246,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "NVIDIA A100-SXM4-40GB",
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "triton": "3.6.0"
+        },
+        "time_ms": 2.430806400025176,
+        "baseline_ms": 6.597357900000134,
+        "speedup": 2.714061432424978,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 0.03391515500015885,
+        "baseline_compile_and_first_call_s": 0.01884816400024647,
+        "samples_ms": [
+          2.434700999992856,
+          2.4313801000062085,
+          2.430707599978632,
+          2.4284125000122003,
+          2.437748499960435,
+          2.429182400010177,
+          2.430806400025176
+        ],
+        "baseline_samples_ms": [
+          6.698384599985729,
+          6.588517199998023,
+          6.58225079996555,
+          7.019295300005979,
+          6.563181999990775,
+          6.597357900000134,
+          7.028184999990117
+        ]
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 29,
+      "name": "graph-rope-swiglu-b512",
+      "hypothesis": "With host overhead removed and RoPE fused, tune SwiGLU tile size for the remaining small device workload.",
+      "commit": "31cc20c",
+      "status": "discard",
+      "incumbent_before_ms": 2.4385327999880246,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "NVIDIA A100-SXM4-40GB",
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "triton": "3.6.0"
+        },
+        "time_ms": 2.435809899998276,
+        "baseline_ms": 6.5801746000033745,
+        "speedup": 2.701431913881306,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 0.0333480649997,
+        "baseline_compile_and_first_call_s": 0.01874926000027699,
+        "samples_ms": [
+          2.437037500021688,
+          2.4360852999961935,
+          2.4357492000035563,
+          2.435809899998276,
+          2.438167699983751,
+          2.4348749999717256,
+          2.4356522999823937
+        ],
+        "baseline_samples_ms": [
+          6.588371499992718,
+          6.579693799994857,
+          6.61750529998244,
+          6.864116599990666,
+          6.555316399999356,
+          6.561150900006396,
+          6.5801746000033745
+        ]
+      },
+      "confirmation": null
+    },
+    {
+      "experiment": 30,
+      "name": "graph-rope-swiglu-b1024",
+      "hypothesis": "With host overhead removed and RoPE fused, tune SwiGLU tile size for the remaining small device workload.",
+      "commit": "2a46355",
+      "status": "discard",
+      "incumbent_before_ms": 2.4385327999880246,
+      "first": {
+        "status": "ok",
+        "correct": true,
+        "scored": true,
+        "phase": "decode",
+        "preset": "colab",
+        "device": "NVIDIA A100-SXM4-40GB",
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "triton": "3.6.0"
+        },
+        "time_ms": 2.4479988000166486,
+        "baseline_ms": 6.859125199980554,
+        "speedup": 2.8019316022270537,
+        "max_abs_err": 0.0,
+        "compile_and_first_call_s": 0.09558151100009127,
+        "baseline_compile_and_first_call_s": 0.018485141999917687,
+        "samples_ms": [
+          2.45982329997787,
+          2.455050700018546,
+          2.4479988000166486,
+          2.445724000017435,
+          2.4386570999922697,
+          2.4513670000033017,
+          2.4376583000048413
+        ],
+        "baseline_samples_ms": [
+          6.907753999985289,
+          6.90470690001348,
+          7.109739299994544,
+          6.852876199991442,
+          6.859125199980554,
+          6.840270500015322,
+          6.850000700023884
+        ]
+      },
+      "confirmation": null
+    }
+  ],
+  "frozen": {
+    "autoresearch/llm_common.py": "046379c4a8c418f97502850489d685452f62a184e4115d8686530985580044d2",
+    "llm_roofline/spec.py": "c89e60a38674773f8f3f31884862678410ebaea31586e5666f9d1bea57aad900",
+    "llm_roofline/torch_llm.py": "704880735490a8f3f1baba453afc8bce1c1211cfef2a434cffec5ce4192171da",
+    "llm_roofline/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "autoresearch/llm_gpu/bench.py": "3ce15e49766620fb70eb47346f3ee11f2b74fa0c5828b649ab36e5070c3ebdb1"
+  },
+  "running": false,
+  "pid": 12473,
+  "current": null
+}
