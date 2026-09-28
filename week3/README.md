@@ -88,3 +88,15 @@ $$
 - 예상 실행시간을 말할 때 입력 위치, 이동 횟수, 성능 활용과 중첩 가정을 함께 말할 수 있는가?
 
 추가로 좋은 자료를 찾았다면 링크만 공유하지 않고, **어떤 질문에 도움이 되는지와 읽을 범위**를 함께 적는다.
+
+## 7. 애니메이션 설명 영상
+
+한국어 내레이션과 자막을 포함한 10분 설명 영상의 구성, 원본 대본, 재생성 방법은
+[영상 제작 안내](./video/README.md)에 정리했다. 개선본은 검은 배경의 2D 도형과
+수식이 설명 순서에 따라 전개되며, Vector Add와 병목 변화를 애니메이션으로 보여준다.
+[10분 개선본](./video/week3-intuition.ko.mp4)과
+[45초 미리보기](./video/week3-intuition-preview.ko.mp4)는 로컬 생성 후 재생할 수 있다.
+[ElevenLabs 남성 저음 버전](./video/week3-intuition-elevenlabs.ko.mp4)과
+[목소리 미리보기](./video/week3-intuition-elevenlabs-preview.ko.mp4)도 제공한다.
+기존 Blender 영상과 원본 프로젝트도 함께 보존한다.
+생성한 MP4와 Blender 파일은 `week3/video/`에 로컬 산출물로 저장하며 Git에는 포함하지 않는다.

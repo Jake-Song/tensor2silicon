@@ -11,7 +11,7 @@
 | 메모리 용량 | 동시에 저장할 수 있는 양 | Byte | 필요한 텐서가 메모리에 들어가는가? |
 | 메모리 대역폭 | 초당 이동할 수 있는 양 | Byte/s | 읽고 쓰는 데 적어도 얼마가 걸리는가? |
 
-용어: 대역폭(bandwidth)은 단위 시간당 전송량이다. 한 번의 요청에 응답이 올 때까지의 지연 시간(latency)과 구분한다.
+용어: 대역폭(bandwidth)은 단위 시간당 전송량이다. 
 
 메모리가 16 GB라는 것은 저장 공간의 크기를 말한다. 대역폭이 1 TB/s라는 것은 초당 옮길 수 있는 양을 말하며, 저장 공간이 1 TB라는 뜻이 아니다. GPU의 메모리와 연산 장치 구성은 [NVIDIA GPU Architecture Fundamentals](https://docs.nvidia.com/deeplearning/performance/dl-performance-gpu-background/index.html)에서 함께 확인할 수 있다.
 

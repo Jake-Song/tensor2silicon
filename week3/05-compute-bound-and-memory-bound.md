@@ -16,7 +16,6 @@ $$
 |---|---|---|
 | 연산 시간 > 메모리 시간 | Compute-bound | 연산 처리 성능 |
 | 메모리 시간 > 연산 시간 | Memory-bound | 메모리 대역폭 |
-| 두 시간이 같거나 비슷함 | 경계 또는 두 제약이 비슷한 상황 | 하나만 개선해도 다른 제약에 곧 도달함 |
 
 용어: 병목(bottleneck)은 전체 작업의 진행 속도를 제한하는 부분이다. Compute-bound는 연산에, 여기서 Memory-bound는 메모리 대역폭에 성능이 제한된다는 뜻이다.
 
@@ -54,11 +53,9 @@ $$
 
 ## 5. 계산이 적은데도 느릴 수 있다
 
-Vector Add는 각 위치에서 덧셈 한 번만 하지만 두 입력을 읽고 결과를 써야 한다. 입력이 크면 총 이동량도 커진다. 따라서 덧셈 횟수만 보아 실행이 짧다고 판단할 수 없다.
+Vector Add는 각 위치에서 덧셈 한 번만 하지만 두 입력을 읽고 결과를 써야 한다. 입력이 크면 총 이동량도 커진다. 따라서 덧셈 횟수만 보아 실행시간이 짧다고 판단할 수 없다.
 
-같은 형태의 문제는 원소별 활성화 연산에서도 볼 수 있다. 입력과 출력의 이동에 비해 계산이 적으면 메모리 대역폭이 중요한 제한 요인이 된다. 다만 아주 작은 입력에서는 대역폭을 충분히 쓰지 못하고 지연이나 실행 준비 비용이 더 중요할 수 있다. [NVIDIA: Memory-Limited Layers / Activations](https://docs.nvidia.com/deeplearning/performance/dl-performance-memory-limited/index.html)
-
-**“원소별 연산은 언제나 Memory-bound다”라고 일반화하지 않는다.** 이번 Vector Add의 판정은 주어진 계산량·이동량·하드웨어 성능을 대입한 결과여야 한다.
+같은 형태의 문제는 원소별 활성화(activation) 연산에서도 볼 수 있다. 입력과 출력의 이동에 비해 계산이 적으면 메모리 대역폭이 중요한 제한 요인이 된다. 다만 아주 작은 입력에서는 대역폭을 충분히 쓰지 못하고 지연이나 실행 준비 비용으로 실행 시간이 더 걸릴 수 있다. [NVIDIA: Memory-Limited Layers / Activations](https://docs.nvidia.com/deeplearning/performance/dl-performance-memory-limited/index.html)
 
 ## 6. 확인 질문
 
