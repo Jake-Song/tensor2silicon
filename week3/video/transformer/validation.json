@@ -1,0 +1,33 @@
+{
+  "params": 542183424,
+  "matmuls": 73,
+  "arithmetic": "passed",
+  "convention": "dense forward, 2 FLOPs/MAC; other op estimates from spec.py",
+  "voice": "ko-KR-SunHiNeural",
+  "scenes": 29,
+  "duration": 600,
+  "resolution": [
+    1920,
+    1080
+  ],
+  "fps": 30,
+  "frames": 18000,
+  "chapters": 9,
+  "full_decode": "passed",
+  "tempo": 1.1432957746478873,
+  "sha256": "c387645569185241bee44c8d8331619bc2c03192511ced5fbc68e8a81b27b2e1",
+  "sources": [
+    {
+      "title": "Attention Is All You Need",
+      "url": "https://arxiv.org/html/1706.03762v7"
+    },
+    {
+      "title": "GLU Variants Improve Transformer",
+      "url": "https://arxiv.org/abs/2002.05202"
+    },
+    {
+      "title": "RoFormer",
+      "url": "https://arxiv.org/abs/2104.09864"
+    }
+  ]
+}

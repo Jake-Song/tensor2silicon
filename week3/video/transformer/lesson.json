@@ -1,0 +1,527 @@
+[
+  {
+    "chapter": "01 전체 지도",
+    "title": "Transformer를 연산 지도로 읽기",
+    "kind": "overview",
+    "focus": "all",
+    "count": 0,
+    "narration": "문장을 입력하면 어떤 계산이 일어날까요? 토큰은 숫자 벡터로 바뀌고 여러 층을 통과한 뒤 다음 토큰의 점수가 됩니다. 이 길을 따라가며 행렬곱을 하나씩 세어 보겠습니다. 연산의 역할과 학습된 숫자의 개수, 그리고 계산량을 구분해서 살펴보겠습니다.",
+    "takeaway": "구조 → 역할 → shape → 파라미터 → FLOPs",
+    "lines": [
+      "토큰 ID",
+      "Embedding",
+      "Transformer × 8",
+      "Final norm → LM head",
+      "다음 토큰의 점수"
+    ],
+    "formula": "",
+    "params": "",
+    "flops": "",
+    "cue": ""
+  },
+  {
+    "chapter": "01 전체 지도",
+    "title": "한 층을 열면 두 개의 큰 흐름",
+    "kind": "block",
+    "focus": "all",
+    "count": 0,
+    "narration": "기준은 이 저장소의 디코더 전용 언어 모델입니다. 한 층에는 토큰 사이의 정보를 섞는 어텐션과, 각 토큰의 특징을 바꾸는 피드포워드가 있습니다. 스위글루를 사용하는 이 모델은 한 층에 행렬곱이 아홉 개입니다. 지도에 번호를 붙이며 따라가겠습니다.",
+    "takeaway": "Self-attention + SwiGLU FFN · 한 층의 논리적 matmul 9개",
+    "lines": [
+      "Attention: 토큰 사이 정보 교환",
+      "FFN: 토큰별 특징 변환",
+      "Residual: 원래 입력을 더하기"
+    ],
+    "formula": "",
+    "params": "",
+    "flops": "",
+    "cue": ""
+  },
+  {
+    "chapter": "02 숫자를 세는 기준",
+    "title": "파라미터와 중간 결과는 다르다",
+    "kind": "params",
+    "focus": "embed",
+    "count": 0,
+    "narration": "파라미터는 학습으로 정해지고 추론에서 재사용하는 숫자입니다. 주황색 가중치의 칸 수가 파라미터 수입니다. 청록색 입력과 보라색 출력은 문장마다 바뀌는 중간 결과입니다. 긴 문장을 넣어도 같은 가중치를 쓰므로, 중간 결과가 커져도 파라미터는 늘지 않습니다.",
+    "takeaway": "주황 = 학습 가중치 · 청록 = 입력 activation · 보라 = 계산 결과",
+    "lines": [
+      "X: 문장마다 달라지는 값",
+      "W: 추론에서 재사용하는 값",
+      "Y: 이번 입력으로 계산한 값"
+    ],
+    "formula": "X @ W = Y",
+    "params": "W의 행 수 × 열 수",
+    "flops": "입력 크기에 따라 달라짐",
+    "cue": ""
+  },
+  {
+    "chapter": "02 숫자를 세는 기준",
+    "title": "matmul: 칸 하나를 계산하는 방법",
+    "kind": "matmul",
+    "focus": "all",
+    "count": 0,
+    "narration": "왼쪽 행과 오른쪽 열의 같은 위치를 곱한 뒤 더하면 출력 한 칸이 됩니다. 이를 모든 출력 칸에 반복합니다. 곱셈과 덧셈을 각각 한 플롭으로 세겠습니다. 길이 케이의 내적은 약 이 케이 플롭이고, 출력이 엠 곱하기 엔 칸이므로 전체는 약 이 엠 케이 엔입니다.",
+    "takeaway": "MAC 1회 ≈ 2 FLOPs · FLOPs는 일의 양, FLOP/s는 처리 속도",
+    "lines": [
+      "왼쪽의 한 행 × 오른쪽의 한 열",
+      "곱한 값들을 더하면 출력 한 칸",
+      "출력 m×n칸에 반복"
+    ],
+    "formula": "[m,k] @ [k,n] → [m,n]",
+    "params": "가중치 W라면 k × n",
+    "flops": "≈ 2 × m × k × n",
+    "cue": ""
+  },
+  {
+    "chapter": "02 숫자를 세는 기준",
+    "title": "shape를 읽는 다섯 가지 기호",
+    "kind": "symbols",
+    "focus": "all",
+    "count": 0,
+    "narration": "비는 한 번에 처리하는 문장 수, 티는 이번 입력 토큰 수입니다. 디는 토큰 벡터의 폭입니다. 에스는 어텐션이 참고하는 전체 토큰 수, 에프는 피드포워드 안에서 넓어지는 폭입니다. 문장을 처음 읽을 때는 티와 에스가 같지만, 새 토큰 하나를 생성할 때는 다릅니다.",
+    "takeaway": "입력 X: [B,T,D] · 선형층에서는 [BT,D]로 생각하기",
+    "lines": [
+      "B  문장 수 / batch",
+      "T  이번 입력 토큰 수",
+      "S  참고할 KV 길이",
+      "D  모델 폭 / F  FFN 폭"
+    ],
+    "formula": "",
+    "params": "",
+    "flops": "",
+    "cue": ""
+  },
+  {
+    "chapter": "03 입력과 QKV",
+    "title": "Embedding: 필요한 행을 꺼내기",
+    "kind": "embedding",
+    "focus": "embed",
+    "count": 0,
+    "narration": "토큰 번호로 임베딩 표의 행을 고릅니다. 어휘가 브이 개, 각 행의 폭이 디라면 파라미터는 브이 곱하기 디 개입니다. 하지만 표 전체와 행렬곱을 하지는 않습니다. 필요한 행만 읽으므로 산술 플롭은 영으로 셉니다. 파라미터는 많아도 산술 계산은 작을 수 있습니다.",
+    "takeaway": "Embedding: 파라미터는 있지만 matmul은 아니다",
+    "lines": [
+      "토큰 ID → 표의 행 번호",
+      "선택한 행을 순서대로 모으기",
+      "[B,T] → [B,T,D]"
+    ],
+    "formula": "Embedding[token_id]",
+    "params": "V × D",
+    "flops": "0 · lookup의 산술 집계",
+    "cue": ""
+  },
+  {
+    "chapter": "03 입력과 QKV",
+    "title": "LayerNorm: 토큰 안에서 크기 정돈",
+    "kind": "norm",
+    "focus": "norm1",
+    "count": 0,
+    "narration": "레이어 정규화는 토큰의 특징에서 평균과 분산을 구합니다. 평균을 빼고 표준편차로 나눈 뒤, 학습된 스케일과 바이어스를 적용합니다. 디 길이의 벡터 두 개이므로 파라미터는 이 디 개입니다. 행렬곱은 아니지만 합산과 원소별 계산이 필요합니다.",
+    "takeaway": "이 저장소는 LayerNorm 사용 · RMSNorm과 구분",
+    "lines": [
+      "평균·분산: 특징 축 D에서 계산",
+      "(x − 평균) / 표준편차",
+      "학습된 γ를 곱하고 β를 더하기"
+    ],
+    "formula": "LN(X) → [B,T,D]",
+    "params": "2D",
+    "flops": "≈ 8BTD · 저장소 근사",
+    "cue": ""
+  },
+  {
+    "chapter": "03 입력과 QKV",
+    "title": "① Q projection: 무엇을 찾을까?",
+    "kind": "projection",
+    "focus": "qkv",
+    "count": 1,
+    "narration": "첫 번째 행렬곱은 쿼리를 만듭니다. 정규화된 입력에 가중치를 곱해, 각 토큰이 무엇을 찾을지 표현합니다. 가중치 크기는 디 곱하기 디라서 파라미터는 디의 제곱입니다. 입력 행이 비 티 개이므로 계산량은 이 비 티 디 제곱입니다. 모든 토큰이 같은 가중치를 사용합니다.",
+    "takeaway": "Q: 다른 토큰에서 찾을 정보의 표현",
+    "lines": [
+      "입력 [BT,D]",
+      "학습 가중치 Wq [D,D]",
+      "Query [BT,D]"
+    ],
+    "formula": "Q = LN(X) @ Wq",
+    "params": "D²",
+    "flops": "2BTD²",
+    "cue": ""
+  },
+  {
+    "chapter": "03 입력과 QKV",
+    "title": "② K · ③ V: 비교 기준과 전달할 내용",
+    "kind": "qkv",
+    "focus": "qkv",
+    "count": 3,
+    "narration": "같은 입력에서 키와 밸류도 만듭니다. 키는 쿼리와 비교할 기준이고, 밸류는 전달할 내용입니다. 모양이 같아도 세 가중치는 서로 다릅니다. 쿼리, 키, 밸류를 만드는 행렬곱이 각각 하나씩, 지금까지 세 개입니다. 예제는 세 종류의 헤드 수가 같은 구조입니다.",
+    "takeaway": "Q·K·V: 독립된 가중치 3개 · matmul 누적 3개",
+    "lines": [
+      "Q = Xnorm @ Wq",
+      "K = Xnorm @ Wk",
+      "V = Xnorm @ Wv"
+    ],
+    "formula": "[BT,D] @ [D,D] → [BT,D]",
+    "params": "Q·K·V 합계 3D²",
+    "flops": "Q·K·V 합계 6BTD²",
+    "cue": ""
+  },
+  {
+    "chapter": "04 Attention",
+    "title": "Head 분리와 RoPE: 위치를 담기",
+    "kind": "heads",
+    "focus": "rope",
+    "count": 3,
+    "narration": "벡터의 폭을 여러 헤드로 나눠 다른 관점으로 비교합니다. 헤드의 폭을 모두 합하면 디입니다. 로프는 쿼리와 키의 성분 쌍을 위치에 맞춰 회전시킵니다. 학습 파라미터는 없지만 곱셈과 덧셈은 있습니다. 모양을 바꾸는 일과 값을 계산하는 일을 구분하세요.",
+    "takeaway": "D = h × d · RoPE는 Q와 K에 적용 · 새 matmul 없음",
+    "lines": [
+      "[B,T,D] → [B,h,T,d]",
+      "Q와 K: 위치에 따라 성분 쌍 회전",
+      "V: 회전 없이 head 분리"
+    ],
+    "formula": "D = h × d",
+    "params": "0",
+    "flops": "RoPE + scale ≈ 7BTD",
+    "cue": ""
+  },
+  {
+    "chapter": "04 Attention",
+    "title": "④ QKᵀ: 토큰끼리 점수를 매기기",
+    "kind": "scores",
+    "focus": "qk",
+    "count": 4,
+    "narration": "네 번째 행렬곱은 쿼리와 키의 전치를 곱합니다. 각 쿼리가 모든 키와 얼마나 맞는지 점수를 만듭니다. 토큰 네 개라면 헤드 하나에 네 칸 곱하기 네 칸의 점수표가 생깁니다. 새 가중치 없이 두 중간 결과를 곱하므로, 추가 파라미터가 영이어도 큰 행렬곱은 가능합니다.",
+    "takeaway": "QKᵀ: 학습 가중치가 아닌 activation끼리의 matmul",
+    "lines": [
+      "헤드별 [T,d] @ [d,S]",
+      "점수 [B,h,T,S]",
+      "모든 헤드의 계산량 합산"
+    ],
+    "formula": "Scores = Q @ Kᵀ",
+    "params": "0",
+    "flops": "2BTSD",
+    "cue": ""
+  },
+  {
+    "chapter": "04 Attention",
+    "title": "Scale · Mask · Softmax",
+    "kind": "softmax",
+    "focus": "softmax",
+    "count": 4,
+    "narration": "점수를 헤드 폭의 제곱근으로 나눕니다. 저장소에서는 이 배율을 미리 쿼리 계산에 합칩니다. 미래 토큰을 가리고 소프트맥스로 각 행을 합이 일인 가중치로 바꿉니다. 지수 함수, 합산, 나눗셈이 들어가지만 새 행렬곱이나 학습 파라미터는 없습니다.",
+    "takeaway": "미래는 보지 않기 · 행마다 attention 가중치의 합 = 1",
+    "lines": [
+      "Scale: 1 / √d",
+      "Causal mask: 미래 점수를 −∞로",
+      "Softmax: exp → 합산 → 나누기"
+    ],
+    "formula": "P = softmax(mask(QKᵀ / √d))",
+    "params": "0",
+    "flops": "Softmax ≈ 5BhTS",
+    "cue": ""
+  },
+  {
+    "chapter": "04 Attention",
+    "title": "⑤ PV: 필요한 내용을 섞기",
+    "kind": "mix",
+    "focus": "pv",
+    "count": 5,
+    "narration": "다섯 번째 행렬곱은 어텐션 가중치와 밸류를 곱합니다. 관련이 큰 토큰의 내용은 많이, 작은 토큰의 내용은 적게 가져옵니다. 출력 한 행은 여러 밸류 행의 가중합입니다. 새 파라미터는 없습니다. 쿼리와 키가 어디를 볼지 정했다면, 여기서는 그 내용을 가져옵니다.",
+    "takeaway": "PV: attention 확률로 Value를 가중합",
+    "lines": [
+      "P [T,S] @ V [S,d]",
+      "헤드별 결과 [T,d]",
+      "모든 헤드: [B,h,T,d]"
+    ],
+    "formula": "Context = P @ V",
+    "params": "0",
+    "flops": "2BTSD",
+    "cue": ""
+  },
+  {
+    "chapter": "05 Attention 출력",
+    "title": "⑥ Output projection: 헤드를 다시 합치기",
+    "kind": "merge",
+    "focus": "out",
+    "count": 6,
+    "narration": "헤드를 이어 붙이면 다시 디 폭이 됩니다. 병합 자체는 행렬곱이 아닙니다. 그다음 출력 가중치로 여러 헤드의 정보를 함께 변환하는 것이 여섯 번째 행렬곱입니다. 쿼리, 키, 밸류 세 개와 점수, 가중합 두 개, 출력 변환 한 개를 합쳐 어텐션에 여섯 개가 있습니다.",
+    "takeaway": "Attention: Q·K·V 3개 + QKᵀ·PV 2개 + O 1개 = 6개",
+    "lines": [
+      "여러 head를 [BT,D]로 병합",
+      "학습 가중치 Wo로 정보 결합",
+      "reshape와 transpose는 matmul이 아님"
+    ],
+    "formula": "O = merge(Context) @ Wo",
+    "params": "D²",
+    "flops": "2BTD²",
+    "cue": ""
+  },
+  {
+    "chapter": "05 Attention 출력",
+    "title": "Residual add: 원래 입력을 더하기",
+    "kind": "residual",
+    "focus": "add1",
+    "count": 6,
+    "narration": "어텐션 결과에 원래 입력을 더합니다. 우회하는 선이 잔차 연결입니다. 같은 위치끼리 더하므로 모양은 그대로이고 가중치도 행렬곱도 없습니다. 원소가 비 티 디 개라서 덧셈도 그만큼 필요합니다. 다시 정규화한 뒤 피드포워드로 보냅니다.",
+    "takeaway": "Residual add: 파라미터 0 · 원소마다 덧셈 1회",
+    "lines": [
+      "입력 X를 우회 경로에 보관",
+      "같은 위치의 원소끼리 더하기",
+      "다음 단계: 두 번째 LayerNorm"
+    ],
+    "formula": "X₁ = X + O",
+    "params": "0",
+    "flops": "BTD",
+    "cue": ""
+  },
+  {
+    "chapter": "06 SwiGLU FFN",
+    "title": "⑦ Gate · ⑧ Up: 두 갈래로 확장",
+    "kind": "ffn",
+    "focus": "ffn",
+    "count": 8,
+    "narration": "스위글루는 정규화된 입력을 두 갈래로 확장합니다. 게이트는 통과할 특징을 조절하고, 업은 전달할 특징을 만듭니다. 두 가중치는 각각 디 곱하기 에프입니다. 일곱 번째와 여덟 번째 행렬곱입니다. 어텐션과 달리 다른 토큰을 직접 섞지 않고 각 토큰을 따로 변환합니다.",
+    "takeaway": "Gate와 Up: 각 토큰을 D → F로 확장",
+    "lines": [
+      "G = LN(X₁) @ Wgate",
+      "U = LN(X₁) @ Wup",
+      "두 결과 모두 [B,T,F]"
+    ],
+    "formula": "[BT,D] @ [D,F] → [BT,F]",
+    "params": "각 DF · 합계 2DF",
+    "flops": "각 2BTDF",
+    "cue": ""
+  },
+  {
+    "chapter": "06 SwiGLU FFN",
+    "title": "SiLU와 원소별 곱: 문을 조절하기",
+    "kind": "gate",
+    "focus": "gate",
+    "count": 8,
+    "narration": "게이트에 실루를 적용하고 업 결과와 같은 위치끼리 곱합니다. 실루는 입력에 시그모이드를 곱하는 활성화 함수입니다. 여기서는 행렬곱이 아니라 원소별 곱이므로 카운터는 여덟에 머뭅니다. 통과 정도는 입력에 따라 바뀌지만 이 단계 자체의 학습 파라미터는 없습니다.",
+    "takeaway": "⊙는 원소별 곱 · @는 행렬곱 · 서로 다른 연산",
+    "lines": [
+      "SiLU(G) = G × sigmoid(G)",
+      "같은 위치의 U와 곱하기",
+      "출력 모양 유지: [B,T,F]"
+    ],
+    "formula": "Z = SiLU(G) ⊙ U",
+    "params": "0",
+    "flops": "≈ 5BTF · 저장소 근사",
+    "cue": ""
+  },
+  {
+    "chapter": "06 SwiGLU FFN",
+    "title": "⑨ Down: 원래 폭으로 돌아오기",
+    "kind": "down",
+    "focus": "down",
+    "count": 9,
+    "narration": "아홉 번째 행렬곱은 에프 폭을 다시 디로 줄입니다. 다운 가중치의 크기는 에프 곱하기 디입니다. 피드포워드 이전의 입력을 한 번 더 더하면 한 층이 끝납니다. 어텐션 여섯 개와 피드포워드 세 개로 아홉 개입니다. 그 사이의 정규화, 활성화, 덧셈도 기억하세요.",
+    "takeaway": "한 층 완성: Attention 6개 + SwiGLU FFN 3개 = 9개",
+    "lines": [
+      "Z [BT,F] @ Wdown [F,D]",
+      "원래 폭 [BT,D]로 복귀",
+      "Residual add 후 다음 층으로"
+    ],
+    "formula": "X₂ = X₁ + Z @ Wdown",
+    "params": "DF",
+    "flops": "2BTDF + residual BTD",
+    "cue": ""
+  },
+  {
+    "chapter": "07 비용 장부",
+    "title": "가중치 matmul 7개 + activation matmul 2개",
+    "kind": "ledger",
+    "focus": "all",
+    "count": 9,
+    "narration": "파라미터 관점에서 다시 나눠 봅시다. 쿼리, 키, 밸류, 출력과 게이트, 업, 다운은 학습 가중치를 쓰는 일곱 개입니다. 점수 계산과 밸류의 가중합, 두 개에는 추가 파라미터가 없습니다. 헤드별 계산을 묶은 논리적 개수이며 실제 커널 실행 횟수와는 다릅니다.",
+    "takeaway": "논리적 matmul 개수 ≠ 실제 GPU 커널 실행 횟수",
+    "lines": [
+      "학습 가중치 사용: Q K V O / Gate Up Down",
+      "중간 결과끼리: QKᵀ / PV",
+      "QKV 결합·커널 fusion으로 실행 횟수는 달라질 수 있음"
+    ],
+    "formula": "",
+    "params": "",
+    "flops": "",
+    "cue": ""
+  },
+  {
+    "chapter": "07 비용 장부",
+    "title": "한 층의 Params와 FLOPs",
+    "kind": "totals",
+    "focus": "all",
+    "count": 9,
+    "narration": "가중치를 합치면 어텐션에서 사 디 제곱, 피드포워드에서 삼 디 에프입니다. 정규화 두 번의 파라미터 사 디도 더합니다. 가중치 행렬곱의 계산량은 토큰 수에 비례하지만, 어텐션의 두 행렬곱에는 티와 에스가 함께 들어갑니다. 파라미터가 같아도 입력 길이에 따라 계산량은 달라집니다.",
+    "takeaway": "파라미터는 모델 크기 · FLOPs는 입력까지 알아야 계산 가능",
+    "lines": [
+      "Attention 가중치: 4D²",
+      "FFN 가중치: 3DF",
+      "LayerNorm 두 번: 4D"
+    ],
+    "formula": "matmul FLOPs = 8BTD² + 4BTSD + 6BTDF",
+    "params": "4D² + 3DF + 4D",
+    "flops": "기타 연산은 별도 합산",
+    "cue": ""
+  },
+  {
+    "chapter": "07 비용 장부",
+    "title": "실제 예제: 한 층 약 5,139만 파라미터",
+    "kind": "numbers",
+    "focus": "all",
+    "count": 9,
+    "narration": "모델 폭은 이천사십팔, 피드포워드 폭은 오천육백삼십이입니다. 어텐션 가중치가 약 천육백칠십팔만 개, 피드포워드 가중치가 약 삼천사백육십만 개입니다. 정규화까지 한 층에 약 오천백삼십구만 개입니다. 이 설정에서는 피드포워드에 더 많은 파라미터가 있습니다.",
+    "takeaway": "D=2,048 · F=5,632 · h=16 · d=128",
+    "lines": [
+      "attention_weights",
+      "ffn_weights",
+      "norm_params_layer"
+    ],
+    "formula": "",
+    "params": "layer_params",
+    "flops": "",
+    "cue": ""
+  },
+  {
+    "chapter": "07 비용 장부",
+    "title": "층 밖에도 큰 파라미터가 있다",
+    "kind": "modeltotal",
+    "focus": "head",
+    "count": 9,
+    "narration": "여덟 층 밖에도 입력 임베딩 표와 출력 가중치가 있습니다. 저장소에서는 두 가중치를 공유하지 않습니다. 마지막 정규화까지 더하면 전체 파라미터는 약 오억 사천이백십팔만 개입니다. 출력 헤드는 토큰 벡터를 어휘별 점수로 바꾸는 별도의 행렬곱입니다.",
+    "takeaway": "전체 Params = L×층 Params + 2VD + 2D · 가중치 공유 없음",
+    "lines": [
+      "Transformer × 8",
+      "Embedding + LM head: 각각 VD",
+      "Final LayerNorm: 2D"
+    ],
+    "formula": "Logits = LNfinal(X) @ Wlm",
+    "params": "total_params",
+    "flops": "LM head: 2BTDV",
+    "cue": ""
+  },
+  {
+    "chapter": "07 비용 장부",
+    "title": "전체 matmul은 9 × 8 + 1 = 73개",
+    "kind": "count",
+    "focus": "head",
+    "count": 9,
+    "narration": "아홉 개씩 여덟 층에 출력 헤드 하나를 더하면 일흔세 개입니다. 입력 한 번의 순전파 기준입니다. 입력 토큰 이천사십팔 개의 점수를 모두 계산하면 행렬곱은 약 이 점 이이칠 테라플롭입니다. 계산량 단위이며, 초당 성능인 테라플롭 퍼 세컨드와 구분하세요.",
+    "takeaway": "73개는 이 모델의 한 번의 forward 기준 · 출력 logits까지",
+    "lines": [
+      "8층 × 층당 9개",
+      "LM head + 1개",
+      "B=1, T=S=2,048 · 모든 위치의 logits"
+    ],
+    "formula": "9L + 1 = 73",
+    "params": "total_params",
+    "flops": "prefill_matmul",
+    "cue": ""
+  },
+  {
+    "chapter": "07 비용 장부",
+    "title": "matmul 밖의 연산도 일을 한다",
+    "kind": "other",
+    "focus": "all",
+    "count": 9,
+    "narration": "나머지 연산도 확인합시다. 정규화와 소프트맥스는 여러 값을 모아 합산합니다. 로프와 활성화, 잔차 연결은 원소별로 계산합니다. 임베딩, 캐시 저장과 일부 재배치는 데이터를 옮깁니다. 플롭이 영이어도 시간이 영은 아닙니다. 지수 함수 등의 비용은 집계 규칙에 따른 근사치입니다.",
+    "takeaway": "FLOPs가 작거나 0이어도 메모리 접근·실행 비용은 발생",
+    "lines": [
+      "Reduction: LayerNorm / Softmax",
+      "Elementwise: RoPE / SiLU / ⊙ / Add",
+      "Data movement: Embedding / KV write / 재배치"
+    ],
+    "formula": "",
+    "params": "",
+    "flops": "",
+    "cue": ""
+  },
+  {
+    "chapter": "08 Prefill과 Decode",
+    "title": "Prefill: 문장을 한꺼번에 읽기",
+    "kind": "prefill",
+    "focus": "qk",
+    "count": 9,
+    "narration": "프리필은 여러 토큰을 한꺼번에 처리합니다. 티와 에스가 같아서 점수표는 토큰 수의 제곱에 비례합니다. 문장 길이가 두 배면 선형층 계산은 두 배, 점수와 가중합 계산은 네 배입니다. 전체 점수표를 계산한 뒤 가리는 밀집 연산 기준이므로 마스크만으로 계산량을 절반으로 세지 않습니다.",
+    "takeaway": "T=S · 길이 2배 → 선형층 2배 / attention 두 matmul 4배",
+    "lines": [
+      "가중치 matmul ∝ T",
+      "QKᵀ + PV ∝ T²",
+      "causal mask만으로 FLOPs를 반으로 세지 않음"
+    ],
+    "formula": "Attention 두 matmul = 4BT²D",
+    "params": "입력 길이에 무관",
+    "flops": "길이에 따라 증가",
+    "cue": ""
+  },
+  {
+    "chapter": "08 Prefill과 Decode",
+    "title": "Decode: 새 토큰 하나와 KV cache",
+    "kind": "decode",
+    "focus": "cache",
+    "count": 9,
+    "narration": "디코드는 새 토큰 하나를 처리하므로 티가 일입니다. 이전 키와 밸류를 캐시에 저장해 재사용합니다. 새 쿼리는 캐시 전체와 비교하므로 에스는 긴 문맥 길이입니다. 캐시는 학습 파라미터가 아니라 이번 문장의 중간 결과입니다. 메모리를 차지해도 파라미터 수는 늘지 않습니다.",
+    "takeaway": "T=1 · S=캐시를 포함한 문맥 길이 · KV cache는 activation",
+    "lines": [
+      "새 토큰의 Q·K·V만 계산",
+      "새 K·V를 cache에 저장",
+      "Q는 모든 cache K와 비교"
+    ],
+    "formula": "Q [1,d] @ Kcacheᵀ [d,S]",
+    "params": "변하지 않음",
+    "flops": "Attention 두 matmul = 4BSD",
+    "cue": ""
+  },
+  {
+    "chapter": "08 Prefill과 Decode",
+    "title": "같은 모델, 다른 계산량과 실행 특성",
+    "kind": "compare",
+    "focus": "all",
+    "count": 9,
+    "narration": "배치를 둘 다 하나, 문맥을 이천사십팔로 맞추겠습니다. 프리필은 약 이 점 이이칠 테라플롭, 디코드 한 번은 약 일 점 영팔칠 기가플롭입니다. 파라미터와 행렬곱 개수는 같지만 가중치를 여러 토큰에서 재사용하는 정도가 다릅니다. 계산량만으로 실행시간 차이를 단정할 수 없습니다.",
+    "takeaway": "동일 B=1, S=2,048 · decode는 새 토큰 1개의 forward",
+    "lines": [
+      "Prefill: T=2,048",
+      "Decode: T=1",
+      "파라미터는 동일 / 가중치 재사용 정도는 다름"
+    ],
+    "formula": "",
+    "params": "",
+    "flops": "",
+    "cue": ""
+  },
+  {
+    "chapter": "09 복습",
+    "title": "왜 어떤 설명에서는 8개일까?",
+    "kind": "eight",
+    "focus": "ffn",
+    "count": 9,
+    "narration": "기본 피드포워드는 확장과 축소, 선형층 두 개를 씁니다. 스위글루는 게이트, 업, 다운 세 개입니다. 그래서 셀프 어텐션 여섯 개에 둘을 더하면 여덟, 셋을 더하면 아홉입니다. 구조를 먼저 정해야 합니다. 크로스 어텐션이 있는 원래 디코더 전체와 혼동하지 마세요.",
+    "takeaway": "Self-attention 6 + 기본 FFN 2 = 8 / SwiGLU 3 = 9",
+    "lines": [
+      "기본 FFN: Up → 활성화 → Down",
+      "SwiGLU: Gate·Up → 원소별 곱 → Down",
+      "구조를 먼저 정하고 개수를 세기"
+    ],
+    "formula": "",
+    "params": "",
+    "flops": "",
+    "cue": ""
+  },
+  {
+    "chapter": "09 복습",
+    "title": "세 가지 질문으로 정리하기",
+    "kind": "recap",
+    "focus": "all",
+    "count": 9,
+    "narration": "한 층의 행렬곱은 왜 아홉 개일까요? 어텐션 여섯 개와 스위글루 세 개입니다. 나머지는 정규화, 위치 회전, 마스크, 소프트맥스, 원소별 계산과 데이터 이동입니다. 파라미터는 재사용하는 학습된 숫자, 플롭은 이번 입력을 처리하는 일의 양입니다. 이제 전체 지도에서 두 가지를 따로 셀 수 있습니다.",
+    "takeaway": "파라미터 = 학습된 숫자의 개수 · FLOPs = 이번 계산의 양",
+    "lines": [
+      "한 층 9개 / 8층 + LM head = 73개",
+      "가중치 matmul 7개 / activation matmul 2개",
+      "입력 길이 ↑ → Params 그대로 / FLOPs 증가"
+    ],
+    "formula": "",
+    "params": "",
+    "flops": "",
+    "cue": ""
+  }
+]

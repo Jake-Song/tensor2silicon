@@ -1,5 +1,15 @@
 # 3주차 설명 영상
 
+## Transformer 연산 지도
+
+[Transformer의 파라미터와 FLOPs](./transformer/transformer-ops.ko.mp4)는
+저장소 LLM의 한 층을 펼쳐 9개 matmul과 정규화·RoPE·softmax·원소별 연산을
+설명하는 10분 영상입니다. 어두운 2D 도식, 한국어 SunHi 음성·자막을 제공합니다.
+전체 73개 matmul과 약 5.42억 파라미터를 합산하고 prefill·decode도 비교합니다.
+
+- [첫 60초 미리보기](./transformer/transformer-ops-preview.ko.mp4)
+- [대본](./transformer/script.ko.md) · [제작·계산 기준](./transformer/README.md)
+
 ## 초보자용 새 영상
 
 [주방 비유로 배우는 GPU 계산과 데이터 이동](./week3-beginner.ko.mp4)은

@@ -1,0 +1,802 @@
+{
+  "D": 2048,
+  "F": 5632,
+  "L": 8,
+  "V": 32000,
+  "h": 16,
+  "d": 128,
+  "attention_weights": 16777216,
+  "ffn_weights": 34603008,
+  "norm_params_layer": 8192,
+  "layer_params": 51388416,
+  "matmul_count": 73,
+  "embedding_params": 65536000,
+  "head_params": 65536000,
+  "total_params": 542183424,
+  "prefill_matmul": 2226940542976,
+  "prefill_other": 4018143232,
+  "prefill_ops": [
+    {
+      "name": "embed",
+      "flops": 0,
+      "count": 1,
+      "kind": "elementwise",
+      "shapes": [
+        [
+          1,
+          2048
+        ],
+        [
+          32000,
+          2048
+        ]
+      ],
+      "mm_index": null
+    },
+    {
+      "name": "ln1",
+      "flops": 33554432,
+      "count": 8,
+      "kind": "norm",
+      "shapes": [
+        [
+          1,
+          2048,
+          2048
+        ],
+        [
+          2048
+        ],
+        [
+          2048
+        ]
+      ],
+      "mm_index": null
+    },
+    {
+      "name": "q_proj",
+      "flops": 17179869184,
+      "count": 8,
+      "kind": "matmul",
+      "shapes": [
+        [
+          1,
+          2048,
+          2048
+        ],
+        [
+          2048,
+          2048
+        ]
+      ],
+      "mm_index": 1
+    },
+    {
+      "name": "k_proj",
+      "flops": 17179869184,
+      "count": 8,
+      "kind": "matmul",
+      "shapes": [
+        [
+          1,
+          2048,
+          2048
+        ],
+        [
+          2048,
+          2048
+        ]
+      ],
+      "mm_index": 2
+    },
+    {
+      "name": "v_proj",
+      "flops": 17179869184,
+      "count": 8,
+      "kind": "matmul",
+      "shapes": [
+        [
+          1,
+          2048,
+          2048
+        ],
+        [
+          2048,
+          2048
+        ]
+      ],
+      "mm_index": 3
+    },
+    {
+      "name": "rope+split_heads",
+      "flops": 29360128,
+      "count": 8,
+      "kind": "elementwise",
+      "shapes": [
+        [
+          1,
+          2048,
+          2048
+        ],
+        [
+          1,
+          2048,
+          2048
+        ],
+        [
+          1,
+          2048,
+          2048
+        ],
+        [
+          2048,
+          64
+        ],
+        [
+          2048,
+          64
+        ]
+      ],
+      "mm_index": null
+    },
+    {
+      "name": "qk",
+      "flops": 17179869184,
+      "count": 8,
+      "kind": "matmul",
+      "shapes": [
+        [
+          1,
+          16,
+          2048,
+          128
+        ],
+        [
+          1,
+          16,
+          2048,
+          128
+        ]
+      ],
+      "mm_index": 4
+    },
+    {
+      "name": "mask+softmax",
+      "flops": 335544320,
+      "count": 8,
+      "kind": "softmax",
+      "shapes": [
+        [
+          1,
+          16,
+          2048,
+          2048
+        ],
+        [
+          2048,
+          2048
+        ]
+      ],
+      "mm_index": null
+    },
+    {
+      "name": "pv",
+      "flops": 17179869184,
+      "count": 8,
+      "kind": "matmul",
+      "shapes": [
+        [
+          1,
+          16,
+          2048,
+          2048
+        ],
+        [
+          1,
+          16,
+          2048,
+          128
+        ]
+      ],
+      "mm_index": 5
+    },
+    {
+      "name": "merge_heads",
+      "flops": 0,
+      "count": 8,
+      "kind": "elementwise",
+      "shapes": [
+        [
+          1,
+          16,
+          2048,
+          128
+        ]
+      ],
+      "mm_index": null
+    },
+    {
+      "name": "o_proj",
+      "flops": 17179869184,
+      "count": 8,
+      "kind": "matmul",
+      "shapes": [
+        [
+          1,
+          2048,
+          2048
+        ],
+        [
+          2048,
+          2048
+        ]
+      ],
+      "mm_index": 6
+    },
+    {
+      "name": "residual1",
+      "flops": 4194304,
+      "count": 8,
+      "kind": "elementwise",
+      "shapes": [
+        [
+          1,
+          2048,
+          2048
+        ],
+        [
+          1,
+          2048,
+          2048
+        ]
+      ],
+      "mm_index": null
+    },
+    {
+      "name": "ln2",
+      "flops": 33554432,
+      "count": 8,
+      "kind": "norm",
+      "shapes": [
+        [
+          1,
+          2048,
+          2048
+        ],
+        [
+          2048
+        ],
+        [
+          2048
+        ]
+      ],
+      "mm_index": null
+    },
+    {
+      "name": "gate_proj",
+      "flops": 47244640256,
+      "count": 8,
+      "kind": "matmul",
+      "shapes": [
+        [
+          1,
+          2048,
+          2048
+        ],
+        [
+          2048,
+          5632
+        ]
+      ],
+      "mm_index": 7
+    },
+    {
+      "name": "up_proj",
+      "flops": 47244640256,
+      "count": 8,
+      "kind": "matmul",
+      "shapes": [
+        [
+          1,
+          2048,
+          2048
+        ],
+        [
+          2048,
+          5632
+        ]
+      ],
+      "mm_index": 8
+    },
+    {
+      "name": "swiglu",
+      "flops": 57671680,
+      "count": 8,
+      "kind": "elementwise",
+      "shapes": [
+        [
+          1,
+          2048,
+          5632
+        ],
+        [
+          1,
+          2048,
+          5632
+        ]
+      ],
+      "mm_index": null
+    },
+    {
+      "name": "down_proj",
+      "flops": 47244640256,
+      "count": 8,
+      "kind": "matmul",
+      "shapes": [
+        [
+          1,
+          2048,
+          5632
+        ],
+        [
+          5632,
+          2048
+        ]
+      ],
+      "mm_index": 9
+    },
+    {
+      "name": "residual2",
+      "flops": 4194304,
+      "count": 8,
+      "kind": "elementwise",
+      "shapes": [
+        [
+          1,
+          2048,
+          2048
+        ],
+        [
+          1,
+          2048,
+          2048
+        ]
+      ],
+      "mm_index": null
+    },
+    {
+      "name": "ln_final",
+      "flops": 33554432,
+      "count": 1,
+      "kind": "norm",
+      "shapes": [
+        [
+          1,
+          2048,
+          2048
+        ],
+        [
+          2048
+        ],
+        [
+          2048
+        ]
+      ],
+      "mm_index": null
+    },
+    {
+      "name": "lm_head",
+      "flops": 268435456000,
+      "count": 1,
+      "kind": "matmul",
+      "shapes": [
+        [
+          1,
+          2048,
+          2048
+        ],
+        [
+          2048,
+          32000
+        ]
+      ],
+      "mm_index": null
+    }
+  ],
+  "decode_matmul": 1087373312,
+  "decode_other": 1961984,
+  "decode_ops": [
+    {
+      "name": "embed",
+      "flops": 0,
+      "count": 1,
+      "kind": "elementwise",
+      "shapes": [
+        [
+          1,
+          1
+        ],
+        [
+          32000,
+          2048
+        ]
+      ],
+      "mm_index": null
+    },
+    {
+      "name": "ln1",
+      "flops": 16384,
+      "count": 8,
+      "kind": "norm",
+      "shapes": [
+        [
+          1,
+          1,
+          2048
+        ],
+        [
+          2048
+        ],
+        [
+          2048
+        ]
+      ],
+      "mm_index": null
+    },
+    {
+      "name": "q_proj",
+      "flops": 8388608,
+      "count": 8,
+      "kind": "matmul",
+      "shapes": [
+        [
+          1,
+          1,
+          2048
+        ],
+        [
+          2048,
+          2048
+        ]
+      ],
+      "mm_index": 1
+    },
+    {
+      "name": "k_proj",
+      "flops": 8388608,
+      "count": 8,
+      "kind": "matmul",
+      "shapes": [
+        [
+          1,
+          1,
+          2048
+        ],
+        [
+          2048,
+          2048
+        ]
+      ],
+      "mm_index": 2
+    },
+    {
+      "name": "v_proj",
+      "flops": 8388608,
+      "count": 8,
+      "kind": "matmul",
+      "shapes": [
+        [
+          1,
+          1,
+          2048
+        ],
+        [
+          2048,
+          2048
+        ]
+      ],
+      "mm_index": 3
+    },
+    {
+      "name": "rope+split_heads",
+      "flops": 14336,
+      "count": 8,
+      "kind": "elementwise",
+      "shapes": [
+        [
+          1,
+          1,
+          2048
+        ],
+        [
+          1,
+          1,
+          2048
+        ],
+        [
+          1,
+          1,
+          2048
+        ],
+        [
+          1,
+          64
+        ],
+        [
+          1,
+          64
+        ]
+      ],
+      "mm_index": null
+    },
+    {
+      "name": "kv_cache_write",
+      "flops": 0,
+      "count": 16,
+      "kind": "elementwise",
+      "shapes": [
+        [
+          1,
+          16,
+          2048,
+          128
+        ],
+        [
+          1,
+          16,
+          1,
+          128
+        ]
+      ],
+      "mm_index": null
+    },
+    {
+      "name": "qk",
+      "flops": 8388608,
+      "count": 8,
+      "kind": "matmul",
+      "shapes": [
+        [
+          1,
+          16,
+          1,
+          128
+        ],
+        [
+          1,
+          16,
+          2048,
+          128
+        ]
+      ],
+      "mm_index": 4
+    },
+    {
+      "name": "mask+softmax",
+      "flops": 163840,
+      "count": 8,
+      "kind": "softmax",
+      "shapes": [
+        [
+          1,
+          16,
+          1,
+          2048
+        ],
+        [
+          1,
+          2048
+        ]
+      ],
+      "mm_index": null
+    },
+    {
+      "name": "pv",
+      "flops": 8388608,
+      "count": 8,
+      "kind": "matmul",
+      "shapes": [
+        [
+          1,
+          16,
+          1,
+          2048
+        ],
+        [
+          1,
+          16,
+          2048,
+          128
+        ]
+      ],
+      "mm_index": 5
+    },
+    {
+      "name": "o_proj",
+      "flops": 8388608,
+      "count": 8,
+      "kind": "matmul",
+      "shapes": [
+        [
+          1,
+          1,
+          2048
+        ],
+        [
+          2048,
+          2048
+        ]
+      ],
+      "mm_index": 6
+    },
+    {
+      "name": "residual1",
+      "flops": 2048,
+      "count": 8,
+      "kind": "elementwise",
+      "shapes": [
+        [
+          1,
+          1,
+          2048
+        ],
+        [
+          1,
+          1,
+          2048
+        ]
+      ],
+      "mm_index": null
+    },
+    {
+      "name": "ln2",
+      "flops": 16384,
+      "count": 8,
+      "kind": "norm",
+      "shapes": [
+        [
+          1,
+          1,
+          2048
+        ],
+        [
+          2048
+        ],
+        [
+          2048
+        ]
+      ],
+      "mm_index": null
+    },
+    {
+      "name": "gate_proj",
+      "flops": 23068672,
+      "count": 8,
+      "kind": "matmul",
+      "shapes": [
+        [
+          1,
+          1,
+          2048
+        ],
+        [
+          2048,
+          5632
+        ]
+      ],
+      "mm_index": 7
+    },
+    {
+      "name": "up_proj",
+      "flops": 23068672,
+      "count": 8,
+      "kind": "matmul",
+      "shapes": [
+        [
+          1,
+          1,
+          2048
+        ],
+        [
+          2048,
+          5632
+        ]
+      ],
+      "mm_index": 8
+    },
+    {
+      "name": "swiglu",
+      "flops": 28160,
+      "count": 8,
+      "kind": "elementwise",
+      "shapes": [
+        [
+          1,
+          1,
+          5632
+        ],
+        [
+          1,
+          1,
+          5632
+        ]
+      ],
+      "mm_index": null
+    },
+    {
+      "name": "down_proj",
+      "flops": 23068672,
+      "count": 8,
+      "kind": "matmul",
+      "shapes": [
+        [
+          1,
+          1,
+          5632
+        ],
+        [
+          5632,
+          2048
+        ]
+      ],
+      "mm_index": 9
+    },
+    {
+      "name": "residual2",
+      "flops": 2048,
+      "count": 8,
+      "kind": "elementwise",
+      "shapes": [
+        [
+          1,
+          1,
+          2048
+        ],
+        [
+          1,
+          1,
+          2048
+        ]
+      ],
+      "mm_index": null
+    },
+    {
+      "name": "ln_final",
+      "flops": 16384,
+      "count": 1,
+      "kind": "norm",
+      "shapes": [
+        [
+          1,
+          1,
+          2048
+        ],
+        [
+          2048
+        ],
+        [
+          2048
+        ]
+      ],
+      "mm_index": null
+    },
+    {
+      "name": "lm_head",
+      "flops": 131072000,
+      "count": 1,
+      "kind": "matmul",
+      "shapes": [
+        [
+          1,
+          1,
+          2048
+        ],
+        [
+          2048,
+          32000
+        ]
+      ],
+      "mm_index": null
+    }
+  ]
+}
