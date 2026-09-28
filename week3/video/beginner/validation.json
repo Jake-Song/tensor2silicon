@@ -1,0 +1,16 @@
+{
+  "voice": "ko-KR-SunHiNeural",
+  "scenes": 26,
+  "duration": 600,
+  "resolution": [
+    1920,
+    1080
+  ],
+  "fps": 30,
+  "frames": 18000,
+  "chapters": 7,
+  "full_decode": "passed",
+  "source": "new beginner script and newly rendered scenes; no old video inputs",
+  "tempo": 1.2045531914893617,
+  "sha256": "5c9eff6f754cbe4b1edb37af5ae75f4018e108613655af19765ddd6706b8c8ae"
+}

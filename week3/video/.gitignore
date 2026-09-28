@@ -1,0 +1,11 @@
+audio/
+frames/
+clips/
+preview/
+*.mp4
+*.zip
+*.blend
+*.blend1
+*.log
+__pycache__/
+intuition/

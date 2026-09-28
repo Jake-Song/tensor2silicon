@@ -95,12 +95,15 @@ $$
 
 ## 7. 애니메이션 설명 영상
 
-한국어 내레이션과 자막을 포함한 10분 설명 영상의 구성, 원본 대본, 재생성 방법은
-[영상 제작 안내](./video/README.md)에 정리했다. 개선본은 검은 배경의 2D 도형과
-수식이 설명 순서에 따라 전개되며, Vector Add와 병목 변화를 애니메이션으로 보여준다.
-[10분 개선본](./video/week3-intuition.ko.mp4)과
-[45초 미리보기](./video/week3-intuition-preview.ko.mp4)는 로컬 생성 후 재생할 수 있다.
-[ElevenLabs 남성 저음 버전](./video/week3-intuition-elevenlabs.ko.mp4)과
-[목소리 미리보기](./video/week3-intuition-elevenlabs-preview.ko.mp4)도 제공한다.
-기존 Blender 영상과 원본 프로젝트도 함께 보존한다.
-생성한 MP4와 Blender 파일은 `week3/video/`에 로컬 산출물로 저장하며 Git에는 포함하지 않는다.
+[초보자용 새 영상](./video/week3-beginner.ko.mp4)은 요리사·재료 창고·운반 비유로
+계산과 데이터 이동을 설명한다. 새 대본과 26개 새 장면, 기존 여성 목소리 SunHi로
+제작했으며, 10분·1080p·30fps의 한국어 음성·자막 영상이다.
+[60초 미리보기](./video/week3-beginner-preview.ko.mp4),
+[새 대본](./video/beginner/script.ko.md),
+[제작 안내](./video/beginner/README.md)에서 확인할 수 있다.
+
+[기존 2D 영상](./video/week3-intuition.ko.mp4)은 별도로 유지한다.
+모든 ZIP 파일과 ElevenLabs 관련 코드·음성·캐시·백업·로그는 요청에 따라 삭제했다.
+ElevenLabs·Blender 버전 영상과 해당 영상 클립도 삭제했다.
+Blender 원본·백업·전용 코드·렌더 캐시·로그도 삭제했다.
+MP4는 `week3/video/`의 로컬 산출물이며 Git에는 포함하지 않는다.

@@ -1,0 +1,14 @@
+{
+  "resolution": [
+    1920,
+    1080
+  ],
+  "fps": 30,
+  "frames": 18000,
+  "duration": 600,
+  "scenes": 30,
+  "chapters": 10,
+  "full_decode": "passed",
+  "source_narration": "preserved",
+  "sha256": "dd17cb01af6e1715b747d01c4f92db8f54957ba7fdf34e29b58aa6c1c9487e6b"
+}
