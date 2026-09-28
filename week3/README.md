@@ -22,6 +22,7 @@
 | ④ | [Compute Time과 Memory Time](./04-compute-and-memory-time.md) | 두 시간을 왜 더하지 않고 큰 값으로 추정하는가? |
 | ⑤ | [Compute-bound와 Memory-bound](./05-compute-bound-and-memory-bound.md) | 어떤 자원을 늘려야 빨라지는가? |
 | ⑥ | [Vector Add 손계산과 풀이](./06-vector-add.md) | 읽기·덧셈·쓰기를 실제 숫자와 코드로 연결할 수 있는가? |
+| ⑦ | [MatMul 손계산과 풀이](./07-matmul.md) | 행렬곱의 계산량과 입력 재사용 가정은 병목 판정에 어떤 영향을 주는가? |
 
 이전 주차 → [2주차: 모델 → 연산](../week2/01-model-to-ops.md)
 
@@ -79,6 +80,9 @@ $$
 5. 연산 성능·대역폭·용량을 각각 늘렸을 때의 변화
 
 계산을 마친 뒤 [⑥ 단계별 풀이](./06-vector-add.md)와 비교한다.
+
+추가 연습으로 [⑦ MatMul 손계산](./07-matmul.md)에서 1,000×1,000 FP32 행렬곱의
+연산량·HBM 이동량·두 시간을 구하고, 입력 재사용과 행렬 모양에 따라 병목이 어떻게 달라지는지 비교한다.
 
 ## 6. 모임에서 함께 확인할 질문
 

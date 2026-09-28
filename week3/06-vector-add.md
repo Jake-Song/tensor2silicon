@@ -2,7 +2,7 @@
 
 > **한 줄 답.** 주어진 조건에서 덧셈은 1억 FLOPs이고 HBM 이동량은 1.2 GB다. 연산 시간 5 μs보다 메모리 시간 1.2 ms가 커서 메모리 대역폭이 병목이다.
 
-이전 ← [⑤ 병목 판정](./05-compute-bound-and-memory-bound.md) · [3주차 목차](./README.md)
+이전 ← [⑤ 병목 판정](./05-compute-bound-and-memory-bound.md) · [3주차 목차](./README.md) · 다음 → [⑦ MatMul 풀이](./07-matmul.md)
 
 ## 1. 문제와 가정
 
