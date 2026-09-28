@@ -1,6 +1,6 @@
 """Progressive mathematical animation, preserving the measured Korean narration.
 
-Usage: .venv/bin/python week3/video/intuition.py preview|render|assemble|check|bundle
+Usage: .venv/bin/python week3/video/intuition/intuition.py preview|render|assemble|check|bundle
 Dependencies: Pillow, FFmpeg/FFprobe; no network or generative media required.
 """
 import argparse
@@ -15,7 +15,7 @@ import zipfile
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parent
-OUT = ROOT / 'intuition'
+OUT = ROOT
 W, H, FPS = 1920, 1080, 30
 BG = '#0b0d12'
 FG = '#edf0f6'

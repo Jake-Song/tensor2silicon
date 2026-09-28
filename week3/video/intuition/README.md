@@ -1,4 +1,4 @@
-# 기존 2D 영상 제작 기록
+# 수식 중심 2D 영상
 
 ## 수학적 직관 중심 개선본
 
@@ -18,14 +18,33 @@
 
 ```bash
 # Pillow 12.3, FFmpeg(libass 포함), 은돋움·DejaVu 폰트 필요
-.venv/bin/python week3/video/intuition.py preview
-.venv/bin/python week3/video/intuition.py render
-.venv/bin/python week3/video/intuition.py assemble
-.venv/bin/python week3/video/intuition.py check
+.venv/bin/python week3/video/intuition/intuition.py preview
+.venv/bin/python week3/video/intuition/intuition.py render
+.venv/bin/python week3/video/intuition/intuition.py assemble
+.venv/bin/python week3/video/intuition/intuition.py check
 ```
 
 `render --scene 21`로 한 장면을 렌더할 수 있습니다. 프레임은 FFmpeg에 바로
 전달하며 디스크에 18,000장의 이미지를 저장하지 않습니다. 코드·타임라인·음성
-경계·폰트의 해시가 바뀌면 클립을 자동 재생성합니다. `intuition/preview/`에
+경계·폰트의 해시가 바뀌면 클립을 자동 재생성합니다. `preview/`에
 30개 대표 화면과 주요 장면의 시간별 화면을 저장합니다. `check`는 최종 파일을
 전체 디코딩하고 길이·프레임 수·해상도·음성·챕터·캐시 최신 여부를 확인합니다.
+
+## 파일 구성
+
+- `week3-intuition.ko.mp4`: 완성 영상 (로컬 산출물).
+- `lesson.py`: 장면·내레이션 원본.
+- `produce.py`: 음성 합성과 타임라인·대본·자막 생성. 초보자 영상에서도 재사용합니다.
+- `intuition.py`: 도식 렌더링·영상 조립·검증.
+- `timeline.json`, `script.ko.md`, `week3.ko.srt`, `chapters.ffmetadata`: 타이밍·대본·자막·챕터.
+- `intuition-validation.json`: 이전 영상 검증 기록.
+- `audio/`, `clips/`, `preview/`: 음성·장면 캐시·미리보기 생성 위치.
+
+프로젝트 루트에서 다음 명령으로 대본·타임라인·자막을 검증할 수 있습니다.
+
+```bash
+.venv/bin/python week3/video/intuition/produce.py check
+```
+
+현재 음성·장면 캐시는 포함되어 있지 않습니다. 전체 영상 재조립과 `intuition.py check`에는
+`audio/narration.wav`, 장면별 음성 경계 JSON, 렌더링된 클립이 필요합니다.

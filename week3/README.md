@@ -102,7 +102,7 @@ $$
 [새 대본](./video/beginner/script.ko.md),
 [제작 안내](./video/beginner/README.md)에서 확인할 수 있다.
 
-[기존 2D 영상](./video/week3-intuition.ko.mp4)은 별도로 유지한다.
+[기존 2D 영상](./video/intuition/week3-intuition.ko.mp4)은 별도로 유지한다.
 모든 ZIP 파일과 ElevenLabs 관련 코드·음성·캐시·백업·로그는 요청에 따라 삭제했다.
 ElevenLabs·Blender 버전 영상과 해당 영상 클립도 삭제했다.
 Blender 원본·백업·전용 코드·렌더 캐시·로그도 삭제했다.

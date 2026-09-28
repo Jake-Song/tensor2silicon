@@ -29,7 +29,7 @@ uv run --with edge-tts python week3/video/beginner/build.py audio
 ```
 
 `render --scene 0`으로 한 장면만 만들 수 있습니다. 완료된 새 음성과 새 장면은
-대본·설정·코드 해시로 캐시합니다. `build.py audio`는 상위 `produce.py`의
+대본·설정·코드 해시로 캐시합니다. `build.py audio`는 `../intuition/produce.py`의
 음성 합성·시간 배분 유틸리티만 사용하며, 기존 음성이나 영상은 읽지 않습니다.
 `sync`는 합성이 끝난 음성을 장면에 맞춰 결합하고 챕터 파일을 만듭니다.
 

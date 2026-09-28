@@ -39,10 +39,10 @@ def write_script(scenes):
 
 def audio():
     # Reuse only speech generation and timing utilities, never footage or old audio.
-    spec = importlib.util.spec_from_file_location('speech_pipeline', ROOT.parent / 'produce.py')
+    spec = importlib.util.spec_from_file_location('speech_pipeline', ROOT.parent / 'intuition' / 'produce.py')
     module = importlib.util.module_from_spec(spec)
     import sys
-    sys.path.insert(0, str(ROOT.parent))
+    sys.path.insert(0, str(ROOT.parent / 'intuition'))
     spec.loader.exec_module(module)
     module.ROOT = ROOT
     module.SCENES = [dict(s, equation=s['takeaway'], note='', labels=[])
@@ -154,7 +154,7 @@ def bundle():
         for name in files:
             z.write(ROOT/name, 'week3-video/beginner/'+name)
         for name in ['produce.py','lesson.py']:
-            z.write(ROOT.parent/name, 'week3-video/'+name)
+            z.write(ROOT.parent/'intuition'/name, 'week3-video/intuition/'+name)
     print('Source bundle saved', flush=True)
 
 
