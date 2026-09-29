@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090f18">
+<title>LLM Explorer · Tensor to Silicon</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='12' fill='%230d1823'/%3E%3Cpath d='M12 10h16v8H12zm0 13h16v8H12z' fill='none' stroke='%237ed7d5' stroke-width='2'/%3E%3Cpath d='M20 18v5' stroke='%237ed7d5' stroke-width='2'/%3E%3C/svg%3E">
+<style>
+:root{color-scheme:dark;--bg:#090f18;--panel:#101a26;--line:#26313e;--text:#e2e8f3;--muted:#8e9bb1;--aqua:#83d8d6;--gold:#ffcc55;--purple:#aba9f4;--blue:#79c7ed;--green:#92cdb1;--pink:#e88abc;font-family:Inter,"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 5% 0%,#211c3d 0,transparent 45%),radial-gradient(ellipse at 95% 0%,#19322c 0,transparent 40%),#090c13;color:var(--text);font-size:14px}
+button,input,a{-webkit-tap-highlight-color:transparent}
+button,input{font:inherit}
+button{color:inherit;cursor:pointer}
+button:disabled{opacity:.27;cursor:default}
+button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--aqua);outline-offset:5px}
+button{border:0}
+button,summary,a{touch-action:manipulation}
+[hidden]{display:none!important}
+.app{margin:14px;min-height:700px;height:calc(100dvh - 28px);border:1px solid #2c3540;border-radius:25px;overflow:hidden;background:var(--bg);display:flex;flex-direction:column;box-shadow:0 24px 100px #0005}
+.topbar{height:68px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:0 24px;border-bottom:1px solid #ffffff09;background:linear-gradient(110deg,#101c23aa,#0c131e)}
+.identity,.toolbar,.history,.granularity,.phase-tabs,.zoom-tools,.canvas-footer,.panel-heading,.node-heading{display:flex;align-items:center}
+.identity{gap:19px;white-space:nowrap}
+.lights{display:flex;gap:7px}.lights i{width:9px;height:9px;border-radius:50%;background:#47515c}.lights i:last-child{background:#9bde72}
+.brand{font-size:13px;letter-spacing:2.1px;font-weight:700}.brand span{color:var(--muted);font-weight:400}
+.toolbar{gap:17px}.history{gap:7px}
+.icon-button{width:31px;height:31px;display:inline-grid;place-items:center;border:1px solid #ffffff0c;border-radius:50%;background:#0c1420;color:#a9b7cb;flex-shrink:0}
+.icon-button:hover:not(:disabled){background:#23303e;color:#fff}
+.icon{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.granularity{gap:15px;border:1px solid #26303e;border-radius:24px;padding:8px 15px;font-size:12px;letter-spacing:1.4px;color:var(--muted)}
+.granularity label{white-space:nowrap}
+.granularity output{color:#c9d4e5;letter-spacing:0;min-width:30px;font-weight:650}
+input[type=range]{width:88px;height:5px;accent-color:var(--aqua);cursor:pointer}
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) 350px;flex:1;min-height:0}
+.canvas{position:relative;min-width:0;display:flex;flex-direction:column;background:radial-gradient(ellipse at 35% 5%,#28463e55,transparent 48%),radial-gradient(ellipse at 95% 0%,#20344b55,transparent 48%),linear-gradient(160deg,#0c1820,#080e17 75%)}
+.canvas-heading{padding:25px 28px 8px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;z-index:1}
+.eyebrow{font-size:10px;letter-spacing:2.3px;text-transform:uppercase;font-weight:700;color:var(--aqua);margin:0 0 8px}
+.canvas-heading h1{margin:0;font-size:20px;font-weight:600;letter-spacing:-.5px}
+.canvas-heading h1 span{color:#8798aa;font-weight:400}
+.model-caption{font-size:12px;color:#7f91a5;margin:8px 0 0;letter-spacing:.2px}
+.phase-tabs{background:#08111b8a;border:1px solid #293542;border-radius:9px;padding:3px;gap:3px;margin-top:3px;flex-shrink:0}
+.phase-tabs button{background:none;color:#8e9bb1;border-radius:6px;padding:7px 11px;font-size:12px}
+.phase-tabs button[aria-pressed=true]{background:#243941;color:#a6e0dd;box-shadow:0 1px 5px #0002}
+.graph-wrap{position:relative;flex:1;min-height:0;overflow:hidden}
+#graph{display:block;width:100%;height:100%;touch-action:none;cursor:grab;user-select:none}
+#graph.dragging{cursor:grabbing}
+.graph-node{cursor:pointer;outline:none}
+.node-body{fill:var(--fill);stroke:var(--accent);stroke-width:1.8;transition:fill .15s,stroke .15s;filter:drop-shadow(0 3px 8px #0002)}
+.graph-node:hover .node-body{fill:var(--hover);stroke-width:2.6}
+.graph-node[aria-pressed=true] .node-body{fill:#e3ad2c;stroke:#ffcf54;stroke-width:2.5;filter:drop-shadow(0 0 16px #ffbe291c)}
+.graph-node[aria-pressed=true] .node-title{fill:#131b23;font-weight:700}
+.graph-node[aria-pressed=true] .node-subtitle{fill:#3f341b}
+.graph-node:focus-visible .node-body{stroke:#fff;stroke-width:3.5;stroke-dasharray:5 3}
+.node-title{fill:#edf1f8;font-size:16px;font-weight:550;pointer-events:none;letter-spacing:-.3px}
+.node-subtitle{fill:#b9c8d9;font-size:11px;pointer-events:none}
+.node-counter{fill:#e7c374;font-size:18px;font-weight:500;pointer-events:none}
+.wire{fill:none;stroke:#9aafc3;stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round;opacity:.72;marker-end:url(#arrow)}
+.wire.cache{stroke:#8bc8b1;stroke-dasharray:5 5;marker-end:url(#cache-arrow)}
+.wire.residual{stroke:#b1acf3;opacity:.75}
+.edge-label{fill:#9facc0;font-size:11px;paint-order:stroke;stroke:#0b141e;stroke-width:5px;stroke-linejoin:round}
+.group-frame{fill:#ffffff02;stroke:#65839955;stroke-width:1;stroke-dasharray:5 6}
+.group-label{font-size:12px;fill:#95a7bc;letter-spacing:1px}
+.expand-hit{cursor:pointer}.expand-hit rect{fill:#ffffff10;stroke:#ffffff23;stroke-width:1}.expand-hit:hover rect{fill:#ffffff28}
+.expand-hit text{font-size:20px;fill:currentColor;pointer-events:none}
+.canvas-footer{justify-content:space-between;gap:10px;padding:13px 22px 18px;flex-shrink:0}
+.canvas-hint{color:#7a8a9f;font-size:11px;display:flex;align-items:center;gap:7px}
+.canvas-hint i{width:5px;height:5px;background:var(--aqua);border-radius:50%;opacity:.8}
+.zoom-tools{gap:2px;border:1px solid #25313f;background:#0b141f;border-radius:9px;padding:3px;box-shadow:0 4px 15px #0002}
+.zoom-tools button{display:grid;place-items:center;background:none;width:28px;height:28px;border-radius:5px;color:#bac8d9}
+.zoom-tools button:hover{background:#253440}
+.zoom-tools output{min-width:42px;text-align:center;font-size:11px;color:#b4c2d5;font-variant-numeric:tabular-nums}
+.zoom-tools .divider{height:15px;width:1px;background:#2b3542;margin:0 3px}
+.inspector{border-left:1px solid #26313c66;background:linear-gradient(150deg,#111d29,#0d1621 55%);overflow:auto;scrollbar-width:thin;scrollbar-color:#29323f transparent;padding:22px 19px 24px}
+.panel-heading{justify-content:space-between;gap:10px;margin-bottom:23px}
+.text-button{background:none;padding:0;color:#94a6bb;font-size:12px;display:flex;align-items:center;gap:5px}
+.text-button:hover{color:var(--aqua)}
+.tiny-badge{font-size:9px;letter-spacing:1.1px;border:1px solid #344355;color:#9fb1c5;border-radius:4px;padding:4px 6px}
+.selection-heading{font-size:15px;letter-spacing:-.2px;font-weight:650;margin:0}
+.selection-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.selection-row .icon-button{border:0;background:none;width:24px;height:24px}
+.breadcrumb{display:flex;align-items:center;gap:7px;font-size:11px;color:#8293a9;min-width:0;margin-bottom:19px}
+.breadcrumb>span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.type-badge{margin-left:auto;background:#12303b;color:#63cce5;border-radius:5px;padding:3px 6px;font-size:10px;flex-shrink:0}
+.detail-card{padding:17px 15px;border:1px solid #ffffff03;border-radius:13px;background:linear-gradient(160deg,#ffffff04,#ffffff01)}
+.node-heading{justify-content:space-between;gap:9px}
+.node-heading h2{font-size:18px;letter-spacing:-.4px;margin:0;overflow-wrap:anywhere;font-weight:650}
+.node-heading button{background:none;color:#a5b6ca;border:0;border-radius:4px;padding:4px;display:grid;place-items:center}
+.node-heading button:hover{color:var(--aqua)}
+.source-path{margin:8px 0 19px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:#8e9fb4;font-size:11px;overflow-wrap:anywhere;line-height:1.6}
+.explainer{border:1px solid #33404c;border-left:2px solid #66bed0;border-radius:7px;padding:13px 12px;background:linear-gradient(160deg,#ffffff04,#ffffff02)}
+.section-label{font-size:10px;font-weight:700;letter-spacing:1.2px;color:#9eb0c6;margin:0 0 12px}
+.mini-diagram{width:100%;height:146px;display:block;margin:7px 0 10px}
+.explanation-title{font-size:14px;font-weight:650;line-height:1.65;margin:0 0 9px;color:#e0e9ed}
+.explanation{font-size:13px;line-height:1.9;color:#a7b6cb;margin:0}
+.phase-note{color:#73c7d6;font-size:12px;line-height:1.8;margin:11px 0 0}
+.expand-button{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;background:none;color:var(--aqua);padding:12px 0 0;text-align:left;font-size:12px}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#2b3743;border:1px solid #2b3743;border-radius:8px;overflow:hidden;margin:17px 0}
+.metric{background:#121f2b;padding:11px 12px}
+.metric dt{font-size:10px;color:#90a4bb;margin-bottom:5px}
+.metric dd{margin:0;font-size:17px;color:#dfe9f3;font-variant-numeric:tabular-nums}
+.metric dd small{font-size:10px;color:#91a5bb;margin-left:4px}
+.tensor-list{margin-top:19px}.tensor-list h3{margin:0 0 11px}
+.tensor{display:flex;flex-direction:column;gap:6px;padding:9px 0;border-top:1px solid #ffffff09}
+.tensor span{font-size:11px;color:#9aaac0}
+.tensor code{font-size:12px;line-height:1.6;color:#c7d6e7;overflow-wrap:anywhere;white-space:normal}
+.legend{display:flex;gap:13px;margin-top:17px;font-size:10px;color:#7f92a8;flex-wrap:wrap}
+.legend span{display:flex;gap:5px;align-items:center}.legend i{width:6px;height:6px;border-radius:2px;background:var(--legend)}
+.source-details{margin-top:18px;font-size:11px;color:#7f93ab;line-height:1.8}
+.source-details summary{cursor:pointer;color:#a0b2c7}
+.source-details code{overflow-wrap:anywhere;font-size:10px}
+.source-details p{margin:7px 0}
+.about-copy{font-size:13px;line-height:1.9;color:#a7b6cb}
+.about-title{font-size:24px;letter-spacing:-.7px;margin:6px 0 8px;line-height:1.4}
+.phase-summary{border-top:1px solid #ffffff0b;padding-top:15px;margin-top:20px}
+.phase-summary p{font-size:12px;color:#8fa3b9;line-height:1.8}
+.phase-summary strong{color:#bcd0df;font-weight:500}
+.formula{display:block;border-radius:6px;padding:10px;background:#09141d;font-family:ui-monospace,monospace;font-size:12px;color:var(--aqua);margin:14px 0}
+.offline-note{font-size:10px;line-height:1.8;color:#71859c;margin:19px 0 0}
+#notice{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#223a44;border:1px solid #4b777b;border-radius:9px;padding:10px 18px;font-size:13px;z-index:10;box-shadow:0 8px 35px #0005}
+.copy-fallback{width:100%;margin-top:10px;padding:9px;background:#08111b;border:1px solid #4e7982;border-radius:5px;color:#d7eceb;font:11px ui-monospace,monospace}
+.skip-link{position:fixed;top:-80px;left:25px;z-index:20;background:#253d46;color:#fff;padding:12px;border-radius:5px}.skip-link:focus{top:20px}
+@media(min-width:1600px){.workspace{grid-template-columns:minmax(0,1fr) 380px}.inspector{padding:26px}.canvas-heading{padding:30px 35px 8px}}
+@media(max-width:1000px){.workspace{grid-template-columns:minmax(0,1fr) 320px}.topbar{padding:0 18px;gap:12px}.brand{font-size:11px;letter-spacing:1.3px}.identity{gap:12px}.granularity{gap:9px}.canvas-heading{padding:22px 18px 8px;flex-wrap:wrap}.canvas-hint{font-size:10px}.canvas-footer{padding:12px}.inspector{padding:20px 14px}}
+@media(max-width:720px){.app{height:auto;min-height:calc(100dvh - 16px);margin:8px;border-radius:18px}.topbar{height:auto;min-height:98px;padding:14px 15px;flex-wrap:wrap;gap:14px}.identity{width:100%}.brand{font-size:12px}.toolbar{width:100%;justify-content:space-between;gap:10px}.granularity{padding:7px 12px;flex:1;max-width:260px;justify-content:space-between}.granularity label{font-size:10px}.workspace{display:flex;flex-direction:column}.canvas{height:610px;min-height:510px}.canvas-heading h1{font-size:18px}.model-caption{font-size:11px}.phase-tabs button{padding:6px 10px}.inspector{border-left:0;border-top:1px solid #293442;padding:23px;overflow:visible}.canvas-footer{padding:12px 15px}.canvas-hint{font-size:10px}.detail-card{padding:17px}.mini-diagram{height:155px}.explanation{font-size:14px}.source-path{font-size:12px}.graph-wrap{min-height:330px}.canvas-heading{gap:14px}.panel-heading{margin-bottom:20px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<a href="#graph" class="skip-link">모델 그래프로 건너뛰기</a>
+<div class="app">
+  <header class="topbar">
+    <div class="identity"><div class="lights" aria-hidden="true"><i></i><i></i><i></i></div><div class="brand">TENSOR<span> TO </span>SILICON</div></div>
+    <div class="toolbar">
+      <nav class="history" aria-label="탐색 기록">
+        <button id="back" class="icon-button" aria-label="이전 탐색" title="이전 탐색" disabled><svg class="icon" viewBox="0 0 20 20"><path d="m12 5-5 5 5 5"/></svg></button>
+        <button id="forward" class="icon-button" aria-label="다음 탐색" title="다음 탐색" disabled><svg class="icon" viewBox="0 0 20 20"><path d="m8 5 5 5-5 5"/></svg></button>
+      </nav>
+      <div class="granularity"><label for="granularity">GRANULARITY</label><input id="granularity" type="range" min="0" max="2" step="1" value="0" aria-label="그래프 상세 수준" aria-valuetext="모델"><output id="level-label" for="granularity">모델</output></div>
+    </div>
+  </header>
+  <main class="workspace">
+    <section class="canvas" aria-label="모델 구조 탐색">
+      <div class="canvas-heading">
+        <div><p class="eyebrow">INTERACTIVE MODEL EXPLORER</p><h1>작은 LLM<span>, 안을 들여다보다.</span></h1><p class="model-caption">LLaMA-shaped decoder · 8 layers · BF16</p></div>
+        <div class="phase-tabs" role="group" aria-label="추론 단계">
+          <button data-phase="prefill" aria-pressed="true">Prefill</button><button data-phase="decode" aria-pressed="false">Decode</button>
+        </div>
+      </div>
+      <div class="graph-wrap">
+        <svg id="graph" role="group" aria-label="LLM 연산 그래프. 노드를 선택하거나 드래그하여 이동하세요." tabindex="0">
+          <defs>
+            <marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M1 1 7 4 1 7" fill="none" stroke="#9aafc3" stroke-width="1.2"/></marker>
+            <marker id="cache-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M1 1 7 4 1 7" fill="none" stroke="#8bc8b1" stroke-width="1.2"/></marker>
+          </defs>
+          <g id="viewport"><g id="frames"></g><g id="edges"></g><g id="nodes"></g></g>
+        </svg>
+      </div>
+      <div class="canvas-footer">
+        <span class="canvas-hint"><i></i><span id="gesture-hint">노드 선택 · 드래그 이동 · 스크롤 확대</span></span>
+        <div class="zoom-tools" role="group" aria-label="그래프 확대 및 이동">
+          <button id="zoom-out" aria-label="축소" title="축소"><svg class="icon" viewBox="0 0 20 20"><path d="M5 10h10"/></svg></button>
+          <output id="zoom-label" aria-label="확대 비율">100%</output>
+          <button id="zoom-in" aria-label="확대" title="확대"><svg class="icon" viewBox="0 0 20 20"><path d="M5 10h10M10 5v10"/></svg></button>
+          <span class="divider"></span>
+          <button id="fit" aria-label="전체 보기" title="전체 보기 (0)"><svg class="icon" viewBox="0 0 20 20"><path d="M7 3H3v4m10-4h4v4M3 13v4h4m10-4v4h-4"/></svg></button>
+        </div>
+      </div>
+    </section>
+    <aside id="inspector" class="inspector" aria-label="선택한 노드 설명"></aside>
+  </main>
+</div>
+<div id="notice" role="status" aria-live="polite" hidden></div>
+<script id="model-config" type="application/json">
+{"preset":"colab","model":{"vocab":32000,"d_model":2048,"n_heads":16,"n_kv_heads":16,"head_dim":128,"d_ff":5632,"n_layers":8,"dtype_bytes":2},"phases":{"prefill":{"name":"prefill","batch":1,"q_len":2048,"kv_len":2048},"decode":{"name":"decode","batch":8,"q_len":1,"kv_len":2048}}}
+</script>
+<script>
+/* Standalone, offline architecture snapshot of llm_roofline/spec.py and
+   torch_llm.forward / jax_llm.forward. No inference or benchmark is executed. */
+(() => {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+  const config = JSON.parse($('model-config').textContent);
+  const cfg = config.model;
+  const levels = ['모델', '블록', '연산'];
+  const colors = {
+    io:['#71d5dc','#204450','#30606b'], norm:['#94d6d1','#26464d','#325d63'],
+    embedding:['#b0acf8','#444763','#555877'], block:['#e8c363','#55482a','#665630'],
+    attention:['#7fc8ee','#27475e','#345d75'], mlp:['#b5a5f1','#413e5d','#514d74'],
+    cache:['#94cdb3','#2c4840','#3c6053'], output:['#ed88bd','#663650','#7d4163'],
+    residual:['#b3b0ee','#3f405b','#535575']
+  };
+  const escape = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const shape = (s) => '[' + s.join(' × ') + ']';
+  const tensor = (label, s) => ({label, shape:s});
+  const state = {phase:'prefill',level:0,selected:'decoder',camera:{x:0,y:0,k:1}};
+  let data, layout, history = [], historyIndex = -1, noticeTimer, wheelTimer;
+  let pointers = new Map(), gesture = null, suppressClick = false;
+
+  function catalog(phase) {
+    const {batch:B,q_len:T,kv_len:S} = config.phases[phase];
+    const {d_model:D,n_heads:N,n_kv_heads:K,head_dim:H,d_ff:F,vocab:V} = cfg;
+    const x=[B,T,D], q=[B,N,T,H], kv=[B,K,T,H], full=[B,K,S,H], scores=[B,N,T,S], ff=[B,T,F];
+    const out={};
+    function add(id,title,kind,summary,description,inputs,outputs,extra={}) {
+      out[id]={id,title,kind,summary,description,inputs,outputs,path:id, ...extra};
+    }
+    add('tokens','Token IDs','io','텍스트를 정수로 표현합니다.','토큰마다 어휘 사전의 정수 ID를 하나씩 사용합니다. B는 배치 크기, T는 이번 단계에서 처리하는 토큰 수입니다.',[],[tensor('토큰 ID · integer',[B,T])],{path:'tokens'});
+    add('embed','Embedding','embedding','정수 ID를 2048차원 벡터로 바꿉니다.','32,000개 어휘의 임베딩 테이블에서 각 토큰에 해당하는 행을 가져옵니다. 이 벡터가 모든 decoder 층을 흐르는 residual stream의 시작입니다.',[tensor('토큰 ID',[B,T]),tensor('임베딩 테이블',[V,D])],[tensor('토큰 벡터',x)],{path:'params.embed',op:'embed'});
+    add('decoder','Decoder block','block','Attention으로 토큰을 연결하고, MLP로 각 토큰을 변환합니다.','각 블록은 두 번의 LayerNorm과 두 개의 residual connection을 사용합니다. 첫 번째 경로에서 토큰 사이의 정보를 모으고, 두 번째 경로에서 각 토큰의 특징을 변환합니다. 동일한 구조를 8번 반복하며, 각 층의 가중치는 서로 다릅니다.',[tensor('Residual stream',x)],[tensor('Residual stream',x),tensor('층별 K / V · 각각',full)],{path:'params.layers[0]',expand:1,repeat:8});
+    const normText='LayerNorm은 각 토큰의 마지막 차원에서 평균과 분산을 구해 정규화하고, 학습 가능한 scale과 bias를 적용합니다. ε = 0.00001입니다.';
+    add('ln1','LayerNorm 1','norm','Attention 앞에서 토큰 벡터를 정규화합니다.',normText,[tensor('입력',x),tensor('Scale',[D]),tensor('Bias',[D])],[tensor('정규화된 벡터',x)],{path:'params.layers[0].ln1_w / ln1_b',op:'ln1'});
+    add('attention','Self-attention','attention','이전 토큰에서 필요한 정보를 모읍니다.','Q (Query)와 K (Key)의 유사도로 가중치를 계산한 뒤 V (Value)를 가중합합니다. Causal mask는 미래 토큰을 보지 못하게 합니다. 16개 head가 각각 128차원의 특징을 처리합니다.',[tensor('정규화된 벡터',x)],[tensor('Attention 출력',x)],{path:'layers[0].attention (연산 그룹)',expand:2});
+    add('residual1','Residual add 1','residual','Attention 결과에 블록 입력을 더합니다.','정규화하기 전의 residual stream을 우회 경로로 보존해 attention 출력과 더합니다. 두 입력과 결과의 shape은 같습니다.',[tensor('블록 입력',x),tensor('Attention 출력',x)],[tensor('Residual stream',x)],{path:'forward → add (attention)',op:'residual1'});
+    add('ln2','LayerNorm 2','norm','MLP 앞에서 residual stream을 정규화합니다.',normText,[tensor('입력',x),tensor('Scale',[D]),tensor('Bias',[D])],[tensor('정규화된 벡터',x)],{path:'params.layers[0].ln2_w / ln2_b',op:'ln2'});
+    add('mlp','SwiGLU MLP','mlp','각 토큰을 더 넓은 공간에서 변환합니다.','MLP (Multilayer Perceptron)는 토큰마다 독립적으로 적용됩니다. Gate와 up projection이 폭을 5632로 늘리고, SiLU 활성화와 원소별 곱을 거친 뒤 down projection이 2048로 되돌립니다.',[tensor('정규화된 벡터',x)],[tensor('MLP 출력',x)],{path:'layers[0].mlp (연산 그룹)',expand:2});
+    add('residual2','Residual add 2','residual','MLP 결과에 두 번째 우회 경로를 더합니다.','첫 번째 residual add의 결과를 보존했다가 MLP 출력과 더합니다. 완성된 벡터는 다음 decoder 층으로 전달됩니다.',[tensor('MLP 이전 residual stream',x),tensor('MLP 출력',x)],[tensor('다음 층의 입력',x)],{path:'forward → add (MLP)',op:'residual2'});
+    add('ln_final','Final LayerNorm','norm','모든 decoder 층을 통과한 벡터를 정규화합니다.',normText,[tensor('마지막 층 출력',x),tensor('Scale',[D]),tensor('Bias',[D])],[tensor('정규화된 벡터',x)],{path:'params.lnf_w / lnf_b',op:'ln_final'});
+    add('lm_head','LM head','attention','2048차원 벡터를 어휘별 점수로 투영합니다.','LM (Language Model) head는 각 토큰 위치에서 32,000개 어휘의 logits를 계산합니다. 이 forward 함수에는 다음 토큰을 고르는 sampling 단계가 없습니다.',[tensor('정규화된 벡터',x),tensor('가중치',[D,V])],[tensor('Logits',[B,T,V])],{path:'params.lm_head',op:'lm_head'});
+    add('logits','Logits','output','다음 토큰에 대한 어휘별 점수입니다.','Logits는 확률로 정규화하기 전의 값입니다. 모델은 이 점수와 각 층의 K/V를 함께 반환합니다.',[tensor('어휘별 점수',[B,T,V])],[tensor('반환값 · logits',[B,T,V])],{path:'forward → logits'});
+    add('cache','KV cache','cache','각 층의 Key와 Value를 보관합니다.',phase==='decode'?'기존 K/V cache의 마지막 슬롯(2047)에 새 토큰의 K/V를 기록합니다. Attention은 이 슬롯을 포함한 2048개 위치를 읽습니다. 이 벤치마크는 고정 크기 cache를 사용합니다.':'Prefill은 전체 입력의 K/V를 계산해 층별로 반환합니다. 이후 한 토큰씩 처리할 때 이 정보를 재사용할 수 있습니다. K와 V는 각각 아래 shape을 갖습니다.',phase==='decode'?[tensor('기존 K / V · 각각',full)]:[tensor('계산된 K / V · 각각',kv)],[tensor('반환값 · 층별 K / V 각각',full)],{path:'forward → kv[0] (k, v)',repeat:8});
+    function linear(id,title,kind,dimIn,dimOut,mm,path,summary,description) {
+      add(id,title,kind,summary,description,[tensor('입력',[B,T,dimIn]),tensor('가중치',[dimIn,dimOut])],[tensor('출력',[B,T,dimOut])],{path,op:id,mm});
+    }
+    linear('q_proj','Q projection','attention',D,N*H,1,'params.layers[0].wq','무엇을 찾을지 나타내는 Query를 만듭니다.','정규화된 벡터에 Q 가중치를 곱합니다. 결과는 16개 head로 나뉘고, RoPE와 1/√128 스케일이 적용됩니다.');
+    linear('k_proj','K projection','attention',D,K*H,2,'params.layers[0].wk','각 토큰의 검색 기준인 Key를 만듭니다.','Query와 비교할 Key를 투영합니다. 이 모델은 query head와 KV head가 모두 16개입니다.');
+    linear('v_proj','V projection','attention',D,K*H,3,'params.layers[0].wv','다른 토큰에 전달할 Value를 만듭니다.','Attention 가중치로 섞을 내용을 투영합니다. Value에는 RoPE를 적용하지 않습니다.');
+    add('rope','RoPE + split heads','attention','Q/K에 위치 정보를 넣고 head를 분리합니다.','RoPE (Rotary Position Embedding)는 Q와 K를 위치에 따라 회전시킵니다. V는 head만 분리합니다. 이 구현은 Q에 1/√128 스케일도 적용하므로 QKᵀ 뒤에서 다시 나누지 않습니다.',[tensor('Q',[B,T,N*H]),tensor('K',[B,T,K*H]),tensor('V',[B,T,K*H]),tensor('Cos',[T,H/2]),tensor('Sin',[T,H/2])],[tensor('Q',q),tensor('K',kv),tensor('V',kv)],{path:'rope_split_heads',op:'rope+split_heads'});
+    add('kv_write','KV cache write','cache','새 K/V를 cache의 마지막 슬롯에 기록합니다.','K와 V 각각에 kv_write를 호출합니다. 현재 토큰의 절대 위치는 S−1 = 2047이며, 갱신된 전체 cache가 QKᵀ와 PV 연산에 사용됩니다.',[tensor('Cache · K 또는 V',full),tensor('새 토큰 · K 또는 V',[B,K,1,H])],[tensor('갱신된 cache · K 또는 V',full)],{path:'kv_write → cache[:, :, -1:]',op:'kv_cache_write'});
+    add('qk','QKᵀ','attention','Query와 모든 Key의 유사도를 계산합니다.','Q와 K의 마지막 두 축을 행렬 곱합니다. 결과의 마지막 축 S는 참조하는 토큰 위치이며, 다음 단계에서 causal mask와 softmax가 적용됩니다.',[tensor('Q',q),tensor('K',full)],[tensor('Attention scores',scores)],{path:'qk',op:'qk',mm:4});
+    add('softmax','Mask + softmax','attention','미래를 가리고, 점수를 attention 가중치로 바꿉니다.','Causal mask에서 금지된 위치의 점수를 −∞로 바꾼 뒤 마지막 축에 softmax를 적용합니다. Decode의 마지막 위치는 cache에 있는 모든 위치를 볼 수 있습니다.',[tensor('Scores',scores),tensor('Causal mask · bool',[T,S])],[tensor('Attention probabilities',scores)],{path:'softmax_masked',op:'mask+softmax'});
+    add('pv','PV','attention','Attention 가중치로 Value를 섞습니다.','확률 행렬 P와 Value 행렬 V를 곱합니다. 각 head는 관련 토큰의 정보를 반영한 새로운 128차원 벡터를 얻습니다.',[tensor('P',scores),tensor('V',full)],[tensor('Head별 출력',q)],{path:'pv',op:'pv',mm:5});
+    add('merge','Merge heads','attention','16개 head를 하나의 2048차원 벡터로 합칩니다.','[B, N, T, H]에서 축 순서를 바꿔 [B, T, N×H]로 만듭니다. Decode에서는 T=1이므로 별도 데이터 복사 없이 reshape할 수 있습니다.',[tensor('Head별 출력',q)],[tensor('합친 출력',x)],{path:'merge_heads',op:phase==='prefill'?'merge_heads':null});
+    linear('o_proj','Output projection','attention',N*H,D,6,'params.layers[0].wo','여러 head의 정보를 residual stream으로 투영합니다.','Head를 합친 벡터에 출력 가중치를 곱합니다. 이후 원래 블록 입력과 residual add를 수행합니다.');
+    linear('gate_proj','Gate projection','mlp',D,F,7,'params.layers[0].w_gate','통과시킬 특징을 조절하는 gate를 만듭니다.','2048차원에서 5632차원으로 투영한 값에 SiLU를 적용해 up projection 출력과 곱합니다.');
+    linear('up_proj','Up projection','mlp',D,F,8,'params.layers[0].w_up','토큰의 특징을 5632차원으로 확장합니다.','Gate projection과 같은 입력을 사용하지만 서로 다른 가중치를 갖습니다. 두 경로는 SwiGLU에서 만납니다.');
+    add('swiglu','SwiGLU','mlp','활성화한 gate와 확장된 특징을 곱합니다.','SwiGLU (Swish-Gated Linear Unit)는 SiLU(gate) ⊙ up을 계산합니다. ⊙는 같은 위치끼리의 원소별 곱이며, SiLU(z) = z·sigmoid(z)입니다.',[tensor('Gate',ff),tensor('Up',ff)],[tensor('Gated features',ff)],{path:'swiglu',op:'swiglu'});
+    linear('down_proj','Down projection','mlp',F,D,9,'params.layers[0].w_down','특징을 residual stream의 폭으로 되돌립니다.','5632차원의 gated features를 2048차원으로 투영합니다. 두 번째 residual add에서 MLP 이전의 벡터와 합쳐집니다.');
+    return out;
+  }
+
+  // Fixed layouts keep the semantic branches and the two residual paths explicit.
+  function buildLayout() {
+    const nodes=[], edges=[], frames=[];
+    const level=state.level, decode=state.phase==='decode';
+    function node(id,x,y,w=222) {const n={id,x,y,w,h:54};nodes.push(n);return n;}
+    function port(id,side='bottom') {
+      const n=nodes.find(n=>n.id===id);
+      return side==='left'?[n.x-n.w/2,n.y+27]:side==='right'?[n.x+n.w/2,n.y+27]:[n.x,n.y+(side==='top'?0:54)];
+    }
+    function connect(a,b,opts={}) {
+      const p=port(a,opts.from||'bottom'), q=port(b,opts.to||'top');
+      let points;
+      if(opts.viaX!==undefined) points=[p,[opts.viaX,p[1]],[opts.viaX,q[1]],q];
+      else if(opts.from==='right'||opts.from==='left') points=[p,[(p[0]+q[0])/2,p[1]],[(p[0]+q[0])/2,q[1]],q];
+      else points=[p,[p[0],(p[1]+q[1])/2],[q[0],(p[1]+q[1])/2],q];
+      edges.push({a,b,points,...opts});
+    }
+    node('tokens',350,25,142);node('embed',350,117);
+    if(level===0) {
+      node('decoder',350,235,246);node('cache',670,285,188);
+      node('ln_final',350,365);node('lm_head',350,457);node('logits',350,549,172);
+      connect('tokens','embed');connect('embed','decoder');connect('decoder','ln_final');
+      connect('ln_final','lm_head');connect('lm_head','logits');
+      connect('decoder','cache',{from:'right',to:'left',kind:'cache',label:'K / V · 층마다'});
+      if(decode) connect('cache','decoder',{from:'top',to:'right',viaX:820,kind:'cache'});
+    } else if(level===1) {
+      frames.push({x:160,y:213,w:465,h:643,label:'DECODER BLOCK · 대표 층 0 / 8',collapse:0});
+      ['ln1','attention','residual1','ln2','mlp','residual2'].forEach((id,i)=>node(id,350,265+i*96));
+      node('cache',775,367,208);node('ln_final',350,902);node('lm_head',350,994);node('logits',350,1086,172);
+      const flow=['tokens','embed','ln1','attention','residual1','ln2','mlp','residual2','ln_final','lm_head','logits'];
+      flow.slice(1).forEach((id,i)=>connect(flow[i],id));
+      connect('embed','residual1',{from:'left',to:'left',viaX:195,kind:'residual',label:'residual'});
+      connect('residual1','residual2',{from:'left',to:'left',viaX:195,kind:'residual',label:'residual'});
+      connect('attention','cache',{from:'right',to:'left',kind:'cache',label:decode?'갱신한 K / V':'K / V'});
+      if(decode) connect('cache','attention',{from:'top',to:'right',viaX:655,kind:'cache'});
+    } else {
+      const extra=decode?98:0;
+      frames.push({x:80,y:210,w:900,h:1560+extra,label:'DECODER BLOCK · 대표 층 0 / 8',collapse:1});
+      node('ln1',470,268);
+      node('q_proj',240,368,186);node('k_proj',470,368,186);node('v_proj',700,368,186);
+      node('rope',470,474,268);
+      if(decode) node('kv_write',740,580,234);
+      node('cache',1095,590+extra,214);
+      node('qk',470,594+extra);node('softmax',470,700+extra);
+      node('pv',470,806+extra);node('merge',470,912+extra);node('o_proj',470,1018+extra);
+      node('residual1',470,1124+extra);node('ln2',470,1230+extra);
+      node('gate_proj',340,1336+extra,210);node('up_proj',610,1336+extra,210);
+      node('swiglu',470,1442+extra);node('down_proj',470,1548+extra);node('residual2',470,1654+extra);
+      node('ln_final',470,1824+extra);node('lm_head',470,1918+extra);node('logits',470,2012+extra,172);
+      connect('tokens','embed');connect('embed','ln1');
+      ['q_proj','k_proj','v_proj'].forEach(id=>{connect('ln1',id);connect(id,'rope');});
+      connect('rope','qk',{label:'Q'});
+      if(decode) {
+        connect('rope','kv_write',{kind:'cache',label:'새 K / V'});
+        connect('cache','kv_write',{from:'top',to:'right',viaX:1010,kind:'cache',label:'기존 cache'});
+        connect('kv_write','qk',{to:'right',kind:'cache',label:'K'});
+        connect('kv_write','pv',{from:'bottom',to:'right',viaX:910,kind:'cache',label:'V'});
+        connect('kv_write','cache',{from:'right',to:'left',kind:'cache',label:'갱신한 K / V'});
+      } else {
+        connect('rope','qk',{from:'right',to:'right',viaX:740,kind:'cache',label:'K'});
+        connect('rope','pv',{from:'right',to:'right',viaX:920,kind:'cache',label:'V'});
+        connect('rope','cache',{from:'right',to:'left',viaX:990,kind:'cache',label:'K / V 반환'});
+      }
+      const flow=['qk','softmax','pv','merge','o_proj','residual1','ln2'];
+      flow.slice(1).forEach((id,i)=>connect(flow[i],id));
+      ['gate_proj','up_proj'].forEach(id=>{connect('ln2',id);connect(id,'swiglu');});
+      ['swiglu','down_proj','residual2','ln_final','lm_head','logits'].slice(1).forEach((id,i)=>connect(['swiglu','down_proj','residual2','ln_final','lm_head'][i],id));
+      connect('embed','residual1',{from:'left',to:'left',viaX:112,kind:'residual',label:'residual'});
+      connect('residual1','residual2',{from:'left',to:'left',viaX:112,kind:'residual',label:'residual'});
+    }
+    const xs=nodes.flatMap(n=>[n.x-n.w/2,n.x+n.w/2]), ys=nodes.flatMap(n=>[n.y,n.y+n.h]);
+    edges.forEach(e=>e.points.forEach(p=>{xs.push(p[0]);ys.push(p[1]);}));
+    frames.forEach(f=>{xs.push(f.x,f.x+f.w);ys.push(f.y,f.y+f.h);});
+    return {nodes,edges,frames,bounds:{x:Math.min(...xs)-28,y:Math.min(...ys)-20,w:Math.max(...xs)-Math.min(...xs)+56,h:Math.max(...ys)-Math.min(...ys)+48}};
+  }
+
+  function miniDiagram(kind) {
+    if(kind==='block'||kind==='attention'||kind==='mlp'||kind==='residual'||kind==='norm') {
+      return '<svg class="mini-diagram" viewBox="0 0 260 154" aria-label="LayerNorm, attention, MLP와 두 residual 경로를 보여주는 개념도" role="img">'+
+        '<g fill="none" stroke="#8da3b6" stroke-width="1.3"><path d="M140 8v139M140 18H58Q50 18 50 26v30q0 9 9 9h81M140 76H58q-8 0-8 8v35q0 9 9 9h81"/>'+
+        '<rect x="86" y="28" width="108" height="25" rx="7" stroke="#7dbba2" fill="#7dbba211"/><rect x="86" y="91" width="108" height="25" rx="7" stroke="#7cbbe1" fill="#7cbbe111"/>'+
+        '<circle cx="140" cy="65" r="6" fill="#16232e"/><circle cx="140" cy="128" r="6" fill="#16232e"/><path d="M136 65h8m-4-4v8m-4 59h8m-4-4v8"/></g>'+
+        '<g font-family="system-ui,sans-serif" font-size="9" text-anchor="middle"><text x="140" y="44" fill="#b6dacc">LN → Attention</text><text x="140" y="107" fill="#bfd8eb">LN → MLP</text><text x="25" y="75" fill="#93a4b9" transform="rotate(-90 25 75)">residual</text></g>'+
+        '<rect x="136" y="3" width="8" height="8" rx="2" fill="#9ed9ed"/><rect x="136" y="145" width="8" height="6" rx="2" fill="#456273"/></svg>';
+    }
+    const labels=kind==='cache'?['K / V','Cache','Attention']:kind==='embedding'?['Token IDs','Lookup','Vectors']:kind==='output'?['Hidden states','LM head','Logits']:['입력','변환','출력'];
+    return '<svg class="mini-diagram" viewBox="0 0 260 154" role="img" aria-label="'+labels.join(' → ')+'"><path d="M130 24v105" stroke="#8096ae" stroke-width="1.5"/>'+
+      labels.map((label,i)=>'<rect x="66" y="'+(8+i*52)+'" width="128" height="30" rx="7" fill="'+(i===1?'#25453f':'#203343')+'" stroke="'+(i===1?'#86cbb0':'#689bbb')+'"/><text x="130" y="'+(28+i*52)+'" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#d5e6ec">'+label+'</text>').join('')+'</svg>';
+  }
+  function metrics() {
+    return '<dl class="metrics"><div class="metric"><dt>DECODER LAYERS</dt><dd>8<small>blocks</small></dd></div><div class="metric"><dt>RESIDUAL WIDTH</dt><dd>2,048<small>dims</small></dd></div><div class="metric"><dt>ATTENTION HEADS</dt><dd>16<small>× 128</small></dd></div><div class="metric"><dt>MLP WIDTH</dt><dd>5,632<small>dims</small></dd></div></dl>';
+  }
+  function sources() {
+    return '<details class="source-details"><summary>구현과 표기 안내</summary><p>구조·shape: <code>llm_roofline/spec.py · PRESETS.colab</code></p><p>실행 순서: <code>llm_roofline/torch_llm.py · forward</code><br><code>llm_roofline/jax_llm.py · forward</code></p><p>B: 배치 · T: 새 토큰 수 · S: 참조 길이<br>N/K: Query/KV head 수 · H: head 차원<br>BF16 (Brain Floating Point 16): 모델 텐서의 16비트 부동소수점 형식</p><p>선은 데이터 의존 관계입니다. 점선은 K/V 경로, 보라색 우회선은 residual connection입니다. 연산 그룹은 설명을 위한 표현이며 Python 클래스 이름이 아닙니다.</p></details>';
+  }
+  function phaseSummary() {
+    return '<div class="phase-summary"><p class="section-label">'+(state.phase==='prefill'?'01 / PREFILL':'02 / DECODE')+'</p><p>'+(state.phase==='prefill'?'프롬프트의 <strong>2048개 토큰</strong>을 함께 처리합니다.<br>B = 1 · T = 2048 · S = 2048':'배치마다 <strong>새 토큰 1개</strong>를 처리합니다.<br>B = 8 · T = 1 · S = 2048')+'</p></div>';
+  }
+  function renderInspector() {
+    const d=data[state.selected];
+    let html='<div class="panel-heading"><button class="text-button" data-action="about"><span aria-hidden="true">‹</span> 모델 정보</button><span class="tiny-badge">COLAB PRESET</span></div>';
+    if(!d) {
+      html+='<p class="eyebrow">THE MODEL, UNFOLDED</p><h2 class="about-title">하나의 토큰에서<br>다음 토큰의 점수까지.</h2><p class="about-copy">LLM (Large Language Model)의 내부를 단계별로 살펴보세요. 그래프의 노드를 누르면 역할과 tensor shape을 확인할 수 있습니다.</p>'+metrics()+
+        '<div class="explainer"><p class="section-label">어디부터 볼까요?</p><p class="explanation">먼저 decoder block을 선택해 보세요. + 버튼이나 상단 슬라이더로 블록을 펼치면 attention과 MLP 안의 연산까지 이어집니다.</p><button class="expand-button" data-action="start">Decoder block 살펴보기 <span>↗</span></button></div>'+phaseSummary()+sources();
+    } else {
+      const name=d.op?'연산':d.kind==='cache'?'KV CACHE':d.kind==='block'?'TRANSFORMER':'TENSOR';
+      html+='<div class="selection-row"><h2 class="selection-heading">선택한 노드 <span style="color:#8194ac;font-weight:400">(1)</span></h2><button class="icon-button" data-action="clear" aria-label="선택 해제"><svg class="icon" viewBox="0 0 20 20"><path d="m6 6 8 8m0-8-8 8"/></svg></button></div>'+
+        '<div class="breadcrumb"><span>LLM ROOFLINE</span><span aria-hidden="true">/</span><span>'+escape(d.id)+'</span><b class="type-badge">'+name+'</b></div>'+
+        '<div class="detail-card"><div class="node-heading"><h2>'+escape(d.title)+'</h2><button data-action="copy" aria-label="구현 식별자 복사" title="구현 식별자 복사"><svg class="icon" viewBox="0 0 20 20"><rect x="7" y="3" width="9" height="12" rx="2"/><path d="M12 17H5a2 2 0 0 1-2-2V7"/></svg></button></div>'+
+        '<p class="source-path">'+escape(d.path)+'</p><input id="copy-fallback" class="copy-fallback" aria-label="복사할 구현 식별자" readonly hidden>'+
+        '<div class="explainer"><p class="section-label">이 블록은 무엇인가요?</p>'+miniDiagram(d.kind)+'<p class="explanation-title">'+escape(d.summary)+'</p><p class="explanation">'+escape(d.description)+'</p>'+
+        '<p class="phase-note">'+(d.mm?'층마다 수행하는 9개 matmul 중 '+d.mm+'번째 연산입니다.':d.id==='decoder'?'2048차원의 residual stream 위에 8개의 블록이 쌓입니다.':state.phase==='prefill'?'Prefill · 전체 프롬프트를 한 번에 처리합니다.':'Decode · 마지막 cache 슬롯을 새 K/V로 갱신합니다.')+'</p>'+
+        (d.expand!==undefined?'<button class="expand-button" data-action="expand" data-level="'+d.expand+'">내부 연산 살펴보기 <span>↗</span></button>':'')+'</div>'+
+        (d.id==='decoder'?metrics():'')+
+        '<section class="tensor-list" aria-label="Tensor shapes"><h3 class="section-label">TENSOR SHAPES</h3>'+
+        d.inputs.map(t=>'<div class="tensor"><span>입력 · '+escape(t.label)+'</span><code>'+shape(t.shape)+'</code></div>').join('')+
+        d.outputs.map(t=>'<div class="tensor"><span>출력 · '+escape(t.label)+'</span><code>'+shape(t.shape)+'</code></div>').join('')+
+        '</section>'+sources()+'</div>'+phaseSummary();
+    }
+    html+='<div class="legend"><span><i style="--legend:#7fc8ee"></i>Attention</span><span><i style="--legend:#b5a5f1"></i>MLP</span><span><i style="--legend:#94cdb3"></i>Cache</span></div><p class="offline-note">구조와 shape을 탐색하는 교육용 시각화입니다.<br>브라우저에서 추론이나 성능 측정을 실행하지 않습니다.</p>';
+    $('inspector').innerHTML=html;
+  }
+
+  function renderGraph() {
+    data=catalog(state.phase);layout=buildLayout();
+    $('frames').innerHTML=layout.frames.map(f=>'<rect class="group-frame" x="'+f.x+'" y="'+f.y+'" width="'+f.w+'" height="'+f.h+'" rx="18"/><text class="group-label" x="'+(f.x+20)+'" y="'+(f.y+28)+'">'+f.label+'</text><g class="expand-hit" role="button" tabindex="0" data-collapse="'+f.collapse+'" aria-label="상위 수준으로 접기" transform="translate('+(f.x+f.w-40)+' '+(f.y+11)+')"><rect width="25" height="25" rx="5"/><text x="12.5" y="19" text-anchor="middle">−</text></g>').join('');
+    $('edges').innerHTML=layout.edges.map(e=>{
+      const p=e.points, mid=p[1], next=p[2];
+      const x=(mid[0]+next[0])/2+7, y=(mid[1]+next[1])/2-7;
+      return '<path data-from="'+e.a+'" data-to="'+e.b+'" class="wire '+(e.kind||'')+'" d="'+p.map((v,i)=>(i?'L':'M')+v.join(' ')).join(' ')+'"/>'+
+        (e.label?'<text class="edge-label" x="'+x+'" y="'+y+'">'+e.label+'</text>':'');
+    }).join('');
+    $('nodes').innerHTML=layout.nodes.map(n=>{
+      const d=data[n.id], c=colors[d.kind], badge=d.mm?'MATMUL '+d.mm+' / 9':n.id==='cache'?'K + V · 8 layers':n.id==='decoder'?'LayerNorm · Attention · SwiGLU':n.id==='tokens'?(state.phase==='prefill'?'B = 1 · T = 2048':'B = 8 · T = 1'):shape(d.outputs[0].shape);
+      const target=d.expand!==undefined?'<g class="expand-hit" role="button" tabindex="0" data-expand="'+d.expand+'" data-owner="'+n.id+'" aria-label="'+escape(d.title)+' 내부 펼치기" transform="translate('+(n.w/2-31)+' 15)"><rect width="23" height="23" rx="5"/><text x="11.5" y="18" text-anchor="middle">+</text></g>':'';
+      // Expansion controls are siblings of selection controls for keyboard semantics.
+      return '<g transform="translate('+n.x+' '+n.y+')" style="--accent:'+c[0]+';--fill:'+c[1]+';--hover:'+c[2]+'">'+
+        '<g class="graph-node" role="button" tabindex="0" data-node="'+n.id+'" data-op="'+(d.op||'')+'" data-mm="'+(d.mm||'')+'" data-inputs="'+escape(JSON.stringify(d.inputs.map(t=>t.shape)))+'" data-outputs="'+escape(JSON.stringify(d.outputs.map(t=>t.shape)))+'" aria-label="'+escape(d.title)+' 설명" aria-pressed="'+(state.selected===n.id)+'">'+
+        '<rect class="node-body" x="'+(-n.w/2)+'" width="'+n.w+'" height="54" rx="9"/><text class="node-title" x="'+(target?-10:0)+'" y="23" text-anchor="middle">'+escape(d.title)+'</text><text class="node-subtitle" x="'+(target?-10:0)+'" y="41" text-anchor="middle">'+escape(badge)+'</text></g>'+target+
+        (d.repeat&&n.id==='decoder'?'<text class="node-counter" x="'+(n.w/2+15)+'" y="34">×8</text>':'')+'</g>';
+    }).join('');
+    $('granularity').value=state.level;
+    $('granularity').setAttribute('aria-valuetext',levels[state.level]);
+    $('level-label').value=levels[state.level];
+    $('gesture-hint').textContent=state.level===0?'노드 선택 · 드래그 이동 · 스크롤 확대':'드래그로 연산 탐색 · 0 키로 전체 보기';
+    document.querySelectorAll('[data-phase]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.phase===state.phase));
+    updateCamera();renderInspector();
+  }
+  function updateCamera() {
+    const c=state.camera;
+    $('viewport').setAttribute('transform','translate('+c.x+' '+c.y+') scale('+c.k+')');
+    $('zoom-label').value=Math.round(c.k*100)+'%';
+    $('zoom-in').disabled=c.k>=2.5;
+    $('zoom-out').disabled=c.k<=.1;
+  }
+  function fitCamera() {
+    const b=layout.bounds, box=$('graph').getBoundingClientRect();
+    const k=Math.max(.1,Math.min(1.1,(box.width-40)/b.w,(box.height-30)/b.h));
+    state.camera={x:(box.width-b.w*k)/2-b.x*k,y:(box.height-b.h*k)/2-b.y*k,k};
+    updateCamera();
+  }
+  function zoom(factor,point) {
+    const c=state.camera, rect=$('graph').getBoundingClientRect();
+    const p=point||{x:rect.width/2,y:rect.height/2};
+    const k=Math.max(.1,Math.min(2.5,c.k*factor)), r=k/c.k;
+    state.camera={x:p.x-(p.x-c.x)*r,y:p.y-(p.y-c.y)*r,k};updateCamera();
+  }
+  function frameSelection() {
+    fitCamera();
+    if(state.level===0||state.camera.k>=.9)return;
+    const n=layout.nodes.find(n=>n.id===state.selected);
+    if(!n)return;
+    const rect=$('graph').getBoundingClientRect(), k=.9;
+    state.camera={x:rect.width/2-n.x*k,y:Math.min(135,rect.height*.28)-(n.y+n.h/2)*k,k};
+    updateCamera();
+  }
+  function syncHistoryButtons() {
+    $('back').disabled=historyIndex<=0;$('forward').disabled=historyIndex>=history.length-1;
+  }
+  function remember() {
+    const snapshot=JSON.stringify(state);
+    if(history[historyIndex]===snapshot) return;
+    history=history.slice(0,historyIndex+1);history.push(snapshot);
+    if(history.length>100) history.shift();
+    historyIndex=history.length-1;syncHistoryButtons();
+  }
+  function finishWheel() {
+    if(wheelTimer) {clearTimeout(wheelTimer);wheelTimer=null;remember();}
+  }
+  function select(id) {
+    finishWheel();state.selected=id;
+    document.querySelectorAll('[data-node]').forEach(n=>n.setAttribute('aria-pressed',n.dataset.node===id));
+    renderInspector();$('inspector').scrollTop=0;remember();
+  }
+  function changeLevel(level,owner,moveFocus=true) {
+    finishWheel();state.level=Number(level);
+    if(state.level===0) state.selected='decoder';
+    else if(owner==='mlp') state.selected='gate_proj';
+    else state.selected=state.level===1?'attention':'q_proj';
+    renderGraph();frameSelection();remember();
+    if(moveFocus)focusNode(state.selected);
+  }
+  function focusNode(id) {document.querySelector('[data-node="'+id+'"]')?.focus({preventScroll:true});}
+  function restore(delta) {
+    finishWheel();
+    const i=historyIndex+delta;if(i<0||i>=history.length)return;
+    historyIndex=i;Object.assign(state,JSON.parse(history[i]));renderGraph();syncHistoryButtons();
+  }
+  function notice(text) {
+    clearTimeout(noticeTimer);$('notice').textContent=text;$('notice').hidden=false;
+    noticeTimer=setTimeout(()=>$('notice').hidden=true,3200);
+  }
+  async function copyPath() {
+    const value=data[state.selected]?.path;if(!value)return;
+    try {
+      if(!navigator.clipboard?.writeText)throw new Error('Clipboard unavailable');
+      await navigator.clipboard.writeText(value);notice('구현 식별자를 복사했습니다.');
+    } catch {
+      const input=$('copy-fallback');if(!input)return;
+      input.value=value;input.hidden=false;input.focus();input.select();
+      notice('선택한 텍스트를 Ctrl+C 또는 ⌘C로 복사하세요.');
+    }
+  }
+  $('graph').addEventListener('click',e=>{
+    if(suppressClick)return;
+    const expand=e.target.closest('[data-expand]'), collapse=e.target.closest('[data-collapse]');
+    if(expand)changeLevel(expand.dataset.expand,expand.dataset.owner);
+    else if(collapse)changeLevel(collapse.dataset.collapse);
+    else {const node=e.target.closest('[data-node]');if(node)select(node.dataset.node);}
+  });
+  $('graph').addEventListener('keydown',e=>{
+    const target=e.target.closest('[data-node],[data-expand],[data-collapse]');
+    if(target&&(e.key==='Enter'||e.key===' ')){e.preventDefault();target.dispatchEvent(new MouseEvent('click',{bubbles:true}));return;}
+    // Let Tab visit nodes; arrows pan the canvas and +/- provide keyboard zoom.
+    const shifts={ArrowLeft:[40,0],ArrowRight:[-40,0],ArrowUp:[0,40],ArrowDown:[0,-40]};
+    if(shifts[e.key]) {e.preventDefault();finishWheel();state.camera.x+=shifts[e.key][0];state.camera.y+=shifts[e.key][1];updateCamera();remember();}
+    else if(e.key==='+'||e.key==='='||e.key==='-'){e.preventDefault();finishWheel();zoom(e.key==='-'?1/1.2:1.2);remember();}
+    else if(e.key==='0'){e.preventDefault();finishWheel();fitCamera();remember();}
+    else if(e.key==='Escape'){e.preventDefault();select(null);$('graph').focus();}
+  });
+  $('graph').addEventListener('focusin',e=>{
+    const target=e.target.closest('[data-node],[data-expand],[data-collapse]');
+    if(!target)return;
+    const r=target.getBoundingClientRect(), box=$('graph').getBoundingClientRect(), pad=15;
+    const dx=r.left<box.left+pad?box.left+pad-r.left:r.right>box.right-pad?box.right-pad-r.right:0;
+    const dy=r.top<box.top+pad?box.top+pad-r.top:r.bottom>box.bottom-pad?box.bottom-pad-r.bottom:0;
+    if(dx||dy) {state.camera.x+=dx;state.camera.y+=dy;updateCamera();remember();}
+  });
+  $('inspector').addEventListener('click',e=>{
+    const b=e.target.closest('[data-action]');if(!b)return;
+    const action=b.dataset.action;
+    if(action==='copy')copyPath();
+    else if(action==='expand')changeLevel(b.dataset.level,state.selected);
+    else if(action==='start')changeLevel(0);
+    else {select(null);$('inspector').querySelector('[data-action="about"]').focus({preventScroll:true});}
+  });
+  $('granularity').addEventListener('input',e=>changeLevel(e.target.value,undefined,false));
+  // Keep keyboard focus on the range while adjusting it repeatedly.
+  $('granularity').addEventListener('keydown',e=>e.stopPropagation());
+  document.querySelectorAll('[data-phase]').forEach(b=>b.addEventListener('click',()=>{
+    if(state.phase===b.dataset.phase)return;
+    finishWheel();state.phase=b.dataset.phase;
+    if(state.phase==='prefill'&&state.selected==='kv_write')state.selected='cache';
+    renderGraph();frameSelection();remember();
+  }));
+  $('back').addEventListener('click',()=>restore(-1));$('forward').addEventListener('click',()=>restore(1));
+  $('zoom-in').addEventListener('click',()=>{finishWheel();zoom(1.2);remember();});
+  $('zoom-out').addEventListener('click',()=>{finishWheel();zoom(1/1.2);remember();});
+  $('fit').addEventListener('click',()=>{finishWheel();fitCamera();remember();});
+  $('graph').addEventListener('wheel',e=>{
+    e.preventDefault();const r=$('graph').getBoundingClientRect();
+    zoom(Math.exp(-e.deltaY*.0015),{x:e.clientX-r.left,y:e.clientY-r.top});
+    clearTimeout(wheelTimer);wheelTimer=setTimeout(()=>{wheelTimer=null;remember();},180);
+  },{passive:false});
+  function beginGesture() {
+    const pts=[...pointers.values()];
+    gesture={camera:{...state.camera},points:pts.map(p=>({...p}))};
+  }
+  $('graph').addEventListener('pointerdown',e=>{
+    if(e.button!==0)return;
+    finishWheel();pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});beginGesture();suppressClick=false;
+    // Capture background drags; node clicks retain their actual target.
+    if(!e.target.closest('[data-node],[data-expand],[data-collapse]'))$('graph').setPointerCapture(e.pointerId);
+  });
+  window.addEventListener('pointermove',e=>{
+    if(!pointers.has(e.pointerId)||!gesture)return;
+    pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    const pts=[...pointers.values()], start=gesture.points, c=gesture.camera;
+    if(pts.length===1) {
+      const dx=pts[0].x-start[0].x,dy=pts[0].y-start[0].y;
+      if(Math.hypot(dx,dy)>4)suppressClick=true;
+      if(suppressClick){state.camera={x:c.x+dx,y:c.y+dy,k:c.k};updateCamera();$('graph').classList.add('dragging');}
+    } else {
+      const distance=p=>Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y);
+      const r=$('graph').getBoundingClientRect(), k=Math.max(.1,Math.min(2.5,c.k*distance(pts)/Math.max(1,distance(start))));
+      const a={x:(start[0].x+start[1].x)/2-r.left,y:(start[0].y+start[1].y)/2-r.top};
+      const b={x:(pts[0].x+pts[1].x)/2-r.left,y:(pts[0].y+pts[1].y)/2-r.top};
+      state.camera={x:b.x-(a.x-c.x)*k/c.k,y:b.y-(a.y-c.y)*k/c.k,k};suppressClick=true;updateCamera();
+    }
+  });
+  function endPointer(e) {
+    if(!pointers.has(e.pointerId))return;
+    pointers.delete(e.pointerId);
+    if(pointers.size)beginGesture();
+    else {gesture=null;$('graph').classList.remove('dragging');if(suppressClick)remember();setTimeout(()=>suppressClick=false,0);}
+  }
+  window.addEventListener('pointerup',endPointer);window.addEventListener('pointercancel',endPointer);
+  renderGraph();fitCamera();remember();
+  let size={width:$('graph').clientWidth,height:$('graph').clientHeight};
+  new ResizeObserver(()=>{
+    const next={width:$('graph').clientWidth,height:$('graph').clientHeight};
+    if(next.width===size.width&&next.height===size.height)return;
+    size=next;fitCamera();
+    // Resizing changes only this history entry; it is not an exploration step.
+    history[historyIndex]=JSON.stringify(state);
+  }).observe($('graph'));
+})();
+</script>
+</body>
+</html>
