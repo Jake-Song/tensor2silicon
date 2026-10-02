@@ -50,7 +50,7 @@ F, 최종 C 쓰기, 연산 시간은 **네 경우 모두 같다.** FMA의 개수
 곱셈은 N³번이고, 매번 A·B를 하나씩 읽는다. 읽은 스칼라는 해당 곱셈 후 재사용하지 않는다. 중간 합만 온칩에 남긴다.
 
 $$
-Q_0=\underbrace{N^3\times2\times4}_{\text{A·B 읽기}}
+Q_0=\underbrace{N^3\times2\times4}_{\text{A와 B 읽기}}
 +\underbrace{4N^2}_{\text{C 쓰기}}
 =549,822,922,752\ \mathrm{Byte}
 $$
