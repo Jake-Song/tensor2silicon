@@ -14,7 +14,7 @@
 | B 입력 조각 | T_K×T_N | 4T_K T_N Byte |
 | 출력의 중간 합 acc | T_M×T_N | 4T_M T_N Byte |
 
-출력 타일을 고정하고 K 방향으로 A·B 조각을 차례로 바꿔 누산한다. [Triton Matrix Multiplication의 Compute Kernel](https://triton-lang.org/main/getting-started/tutorials/03-matrix-multiplication.html#compute-kernel) 첫 블록 알고리즘에서 이 관계를 확인할 수 있다. 이번 연습만 `T_M = T_N = T_K = T`로 둔다.
+출력 타일을 고정(출력 타일 공간 재사용)하고 K 방향으로 A·B 조각을 차례로 바꿔 누산한다. [Triton Matrix Multiplication의 Compute Kernel](https://triton-lang.org/main/getting-started/tutorials/03-matrix-multiplication.html#compute-kernel) 첫 블록 알고리즘에서 이 관계를 확인할 수 있다. 이번 연습만 `T_M = T_N = T_K = T`로 둔다.
 
 입력 한 벌의 공간은 `8T² Byte`, 중간 합은 `4T² Byte`다. 한 변이 두 배면 각각 **네 배**의 저장 공간이 필요하다.
 
