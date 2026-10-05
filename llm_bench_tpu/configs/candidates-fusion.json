@@ -1,0 +1,20 @@
+[
+  {
+    "id": "26-projection-decode",
+    "backend": "native",
+    "phase": "decode",
+    "changes": {
+      "fuse_projection": true
+    },
+    "hypothesis": "Fuse projections with RoPE/head layout while preserving BF16 projection rounding"
+  },
+  {
+    "id": "27-projection-prefill",
+    "backend": "native",
+    "phase": "prefill",
+    "changes": {
+      "fuse_projection": true
+    },
+    "hypothesis": "Fuse projections with RoPE/head layout while preserving BF16 projection rounding"
+  }
+]

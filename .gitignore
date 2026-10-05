@@ -21,3 +21,7 @@ autoresearch/*/run.log
 autoresearch/llm_*/runs/
 autoresearch/llm_*/baseline.json
 autoresearch/llm_*/baseline.log
+
+# llm bench
+llm_bench/results
+llm_bench_tpu/results

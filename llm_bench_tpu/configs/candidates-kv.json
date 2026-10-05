@@ -1,0 +1,29 @@
+[
+  {
+    "id": "01-kv-512",
+    "backend": "native",
+    "phase": "decode",
+    "changes": {
+      "kv_block_s": 512
+    },
+    "hypothesis": "KV writes consume 75% of native decode device time; increase sequence block from incumbent to 512"
+  },
+  {
+    "id": "02-kv-1024",
+    "backend": "native",
+    "phase": "decode",
+    "changes": {
+      "kv_block_s": 1024
+    },
+    "hypothesis": "KV writes consume 75% of native decode device time; increase sequence block from incumbent to 1024"
+  },
+  {
+    "id": "03-kv-2048",
+    "backend": "native",
+    "phase": "decode",
+    "changes": {
+      "kv_block_s": 2048
+    },
+    "hypothesis": "KV writes consume 75% of native decode device time; increase sequence block from incumbent to 2048"
+  }
+]

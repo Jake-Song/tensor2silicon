@@ -1,0 +1,195 @@
+[
+  {
+    "id": "11-decode-k-full",
+    "backend": "native",
+    "phase": "decode",
+    "changes": {
+      "gemm": {
+        "8x2048x2048": [
+          8,
+          2048,
+          512
+        ],
+        "8x2048x5632": [
+          8,
+          2048,
+          512
+        ],
+        "8x2048x32000": [
+          8,
+          2048,
+          256
+        ]
+      }
+    },
+    "hypothesis": "Use the full 2048 K extent in decode GEMMs to reduce reduction iterations"
+  },
+  {
+    "id": "12-decode-down-full",
+    "backend": "native",
+    "phase": "decode",
+    "changes": {
+      "gemm": {
+        "8x5632x2048": [
+          8,
+          5632,
+          512
+        ]
+      }
+    },
+    "hypothesis": "Use one K reduction tile in the down projection"
+  },
+  {
+    "id": "13-decode-n-wide",
+    "backend": "native",
+    "phase": "decode",
+    "changes": {
+      "gemm": {
+        "8x2048x2048": [
+          8,
+          2048,
+          2048
+        ],
+        "8x2048x5632": [
+          8,
+          2048,
+          1408
+        ],
+        "8x2048x32000": [
+          8,
+          2048,
+          1280
+        ]
+      }
+    },
+    "hypothesis": "Increase weight transfer sizes and reduce N grid iterations"
+  },
+  {
+    "id": "14-decode-down-wide",
+    "backend": "native",
+    "phase": "decode",
+    "changes": {
+      "gemm": {
+        "8x5632x2048": [
+          8,
+          2816,
+          1024
+        ]
+      }
+    },
+    "hypothesis": "Balance K and N dimensions in the down projection"
+  },
+  {
+    "id": "15-prefill-bm-256",
+    "backend": "native",
+    "phase": "prefill",
+    "changes": {
+      "gemm": {
+        "2048x2048x2048": [
+          256,
+          1024,
+          512
+        ],
+        "2048x2048x5632": [
+          256,
+          1024,
+          512
+        ],
+        "2048x5632x2048": [
+          256,
+          512,
+          512
+        ],
+        "2048x2048x32000": [
+          256,
+          1024,
+          256
+        ]
+      }
+    },
+    "hypothesis": "Reduce M tile to improve the prefill GEMM pipeline"
+  },
+  {
+    "id": "16-prefill-k-2048",
+    "backend": "native",
+    "phase": "prefill",
+    "changes": {
+      "gemm": {
+        "2048x2048x2048": [
+          512,
+          2048,
+          512
+        ],
+        "2048x2048x5632": [
+          512,
+          2048,
+          512
+        ],
+        "2048x2048x32000": [
+          512,
+          2048,
+          256
+        ]
+      }
+    },
+    "hypothesis": "Larger K tiles reduce prefill reduction overhead"
+  },
+  {
+    "id": "17-prefill-n-wide",
+    "backend": "native",
+    "phase": "prefill",
+    "changes": {
+      "gemm": {
+        "2048x2048x2048": [
+          512,
+          2048,
+          1024
+        ],
+        "2048x2048x5632": [
+          512,
+          2048,
+          1408
+        ],
+        "2048x2048x32000": [
+          512,
+          2048,
+          1280
+        ]
+      }
+    },
+    "hypothesis": "Larger N tiles improve reuse in the measured prefill GEMM bottleneck"
+  },
+  {
+    "id": "18-prefill-down-tile",
+    "backend": "native",
+    "phase": "prefill",
+    "changes": {
+      "gemm": {
+        "2048x5632x2048": [
+          512,
+          1408,
+          1024
+        ]
+      }
+    },
+    "hypothesis": "Increase K and N reuse for prefill down projection"
+  },
+  {
+    "id": "19-prefill-q-256",
+    "backend": "native",
+    "phase": "prefill",
+    "changes": {
+      "block_q": 256
+    },
+    "hypothesis": "Larger query tile reuses K/V across more prefill rows"
+  },
+  {
+    "id": "20-prefill-q-512",
+    "backend": "native",
+    "phase": "prefill",
+    "changes": {
+      "block_q": 512
+    },
+    "hypothesis": "Larger query tile reuses K/V across more prefill rows"
+  }
+]

@@ -1,0 +1,65 @@
+[
+  {
+    "id": "04-kv-heads-4",
+    "backend": "native",
+    "phase": "decode",
+    "changes": {
+      "kv_group_heads": 4
+    },
+    "hypothesis": "Batch 4 contiguous cache heads per grid program to reduce KV pipeline overhead"
+  },
+  {
+    "id": "05-kv-heads-8",
+    "backend": "native",
+    "phase": "decode",
+    "changes": {
+      "kv_group_heads": 8
+    },
+    "hypothesis": "Batch 8 contiguous cache heads per grid program to reduce KV pipeline overhead"
+  },
+  {
+    "id": "06-kv-heads-16",
+    "backend": "native",
+    "phase": "decode",
+    "changes": {
+      "kv_group_heads": 16
+    },
+    "hypothesis": "Batch 16 contiguous cache heads per grid program to reduce KV pipeline overhead"
+  },
+  {
+    "id": "07-kv-pair",
+    "backend": "native",
+    "phase": "decode",
+    "changes": {
+      "kv_pair": true
+    },
+    "hypothesis": "Write K and V together to amortize grid and call overhead"
+  },
+  {
+    "id": "08-attention-heads-2",
+    "backend": "native",
+    "phase": "decode",
+    "changes": {
+      "decode_heads": 2
+    },
+    "hypothesis": "Group 2 decode attention heads to amortize K/V transfers"
+  },
+  {
+    "id": "09-attention-heads-4",
+    "backend": "native",
+    "phase": "decode",
+    "changes": {
+      "decode_heads": 4
+    },
+    "hypothesis": "Group 4 decode attention heads to amortize K/V transfers"
+  },
+  {
+    "id": "10-attention-heads-8",
+    "backend": "native",
+    "phase": "decode",
+    "changes": {
+      "decode_heads": 8
+    },
+    "hypothesis": "Group 8 decode attention heads to amortize K/V transfers"
+  }
+]

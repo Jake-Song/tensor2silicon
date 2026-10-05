@@ -1,0 +1,11 @@
+[
+  {
+    "id": "30-kv-flat-mask",
+    "backend": "native",
+    "phase": "decode",
+    "changes": {
+      "kv_flat_tail": true
+    },
+    "hypothesis": "Construct the tail mask directly in 2D to support a plain bulk KV copy with aligned tail updates"
+  }
+]

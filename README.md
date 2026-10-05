@@ -112,6 +112,25 @@ uv run --with jax python -m llm_roofline.jax_llm --preset tiny                  
 uv run --with matplotlib python -m llm_roofline.plot llm_roofline/results/*.json --out-dir plots
 ```
 
+## BF16 전체 추론: PyTorch · Triton 비교
+
+같은 모델을 컴파일 PyTorch, 컴파일 PyTorch + 직접 작성한 Triton, 전체 계산을 직접 작성한 Triton으로 비교합니다.
+Prefill·B=8 decode·128토큰 생성의 실제 GPU 시간과 wall-clock 시간, FP32 기준 정확도를 확인합니다.
+
+- [실행 방법과 측정 조건](llm_bench/README.md)
+- [G4 실측 보고서와 원시 결과](llm_bench/results/2026-10-04-g4/report.md)
+- [코드·결과가 내장된 분석 노트북](notebooks/llm_backend_comparison_g4.ipynb)
+
+## BF16 전체 추론: JAX · Pallas 비교 (TPU v6e)
+
+같은 8층 decoder를 JAX, attention만 Pallas로 교체한 JAX+Pallas, 모든 모델 연산을 Pallas로 작성한 native Pallas로 비교합니다.
+Colab TPU v6e에서 prefill·B=8 decode를 측정하고, 전체 logits·KV 정확도와 실제 Pallas 실행 경로를 검사합니다.
+
+- [실행 방법과 비교 조건](llm_bench_tpu/README.md)
+- [Colab 실행 노트북](notebooks/llm_backend_comparison_tpu_v6e.ipynb)
+- [TPU v6e 실측 보고서](llm_bench_tpu/results/2026-10-05-v6e/report.md)
+- [TPU 프로파일링·Pallas 최적화 결과](llm_bench_tpu/results/2026-10-05-v6e-optimized/report.md)
+
 ## autoresearch: 에이전트가 커널을 최적화하는 실험
 
 Claude Code가 Colab 터미널에서 `kernel.py`만 고치며 fused `ReLU(XW + b)` 커널을 반복 실험으로 빠르게 만든다.

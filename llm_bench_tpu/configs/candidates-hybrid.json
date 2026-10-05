@@ -1,0 +1,47 @@
+[
+  {
+    "id": "22-hybrid-heads-4",
+    "backend": "hybrid",
+    "phase": "decode",
+    "changes": {
+      "decode_heads": 4
+    },
+    "hypothesis": "Remeasure shared grouped attention inside the hybrid full model"
+  },
+  {
+    "id": "25-hybrid-q-512",
+    "backend": "hybrid",
+    "phase": "prefill",
+    "changes": {
+      "block_q": 512
+    },
+    "hypothesis": "Remeasure larger query blocks inside the hybrid full model"
+  },
+  {
+    "id": "24-hybrid-q-256",
+    "backend": "hybrid",
+    "phase": "prefill",
+    "changes": {
+      "block_q": 256
+    },
+    "hypothesis": "Remeasure larger query blocks inside the hybrid full model"
+  },
+  {
+    "id": "21-hybrid-heads-2",
+    "backend": "hybrid",
+    "phase": "decode",
+    "changes": {
+      "decode_heads": 2
+    },
+    "hypothesis": "Remeasure shared grouped attention inside the hybrid full model"
+  },
+  {
+    "id": "23-hybrid-heads-8",
+    "backend": "hybrid",
+    "phase": "decode",
+    "changes": {
+      "decode_heads": 8
+    },
+    "hypothesis": "Remeasure shared grouped attention inside the hybrid full model"
+  }
+]
