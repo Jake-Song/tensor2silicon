@@ -1,7 +1,7 @@
-"""All-compute Triton implementation of the repository's decoder-only model.
+"""All-compute Triton or CUDA C++/cuBLAS implementation of the repository's decoder-only model.
 
 PyTorch supplies tensor storage, metadata/views and the caller's CUDA Graph
-capture machinery. Model arithmetic, KV writes and token selection are Triton
+capture machinery. Model arithmetic, KV writes and token selection are native
 kernels. Weight concatenation and RoPE table transfer happen only at setup.
 """
 
@@ -12,15 +12,16 @@ import torch
 
 from llm_roofline.spec import rope_tables
 
-from . import triton_ops as ops
-from .triton_attention import attention
-from .triton_matmul import linear
 
 
 class NativeRunner:
-    """Triton decoder with explicit compact-prefill and static-decode caches."""
+    """Native decoder with explicit compact-prefill and static-decode caches."""
 
-    def __init__(self, cfg, params, capacity: int):
+    def __init__(self, cfg, params, capacity: int, implementation="triton"):
+        if implementation not in ("triton", "cuda"):
+            raise ValueError("unknown native implementation")
+        if not cfg.n_layers:
+            raise ValueError("native runner requires at least one layer")
         if cfg.d_model != cfg.n_heads * cfg.head_dim:
             raise ValueError("d_model must equal n_heads * head_dim")
         if cfg.n_heads % cfg.n_kv_heads:
@@ -31,6 +32,13 @@ class NativeRunner:
             raise ValueError("capacity must be positive")
         if params["embed"].dtype != torch.bfloat16:
             raise ValueError("NativeRunner benchmarks BF16 parameters")
+        if implementation == "cuda":
+            from . import cuda_ops
+            cuda_ops.extension()
+            self.ops, self.linear, self.attention = cuda_ops, cuda_ops.linear, cuda_ops.attention
+        else:
+            from . import triton_ops, triton_matmul, triton_attention
+            self.ops, self.linear, self.attention = triton_ops, triton_matmul.linear, triton_attention.attention
         self.cfg = cfg
         self.params = params
         self.capacity = capacity
@@ -49,29 +57,29 @@ class NativeRunner:
 
     def _finish_layer(self, x, projected, layer_index):
         p = self.layers[layer_index]
-        x, h = ops.add_layernorm(x, projected, p["ln2_w"], p["ln2_b"])
-        gated = ops.swiglu(linear(h, p["w_gate_up"]))
-        down = linear(gated, p["w_down"])
+        x, h = self.ops.add_layernorm(x, projected, p["ln2_w"], p["ln2_b"])
+        gated = self.ops.swiglu(self.linear(h, p["w_gate_up"]))
+        down = self.linear(gated, p["w_down"])
         if layer_index + 1 < len(self.layers):
             next_p = self.layers[layer_index + 1]
-            return ops.add_layernorm(x, down, next_p["ln1_w"], next_p["ln1_b"])
-        return ops.add_layernorm(x, down, self.params["lnf_w"], self.params["lnf_b"])
+            return self.ops.add_layernorm(x, down, next_p["ln1_w"], next_p["ln1_b"])
+        return self.ops.add_layernorm(x, down, self.params["lnf_w"], self.params["lnf_b"])
 
     def prefill(self, tokens):
         """Return all ``[B,T,vocab]`` logits and compact per-layer ``[B,K,T,H]`` KV."""
         if tokens.shape[1] > self.capacity:
             raise ValueError("prefill length exceeds RoPE/cache capacity")
-        x = ops.embedding(tokens, self.params["embed"])
+        x = self.ops.embedding(tokens, self.params["embed"])
         first = self.layers[0]
-        h = ops.layernorm(x, first["ln1_w"], first["ln1_b"])
+        h = self.ops.layernorm(x, first["ln1_w"], first["ln1_b"])
         cache = []
         for i, p in enumerate(self.layers):
-            qkv = linear(h, p["wqkv"])
-            q, k, v = ops.rope_qkv(qkv, self.cos, self.sin, self.cfg.n_heads, self.cfg.n_kv_heads)
+            qkv = self.linear(h, p["wqkv"])
+            q, k, v = self.ops.rope_qkv(qkv, self.cos, self.sin, self.cfg.n_heads, self.cfg.n_kv_heads)
             cache.append((k, v))
-            projected = linear(attention(q, k, v), p["wo"])
+            projected = self.linear(self.attention(q, k, v), p["wo"])
             x, h = self._finish_layer(x, projected, i)
-        return linear(h, self.params["lm_head"]), cache
+        return self.linear(h, self.params["lm_head"]), cache
 
     def decode(self, tokens, cache, position):
         """Write one token at ``position`` and attend only through that cache slot.
@@ -82,34 +90,34 @@ class NativeRunner:
         """
         if tokens.shape[1] != 1:
             raise ValueError("decode accepts one token per sequence")
-        x = ops.embedding(tokens, self.params["embed"])
+        x = self.ops.embedding(tokens, self.params["embed"])
         first = self.layers[0]
-        h = ops.layernorm(x, first["ln1_w"], first["ln1_b"])
+        h = self.ops.layernorm(x, first["ln1_w"], first["ln1_b"])
         for i, p in enumerate(self.layers):
-            qkv = linear(h, p["wqkv"])
+            qkv = self.linear(h, p["wqkv"])
             k, v = cache[i]
-            q = ops.rope_qkv_decode(
+            q = self.ops.rope_qkv_decode(
                 qkv, self.cos, self.sin, self.cfg.n_heads, self.cfg.n_kv_heads, position, k, v,
             )
-            projected = linear(attention(q, k, v, position=position), p["wo"])
+            projected = self.linear(self.attention(q, k, v, position=position), p["wo"])
             x, h = self._finish_layer(x, projected, i)
-        return linear(h, self.params["lm_head"]), cache
+        return self.linear(h, self.params["lm_head"]), cache
 
     def copy_prefill_cache(self, src_cache, dst_cache):
         """Copy valid prefill prefixes using only Triton device work."""
         for (sk, sv), (dk, dv) in zip(src_cache, dst_cache, strict=True):
-            ops.copy_prefix(sk, dk)
-            ops.copy_prefix(sv, dv)
+            self.ops.copy_prefix(sk, dk)
+            self.ops.copy_prefix(sv, dv)
 
-    @staticmethod
-    def select_token(logits):
-        return ops.select_token(logits)
+    def select_token(self, logits):
+        return self.ops.select_token(logits)
 
-    @staticmethod
-    def advance(position):
-        ops.advance(position)
+    def advance(self, position):
+        self.ops.advance(position)
 
-    @staticmethod
-    def write_token(logits, token_buffer, output_tokens, index):
-        ops.select_token_into(logits, token_buffer)
-        ops.record_token(token_buffer, output_tokens, index)
+    def write_token(self, logits, token_buffer, output_tokens, index):
+        self.ops.select_token_into(logits, token_buffer)
+        self.ops.record_token(token_buffer, output_tokens, index)
+
+    def copy_token(self, src, dst):
+        self.ops.copy_token(src, dst)

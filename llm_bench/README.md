@@ -1,7 +1,8 @@
 # BF16 모델 전체 추론 비교
 
 현재 프로젝트의 8층 decoder를 **컴파일 PyTorch**, **컴파일 PyTorch + 직접 작성한 Triton**,
-**전체 계산을 직접 작성한 Triton**으로 실행한다. 기존 `llm_roofline` 모델과 과거 실험은 수정하지 않는다.
+**전체 계산을 직접 작성한 Triton**, **컴파일 PyTorch + 직접 작성한 CUDA C++**,
+**CUDA C++ + cuBLAS**의 다섯 경로로 실행한다. 기존 `llm_roofline` 모델과 과거 실험은 수정하지 않는다.
 
 GPU 환경에서 저장소 루트를 작업 디렉터리로 사용한다.
 
@@ -11,6 +12,14 @@ python -m llm_bench --preset tiny --quick --profile --out /tmp/llm-tiny.json
 
 # 실제 모델: prefill, 고정 context decode, 128토큰 연속 생성
 python -m llm_bench --backend all --profile --out /tmp/llm-full.json
+
+# CUDA C++ 두 경로: NVCC와 cuBLAS가 있는 CUDA toolkit 및 Ninja 필요
+python -m pip install ninja
+python -m llm_bench --backend hybrid-cuda --torch-attention flex-decode --out /tmp/llm-hybrid-cuda.json
+python -m llm_bench --backend cuda --profile --out /tmp/llm-native-cuda.json
+
+# 작은 연산 교체 범위를 맞춘 5개 경로 비교
+python -m llm_bench --backend all --torch-attention flex-decode --hybrid-attention flex-decode --profile --out /tmp/llm-five.json
 
 # 개별 구현/단계만 실행
 python -m llm_bench --backend triton --workload decode --out /tmp/llm-decode.json
@@ -35,11 +44,11 @@ PyTorch와 Triton은 GPU 런타임에 설치된 패키지를 사용한다. 실�
 | Decode | B=8, T=1, S=2048, 마지막 cache 슬롯을 갱신하는 전체 forward |
 | 연속 생성 | B=1, prompt 2048, greedy 128토큰; prefill에서 1개 + decode 127회 |
 | 자료형 | 가중치·저장 activation·KV·logits BF16, GEMM 누산과 일부 내부 계산 FP32 |
-| 컴파일 | 두 PyTorch 경로는 Inductor `fullgraph=True`, `max-autotune-no-cudagraphs` |
-| Graph | 세 구현 모두 외부 CUDA Graph; graph 없는 시간도 별도 측정 |
+| 컴파일 | 세 PyTorch 경로는 Inductor `fullgraph=True`, `max-autotune-no-cudagraphs` |
+| Graph | 다섯 구현 모두 외부 CUDA Graph; graph 없는 시간도 별도 측정 |
 
 PyTorch native에도 Inductor가 생성한 Triton은 포함될 수 있다.
-비교 경계는 **직접 작성한 Triton 커널의 범위**다.
+비교 경계는 **직접 작성한 Triton/CUDA C++ 커널의 범위**다.
 Native Triton의 PyTorch 사용은 메모리 할당, 가중치 준비, 메타데이터와 CUDA Graph 관리로 제한한다.
 profiler의 CUDA 계산 커널이 직접 작성한 커널 목록에 속하는지도 확인한다.
 Chrome trace의 leaf kernel/memcpy/memset만 집계해 compiled-region annotation과 자식 커널을 중복 계산하지 않는다.
@@ -130,6 +139,7 @@ Gate/up GEMM+SwiGLU fusion은 기존 BF16 projection 반올림을 보존하는 �
 |---|---|
 | `--torch-attention sdpa` | 순수 PyTorch의 기본 SDPA 경로 |
 | `--torch-attention flex-decode` | 순수 PyTorch의 연속 생성 decode에 공식 FlexAttention 사용 |
+| `--hybrid-attention flex-decode` | Triton 혼합 경로의 연속 생성에 공식 PyTorch FlexAttention 사용; 작은 연산 비교용 |
 | `--hybrid-attention triton` | 혼합 구현의 prefill/decode attention을 직접 작성한 Triton으로 교체 |
 | `--hybrid-attention decode-triton` | 혼합 구현의 decode attention만 직접 작성한 Triton으로 교체 |
 | `--hybrid-matmul decode-triton` | 혼합 구현의 모든 decode projection과 LM head를 Triton GEMM으로 교체 |
@@ -141,4 +151,34 @@ Gate/up GEMM+SwiGLU fusion은 기존 BF16 projection 반올림을 보존하는 �
 지원 여부와 시간 제한 때문에 모든 하드웨어 최적화를 망라했다고 주장하지 않는다.
 실제 적용·측정 후 탈락·미측정 항목은 각 실행의 분석 보고서에 남긴다.
 
-실측 자료: [2026-10-04 G4 결과](results/2026-10-04-g4/report.md).
+## CUDA C++ 경로
+
+`hybrid-cuda`는 embedding, affine LayerNorm, residual+LayerNorm, RoPE+KV 쓰기,
+SwiGLU, argmax와 cache/token 보조 연산을 직접 작성 CUDA C++로 실행한다.
+행렬곱은 PyTorch에 맡기며 attention은 `--torch-attention`을 따른다.
+`--hybrid-attention`과 `--hybrid-matmul`은 기존 Triton 혼합 경로에만 적용된다.
+작은 연산 비교에서는 `--hybrid-matmul torch`와 두 attention 옵션의 같은 값을 사용한다.
+`hybrid-cuda`는 custom operator의 FakeTensor·mutation 계약을 등록한 `fullgraph=True` compile 경로다.
+Inductor가 생성하는 Triton은 포함될 수 있다.
+
+`cuda`는 모델 계산을 CUDA C++와 cuBLAS로 실행한다. PyTorch는 가중치 준비,
+메모리 할당·뷰와 CUDA Graph 관리에 사용한다. Projection/LM head는 cuBLAS BF16 GEMM이며
+FP32로 누산한다. Prefill attention은 cuBLAS QK, CUDA causal softmax, cuBLAS PV를 사용한다.
+중간 FP32 score와 BF16 확률 행렬을 저장하므로 fused attention과 메모리 비용이 다르다.
+Decode attention은 CUDA online softmax와 32-way split-KV를 사용한다(head_dim ≤ 256).
+이 구현 간 시간 차이를 CUDA와 Triton 언어 자체의 우열로 해석하지 않는다.
+
+확장은 CUDA 경로를 선택할 때 PyTorch extension cache에 빌드한다. 빌드와 cuBLAS 준비는
+정상 추론 시간 밖에서 수행한다. `--help`와 CPU 검사에는 CUDA toolkit이 필요 없다.
+빌드 실패는 오류로 기록하며 다른 backend로 자동 대체하지 않는다.
+결과에는 `.py/.cu/.cpp/.h/.cuh` 소스 해시, NVCC 버전과 cuBLAS/빌드 메타데이터를 기록한다.
+메모리 수치는 PyTorch allocator의 프로세스 peak이며 라이브러리 내부 할당까지 포괄한 GPU 총사용량은 아니다.
+
+```bash
+RUN_LLM_BENCH_GPU_TESTS=1 python -m unittest discover -s tests -p 'test_llm_bench_cuda.py' -v
+```
+
+기존 실측 자료: [2026-10-04 G4 결과](results/2026-10-04-g4/report.md).
+
+CUDA 추가 실측: [2026-10-10 G4 5개 경로 비교](results/2026-10-10-g4-cuda/report.md),
+[결과와 소스를 내장한 재현 노트북](../notebooks/llm_backend_comparison_g4_cuda.ipynb).

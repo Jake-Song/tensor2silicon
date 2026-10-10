@@ -32,7 +32,7 @@ class TorchRunner:
     def __init__(
         self, cfg, params, capacity, hybrid=False, compile_model=True,
         attention_backend="sdpa", matmul_backend="torch", decode_full_context=False,
-        flex_kernel_options=None,
+        flex_kernel_options=None, custom_ops="triton",
     ):
         if capacity < 1:
             raise ValueError("capacity must be positive")
@@ -81,9 +81,13 @@ class TorchRunner:
         self.sin = torch.as_tensor(sin, dtype=torch.float32, device=self.device)
         self.cache_positions = torch.arange(self.capacity, dtype=torch.int64, device=self.device)
         if self.hybrid:
-            from . import triton_ops
-
-            self.ops = triton_ops
+            if custom_ops == "cuda":
+                from . import cuda_ops
+                cuda_ops.extension()
+                self.ops = cuda_ops
+            else:
+                from . import triton_ops
+                self.ops = triton_ops
         else:
             self.ops = None
         if attention_backend in ("triton", "decode-triton"):
@@ -274,3 +278,9 @@ class TorchRunner:
             self.ops.advance(position)
         else:
             position.add_(1)
+
+    def copy_token(self, src, dst):
+        if self.hybrid:
+            self.ops.copy_token(src, dst)
+        else:
+            dst.copy_(src)

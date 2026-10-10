@@ -44,7 +44,9 @@ def environment():
     sources = {}
     root = Path(__file__).resolve().parents[1]
     for directory in ('llm_bench', 'llm_roofline'):
-        for path in sorted((root / directory).glob('*.py')):
+        for path in sorted((root / directory).rglob('*')):
+            if path.suffix not in ('.py', '.cu', '.cpp', '.h', '.cuh'):
+                continue
             sources[str(path.relative_to(root))] = hashlib.sha256(path.read_bytes()).hexdigest()
     try:
         telemetry = subprocess.check_output([
@@ -52,7 +54,11 @@ def environment():
             '--format=csv'], text=True, timeout=10).strip()
     except (OSError, subprocess.SubprocessError) as error:
         telemetry = f'unavailable: {type(error).__name__}'
-    return dict(gpu=p.name, memory_gib=p.total_memory / 2**30,
+    try:
+        nvcc = subprocess.check_output(['nvcc', '--version'], text=True, timeout=10).strip()
+    except (OSError, subprocess.SubprocessError):
+        nvcc = None
+    return dict(nvcc=nvcc, gpu=p.name, memory_gib=p.total_memory / 2**30,
                 capability=list(torch.cuda.get_device_capability()), sm_count=p.multi_processor_count,
                 torch=torch.__version__, triton=triton.__version__, cuda=torch.version.cuda,
                 python=platform.python_version(), source_sha256=sources,
@@ -183,6 +189,17 @@ def profile_call(fn, path, native=False):
             return True
         return any(re.search(r'(?<![A-Za-z0-9_])' + re.escape(kernel) + r'(?![A-Za-z0-9_])', name)
                    for kernel in owned)
+    if native == "cuda":
+        def allowed(name):
+            lower = name.lower()
+            if any(tag in lower for tag in ('triton', 'at::native', 'elementwise_kernel')):
+                return False
+            cuda_owned = ('lb_embedding', 'lb_norm', 'lb_swiglu', 'lb_rope', 'lb_argmax',
+                          'lb_advance', 'lb_copy_prefix', 'lb_copy_token', 'lb_record_token',
+                          'lb_softmax', 'lb_heads', 'lb_decode_parts', 'lb_decode_reduce')
+            return (any(re.search(r'(?<![A-Za-z0-9_])' + kernel + r'(?![A-Za-z0-9_])', name)
+                        for kernel in cuda_owned)
+                    or any(tag in lower for tag in ('cublas', 'cutlass', 'gemm', 'gemv', 'memcpy', 'memset')))
     forbidden = [name for name in kernels if not allowed(name)] if native else []
     if native and not kernels:
         raise AssertionError('native profiler returned no CUDA events; cannot verify compute provenance')
@@ -193,11 +210,12 @@ def profile_call(fn, path, native=False):
 
 def make_runner(name, cfg, params, capacity, compile_model=True, attention_backend='sdpa', matmul_backend='torch',
                 torch_attention='sdpa', decode_full_context=False, flex_kernel_options=None):
-    if name == 'triton':
+    if name in ('triton', 'cuda'):
         from .native import NativeRunner
-        return NativeRunner(cfg, params, capacity)
+        return NativeRunner(cfg, params, capacity, implementation=name)
     from .torch_backend import TorchRunner
-    return TorchRunner(cfg, params, capacity, hybrid=name == 'hybrid', compile_model=compile_model,
+    return TorchRunner(cfg, params, capacity, hybrid=name in ('hybrid', 'hybrid-cuda'), compile_model=compile_model,
+                       custom_ops='cuda' if name == 'hybrid-cuda' else 'triton',
                        attention_backend=attention_backend if name == 'hybrid' else torch_attention,
                        matmul_backend=matmul_backend if name == 'hybrid' else 'torch',
                        decode_full_context=decode_full_context, flex_kernel_options=flex_kernel_options)
@@ -266,7 +284,7 @@ def fixed_workload(name, cfg, params, fp32_params, phase, args):
                   scope='whole process, including BF16 source/packed weights and FP32 validation weights')
     no_graph = time_fixed(fn, 2, 5 if args.quick else 20, 2)
     prof = profile_call(fn, Path(args.out).with_name(f'{Path(args.out).stem}-{name}-{phase.name}-trace.json'),
-                        native=name == 'triton') if args.profile else None
+                        native=name if name in ('triton', 'cuda') else False) if args.profile else None
     gpu_ms = timing['device_round_average']['median_ms']
     return dict(status='ok', backend=name, workload=phase.name, shape=dataclasses.asdict(phase),
                 correct=True, correctness=checks, changed_input_correctness=changed_checks,
@@ -295,21 +313,13 @@ def generation_workload(name, cfg, params, fp32_params, prompt_length, args):
         output = runner.prefill(prompt)
         runner.copy_prefill_cache(output[1], cache)
         selected = runner.select_token(output[0])
-        if name == 'triton':
-            from .triton_ops import copy_token
-            copy_token(selected, token)
-        else:
-            token.copy_(selected)
+        runner.copy_token(selected, token)
         return output
 
     def decode():
         output = runner.decode(token, cache, position)
         selected = runner.select_token(output[0])
-        if name == 'triton':
-            from .triton_ops import copy_token
-            copy_token(selected, token)
-        else:
-            token.copy_(selected)
+        runner.copy_token(selected, token)
         runner.advance(position)
         return output
 
@@ -404,7 +414,7 @@ def generation_workload(name, cfg, params, fp32_params, prompt_length, args):
         position.fill_(prompt_length)
         pre_graph()
         prof = profile_call(decode, Path(args.out).with_name(f'{Path(args.out).stem}-{name}-generate-trace.json'),
-                            native=name == 'triton')
+                            native=name if name in ('triton', 'cuda') else False)
     return dict(status='ok', backend=name, workload='generate', correct=True,
                 batch=1, prompt_length=prompt_length, generated_tokens=count,
                 prepare_s=prepare_s, prepare_compile_and_validation_s=first_s,
@@ -416,7 +426,7 @@ def generation_workload(name, cfg, params, fp32_params, prompt_length, args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--backend', choices=('torch', 'hybrid', 'triton', 'all'), default='all')
+    parser.add_argument('--backend', choices=('torch', 'hybrid', 'triton', 'hybrid-cuda', 'cuda', 'all'), default='all')
     parser.add_argument('--preset', choices=('tiny', 'small', 'colab'), default='colab')
     parser.add_argument('--workload', choices=('prefill', 'decode', 'generate', 'all'), default='all')
     parser.add_argument('--out', required=True)
@@ -426,7 +436,7 @@ def main():
     parser.add_argument('--profile', action='store_true')
     parser.add_argument('--no-compile', action='store_true', help='diagnostics only; never a compiled result')
     parser.add_argument('--torch-attention', choices=('sdpa', 'flex-decode'), default='sdpa')
-    parser.add_argument('--hybrid-attention', choices=('sdpa', 'triton', 'decode-triton'), default='sdpa')
+    parser.add_argument('--hybrid-attention', choices=('sdpa', 'triton', 'decode-triton', 'flex-decode'), default='sdpa')
     parser.add_argument('--hybrid-matmul', choices=('torch', 'decode-triton', 'm1-triton'), default='torch')
     parser.add_argument('--tuning-config', help='JSON containing measured split-K, split-KV and optional FlexAttention choices')
     args = parser.parse_args()
@@ -448,12 +458,12 @@ def main():
         set_attention_split_overrides(tuning_config.get('attention_split_overrides', {}))
         args.flex_kernel_options = tuning_config.get('flex_kernel_options')
     preset = spec.PRESETS[args.preset]
-    names = ['torch', 'hybrid', 'triton'] if args.backend == 'all' else [args.backend]
+    names = ['torch', 'hybrid', 'triton', 'hybrid-cuda', 'cuda'] if args.backend == 'all' else [args.backend]
     if args.reverse:
         names.reverse()
     phases = ['prefill', 'decode', 'generate'] if args.workload == 'all' else [args.workload]
     result = dict(environment=environment(), arguments=vars(args), model=dataclasses.asdict(preset.model),
-                  started_utc=time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()), results=[])
+                  backends=names, started_utc=time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()), results=[])
     if args.tuning_config:
         result['tuning_config_sha256'] = hashlib.sha256(Path(args.tuning_config).read_bytes()).hexdigest()
     write_json(args.out, result)
@@ -476,6 +486,9 @@ def main():
                     row = dict(status='error', backend=name, workload=phase, correct=False,
                                error=f'{type(error).__name__}: {error}', traceback=traceback.format_exc())
                     print(row['traceback'], flush=True)
+                if name in ('cuda', 'hybrid-cuda') and row['status'] == 'ok':
+                    from .cuda_ops import build_metadata
+                    result['environment']['cuda_extension'] = build_metadata()
                 result['results'].append(row)
                 result['updated_utc'] = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
                 write_json(args.out, result)

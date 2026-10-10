@@ -19,8 +19,9 @@ from pathlib import Path
 import shlex
 
 
-BACKENDS = ("torch", "hybrid", "triton")
-LABELS = {"torch": "PyTorch compile", "hybrid": "PyTorch + Triton compile", "triton": "Native Triton"}
+LEGACY_BACKENDS = ("torch", "hybrid", "triton")
+BACKENDS = (*LEGACY_BACKENDS, "hybrid-cuda", "cuda")
+LABELS = {"torch": "PyTorch compile", "hybrid": "PyTorch + Triton compile", "triton": "Native Triton", "hybrid-cuda": "PyTorch + CUDA compile", "cuda": "Native CUDA (cuBLAS)"}
 FINAL_FILES = ("final-run1.json", "final-run2.json")
 CANDIDATE_FILES = ("hybrid-attention-candidate.json", "hybrid-matmul-candidate.json", "hybrid-both-candidate.json")
 TORCH_CANDIDATE_FILES = ("torch-flex-candidate.json",)
@@ -51,11 +52,14 @@ def load_runs(results_dir):
             raise ValueError(f"{name} must use the full colab model preset")
         if data.get("model") != expected_model:
             raise ValueError(f"{name} model dimensions do not match the colab preset")
-        expected = {(backend, phase) for backend in BACKENDS for phase in ("prefill", "decode", "generate")}
+        selected = data.get("backends", LEGACY_BACKENDS)
+        if not selected or len(selected) != len(set(selected)) or not set(selected) <= set(BACKENDS):
+            raise ValueError(f"{name} has an invalid backend list: {selected}")
+        expected = {(backend, phase) for backend in selected for phase in ("prefill", "decode", "generate")}
         rows = data.get("results", [])
         keys = [(row.get("backend"), row.get("workload")) for row in rows]
         if len(keys) != len(set(keys)) or set(keys) != expected:
-            raise ValueError(f"{name} requires all nine unique backend/workload rows; got {keys}")
+            raise ValueError(f"{name} requires all {len(expected)} unique backend/workload rows; got {keys}")
         for row in rows:
             if row.get("status") == "ok" and row["workload"] == "generate":
                 if row.get("generated_tokens") != 128:
@@ -147,6 +151,7 @@ def hybrid_policy(args):
         "sdpa": "PyTorch SDPA",
         "triton": "prefill/decode Triton attention",
         "decode-triton": "prefill SDPA + decode Triton attention",
+        "flex-decode": "prefill/고정 decode SDPA + 연속 생성 FlexAttention",
     }.get(args.get("hybrid_attention", "sdpa"), f"attention policy={args.get('hybrid_attention')}")
     return matmul, attention
 
@@ -242,9 +247,80 @@ def _index(records):
     return {(r["run"], r["backend"], r["workload"], r["metric"]): r for r in records}
 
 
+def render_cuda_report(runs, records, reproduction_dir):
+    hybrid_choices = "; ".join(f"{run}: {', '.join(hybrid_policy(data.get('arguments', {})))}" for run, data in runs)
+    sections = ["# PyTorch·Triton·CUDA BF16 전체 모델 비교", "",
+        "무작위 가중치의 동일한 8층 decoder, BF16 가중치·activation·KV·logits를 사용했다. FP32 reference 검증은 성능 측정에서 제외했다.",
+        "Prefill B1/T2048, 고정 decode B8/S2048, 연속 생성 B1/prompt2048/128토큰이다. 모든 prompt 위치의 logits를 계산한다.", "",
+        "## 구현 경계", "",
+        _table(["Backend", "계산 방식"], [
+            (LABELS['torch'], "Inductor compile; PyTorch GEMM, SDPA/FlexAttention"),
+            (LABELS['hybrid'], "직접 작성 Triton 작은 연산; " + hybrid_choices),
+            (LABELS['hybrid-cuda'], "작은 연산만 직접 작성 CUDA C++; GEMM·attention은 PyTorch"),
+            (LABELS['triton'], "직접 작성 Triton으로 모델 계산·KV 쓰기·토큰 선택"),
+            (LABELS['cuda'], "직접 작성 CUDA C++ + cuBLAS; PyTorch는 저장소·준비·Graph 관리")]), "",
+        "혼합 경로의 작은 연산은 embedding, affine LayerNorm, residual+LayerNorm, RoPE+KV 쓰기, SwiGLU, argmax 및 cache/token 보조 연산이다. "
+        "세 compile 경로의 attention 정책은 실행 인자에 기록한다. Inductor가 생성하는 Triton은 허용되며 사용자 작성 Triton과 구분한다.",
+        "Native CUDA prefill attention은 cuBLAS QK → CUDA causal softmax → cuBLAS PV이며 FP32 score 행렬과 BF16 확률 행렬을 저장한다. "
+        "Fused FlashAttention 구현이 아니므로 native Triton과의 차이는 언어 자체의 차이로 해석할 수 없다. "
+        "Decode는 FP32 online softmax와 32-way split-KV CUDA 커널이다. cuBLAS GEMM은 BF16 입출력, FP32 누산을 사용한다.", "",
+        "## 측정 결과", "",
+        "배속은 같은 실행의 PyTorch compile 대비 값이다. 각 실행의 중앙값을 따로 보고하며 표본을 합치지 않는다.", ""]
+    lookup = _index(records)
+    overview = []
+    for run, _ in runs:
+        for backend in BACKENDS:
+            metrics = [("prefill", "graph_device"), ("decode", "graph_device"),
+                       ("generate", "generation_device"), ("generate", "ttft_device"),
+                       ("generate", "decode_token_device")]
+            values = [lookup.get((run, backend, phase, metric), {}).get("median_ms") for phase, metric in metrics]
+            if any(v is not None for v in values):
+                overview.append((run, LABELS[backend], *[_number(v) for v in values]))
+    sections += [_table(["실행", "Backend", "Prefill ms", "Decode ms", "128-token ms", "TTFT ms", "TPOT ms"], overview), "",
+                 "<details><summary>전체 시간 지표와 배속</summary>", ""]
+    rows = []
+    for r in records:
+        rows.append((r['run'], LABELS[r['backend']], r['workload'], METRIC_LABELS.get(r['metric'], r['metric']),
+                     _number(r['median_ms']), _number(r['p95_ms']), _number(r['speedup_vs_torch'])))
+    sections += [_table(['실행','Backend','Workload','측정','중앙값 ms','p95 ms','배속'], rows), '', '</details>', '',
+        "고정 forward CUDA event 표본은 여러 호출의 평균이며 개별 요청 p95가 아니다. 동기화 wall 시간은 개별 요청을 측정한다. "
+        "생성은 prefill, cache 복사, argmax, 위치 증가와 127 decode를 포함한다. Graph 없는 시간은 고정 forward에만 측정한다.", '',
+        '## 정확도와 실행 경로', '']
+    checks=[]
+    for run,data in runs:
+        for row in data['results']:
+            a=correctness_metrics(row)
+            profile=row.get('profile') or {}
+            checks.append((run,LABELS[row['backend']],row['workload'],row['status'],a['checked_tensors'],
+                           _number(a['worst_nrmse'],5),_number(a['worst_normalized_max'],5),
+                           len(profile.get('cuda_kernels',{})),str(profile.get('forbidden_native_kernels',[]))))
+    sections += [_table(['실행','Backend','Workload','상태','검사 tensor','최대 NRMSE','최대 정규화 오차','커널 종류','금지 커널'], checks), '',
+        '기준: NRMSE ≤ 0.02, 최대 오차/RMS(reference) ≤ 0.20. 전체 logits와 모든 유효 KV를 검사하고, 생성은 reference 토큰을 양쪽에 공급한다. '
+        'Graph 재실행과 GPU 위치 갱신도 검사한다. Native CUDA의 커널 provenance 검사는 CUDA/cuBLAS 커널 이름을 이용한 audit이며 형식적 증명은 아니다.', '',
+        '## 환경·재현', '']
+    for run,data in runs:
+        env=data['environment']
+        sections += [f"### {run}", '',
+            f"GPU: {env['gpu']} ({env['memory_gib']:.2f} GiB), capability {env['capability']}; PyTorch {env['torch']}, Triton {env['triton']}, CUDA {env['cuda']}.",
+            '```json',json.dumps(env.get('cuda_extension',{}),ensure_ascii=False,indent=2),'```',
+            '```bash',reproduction_command(run,data,reproduction_dir),'```', '']
+    preparation = [(run, LABELS[r['backend']], r['workload'], _number(r.get('prepare_s')),
+                    _number(r.get('compile_autotune_first_call_s', r.get('prepare_compile_and_validation_s'))),
+                    _number((r.get('memory') or {}).get('peak_allocated_gib')))
+                   for run, data in runs for r in data['results'] if r.get('status') == 'ok']
+    sections += [_table(['실행', 'Backend', 'Workload', '준비 s', '첫 호출/생성 준비·검증 s', 'Allocator peak GiB'], preparation), '',
+                 '소스 SHA-256은 Python·CUDA·C++·헤더를 포함한다. 컴파일, 가중치 준비, 정확도 검증과 profiling은 정상 추론 시간에 포함하지 않는다. '
+                 '첫 호출은 영속 compiler cache를 사용할 수 있다. 메모리는 reference 가중치를 포함한 프로세스 전체 값이며 backend 단독 상주량이 아니다.', '',
+                 '원시 표본·준비 시간·메모리는 final-run JSON, 전체 시간 지표는 summary.csv, 시각화는 charts.png에 보존한다. '
+                 '이번 실행은 최대 2시간의 G4 예산으로 수행하며 CUDA prefill fusion이나 모든 shape의 최적화를 완료했다고 주장하지 않는다.', '']
+    return '\n'.join(sections)
+
+
 def render_report(runs, records, inventory=(), tuning_configs=None, candidates=(),
                   reproduction_dir="llm_bench/results/2026-10-04-g4", torch_candidates=(), native_candidates=()):
     """Render measured observations separately from optimization interpretation."""
+    if any(row["backend"] in ("cuda", "hybrid-cuda") for row in records):
+        return render_cuda_report(runs, records, reproduction_dir)
     lookup = _index(records)
     tuning_configs = tuning_configs or {}
     first = runs[0][1]
@@ -752,16 +828,17 @@ def plot_records(records, destination):
               ("prefill", "graph_wall", "Prefill: synchronized wall ms"),
               ("decode", "graph_wall", "Decode: synchronized wall ms/step"),
               ("generate", "generation_wall", "128-token generation: wall ms"))
+    backends = [b for b in BACKENDS if any(r["backend"] == b for r in records)]
     colors = ("#4477AA", "#EE6677")
     for ax, (phase, metric, title) in zip(axes.flat, panels):
-        x = np.arange(len(BACKENDS))
+        x = np.arange(len(backends))
         width = 0.36 if len(run_names) == 2 else 0.7 / max(1, len(run_names))
         for index, run in enumerate(run_names):
-            values = [lookup.get((run, backend, phase, metric), {}).get("median_ms", float("nan")) for backend in BACKENDS]
+            values = [lookup.get((run, backend, phase, metric), {}).get("median_ms", float("nan")) for backend in backends]
             bars = ax.bar(x + (index - (len(run_names) - 1) / 2) * width, values, width,
                           label=run, color=colors[index % len(colors)])
-            ax.bar_label(bars, fmt="%.2f", padding=3, fontsize=8)
-        ax.set_xticks(x, ["PyTorch\ncompile", "PyTorch +\nTriton", "Native\nTriton"])
+            ax.bar_label(bars, fmt="%.2f", padding=3 + 11 * index, fontsize=8)
+        ax.set_xticks(x, [LABELS[b].replace(" + ", " +\n").replace(" (cuBLAS)", "\n(cuBLAS)") for b in backends], fontsize=7)
         ax.set_title(title, fontsize=11)
         ax.set_ylabel("milliseconds; lower is faster")
         ax.grid(axis="y", alpha=.2)
@@ -777,7 +854,11 @@ def build_notebook(runs, root, destination, inventory=(), results_dir=None, cand
     """Use plain JSON so building does not require nbformat/nbclient installed."""
     source_files = {}
     for package in ("llm_bench", "llm_roofline"):
-        for path in sorted((root / package).glob("*.py")):
+        for path in sorted((root / package).rglob("*")):
+            if "results" in path.relative_to(root / package).parts:
+                continue
+            if path.suffix not in (".py", ".cu", ".cpp", ".h", ".cuh"):
+                continue
             source_files[str(path.relative_to(root))] = path.read_text()
     sidecars = load_tuning_configs(runs, results_dir or Path.cwd())
     sidecars_raw = {name: base64.b64encode((Path(results_dir or Path.cwd()) / name).read_bytes()).decode()
@@ -847,7 +928,10 @@ for name, data in runs:
 '''
     rerun = '''# GPU 재측정은 최대 수십 분 이상 걸릴 수 있습니다. 모델/패키지 다운로드는 하지 않습니다.
 if RUN_BENCHMARK:
-    import os, subprocess, torch, triton
+    import os, subprocess, torch, triton, importlib.util
+    if any(b in ("cuda", "hybrid-cuda") for _, data in runs for b in data.get("backends", [])):
+        if importlib.util.find_spec("ninja") is None:
+            subprocess.run([sys.executable, "-m", "pip", "install", "ninja"], check=True)
     assert torch.cuda.is_available() and torch.cuda.is_bf16_supported()
     assert not any(source_mismatches.values()), '기록된 source와 다른 파일을 먼저 확인하세요.'
     print('재측정 GPU:', torch.cuda.get_device_name(), 'torch:', torch.__version__, 'triton:', triton.__version__)
@@ -901,10 +985,10 @@ print('수치 행:', len(records))
                 "metadata": {"kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
                              "language_info": {"name": "python", "version": "3"},
                              "colab": {"name": destination.name, "provenance": []}},
-                "cells": [md("# 프로젝트 모델의 PyTorch·Triton 실제 추론 비교\n\n"
+                "cells": [md("# 프로젝트 모델의 BF16 백엔드 실제 추론 비교\n\n"
                              "실측 JSON과 재현 가능한 모델·벤치마크 source를 내장한 노트북입니다. 기본 실행은 GPU 없이 결과를 재분석합니다. "
                              "NumPy와 Matplotlib이 필요하며 Colab 기본 환경에서 사용할 수 있습니다.\n\n"
-                             "PyTorch는 컴파일 버전, native Triton은 GPU 계산 전체를 수동 Triton kernel로 수행합니다. "
+                             "PyTorch는 컴파일 버전이며 CUDA 결과에는 직접 작성한 CUDA C++와 cuBLAS가 포함됩니다. "
                              "하드웨어별 최적화의 제한과 미수행 후보를 결과와 함께 기록했습니다."),
                           code(bootstrap), md("## 선택: GPU 재측정\n\n기본값은 저장 결과 분석입니다. 재측정하려면 위 cell의 "
                                               "`RUN_BENCHMARK=True`로 바꿉니다. 기록된 GPU/소프트웨어 환경과 현재 런타임을 비교하세요. "
