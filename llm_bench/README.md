@@ -182,3 +182,6 @@ RUN_LLM_BENCH_GPU_TESTS=1 python -m unittest discover -s tests -p 'test_llm_benc
 
 CUDA 추가 실측: [2026-10-10 G4 5개 경로 비교](results/2026-10-10-g4-cuda/report.md),
 [결과와 소스를 내장한 재현 노트북](../notebooks/llm_backend_comparison_g4_cuda.ipynb).
+
+기존 G4 trace 분석: [PyTorch compile 프로파일링 보고서](profiling/g4/report.md).
+B1 단독 사용자 조건에서 prefill의 큰 행렬곱과 decode의 가중치·KV 읽기를 분리 분석했다. 단계별 시간 비중과 다음 실험을 정리하고, 고정 B8 결과는 보조 자료로 포함한다.

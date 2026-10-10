@@ -1,0 +1,265 @@
+dataset,run,workload,category,group,name,calls,total_us,mean_us,share_percent
+2026-10-04-g4,final-run1,prefill,kernel,GEMM-containing (named),void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_256x128_32x3_nn_align8>(cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_256x128_32x3_nn_align8::Params),9,2615.98,290.6644444444444,38.326030430163165
+2026-10-04-g4,final-run1,prefill,kernel,GEMM-containing (named),triton_tem_fused__to_copy__unsafe_view_mm_mul_silu_split_view_7,8,1223.589,152.948625,17.926478508250412
+2026-10-04-g4,final-run1,prefill,kernel,GEMM-containing (named),triton_tem_fused__unsafe_view_add_embedding_mm_native_layer_norm_view_9,7,1116.452,159.49314285714286,16.35684268450696
+2026-10-04-g4,final-run1,prefill,kernel,FlashAttention,"void pytorch_flash::flash_fwd_kernel<Flash_fwd_kernel_traits<128, 128, 64, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 128, 64, 4, cutlass::bfloat16_t> >, false, true, false, false, true, true, false, false>(pytorch_flash::Flash_fwd_params)",8,830.019,103.752375,12.160388631263848
+2026-10-04-g4,final-run1,prefill,kernel,GEMM-containing (named),triton_tem_fused__unsafe_view_clone_mm_transpose_view_4,8,464.866,58.10825,6.810628698211848
+2026-10-04-g4,final-run1,prefill,kernel,GEMM-containing (named),void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x128_32x4_nn_align8>(cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x128_32x4_nn_align8::Params),1,165.921,165.921,2.4308646453730924
+2026-10-04-g4,final-run1,prefill,kernel,Other kernels / copies,triton_poi_fused__to_copy__unsafe_view_mul_silu_split_6,8,87.392,10.924,1.2803570559992121
+2026-10-04-g4,final-run1,prefill,kernel,Other kernels / copies,triton_poi_fused__scaled_dot_product_flash_attention__to_copy__unsafe_view_add_cat_clone_mul_slice_split_with_sizes_sub_transpose_unsqueeze_view_1,8,67.265,8.408125,0.9854817073849668
+2026-10-04-g4,final-run1,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_14,3,44.128,14.709333333333333,0.6465076456327037
+2026-10-04-g4,final-run1,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_13,3,39.808,13.269333333333334,0.5832164693017283
+2026-10-04-g4,final-run1,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_11,3,38.816,12.938666666666668,0.5686829399220229
+2026-10-04-g4,final-run1,prefill,kernel,Other kernels / copies,triton_poi_fused_clone_transpose_3,8,26.112000000000002,3.2640000000000002,0.38255999915611766
+2026-10-04-g4,final-run1,prefill,kernel,Other kernels / copies,triton_poi_fused__unsafe_view_clone_split_with_sizes_transpose_view_2,8,25.856,3.232,0.3788094109290969
+2026-10-04-g4,final-run1,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_12,3,25.056,8.352,0.367088822719657
+2026-10-04-g4,final-run1,prefill,kernel,Other kernels / copies,triton_red_fused_embedding_native_layer_norm_0,1,13.088,13.088,0.1917488231064364
+2026-10-04-g4,final-run1,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_15,1,12.16,12.16,0.17815294078348615
+2026-10-04-g4,final-run1,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_embedding_native_layer_norm_10,1,11.712,11.712,0.17158941138619982
+2026-10-04-g4,final-run1,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_embedding_native_layer_norm_8,1,9.696,9.696,0.14205352909841132
+2026-10-04-g4,final-run1,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_embedding_native_layer_norm_5,1,7.68,7.68,0.11251764681062283
+2026-10-04-g4,final-run1,decode,kernel,FlashAttention,"void pytorch_flash::flash_fwd_splitkv_kernel<Flash_fwd_kernel_traits<128, 64, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 4, cutlass::bfloat16_t> >, false, false, false, false, true, false, true, false>(pytorch_flash::Flash_fwd_params)",8,732.421,91.552625,48.23217423142878
+2026-10-04-g4,final-run1,decode,kernel,GEMM-containing (named),triton_tem_fused__unsafe_view_add_embedding_mm_native_layer_norm_view_6,8,256.577,32.072125,16.89638413941886
+2026-10-04-g4,final-run1,decode,kernel,GEMM-containing (named),triton_tem_fused_embedding_mm_native_layer_norm_view_1,8,146.40099999999998,18.300124999999998,9.640955870538125
+2026-10-04-g4,final-run1,decode,kernel,GEMM-containing (named),triton_tem_fused__to_copy__unsafe_view_mm_mul_silu_split_view_8,8,136.159,17.019875,8.966488687758968
+2026-10-04-g4,final-run1,decode,kernel,GEMM-containing (named),triton_tem_fused__unsafe_view_add_mm_native_layer_norm_view_16,1,88.897,88.897,5.854140709580043
+2026-10-04-g4,final-run1,decode,kernel,GEMM-containing (named),triton_tem_fused_mm_transpose_view_4,8,58.016,7.252,3.820531934789652
+2026-10-04-g4,final-run1,decode,kernel,FlashAttention,"void pytorch_flash::flash_fwd_splitkv_combine_kernel<Flash_fwd_kernel_traits<128, 64, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 4, cutlass::bfloat16_t> >, 4, 3, true>(pytorch_flash::Flash_fwd_params)",8,30.400000000000002,3.8000000000000003,2.0019334462494043
+2026-10-04-g4,final-run1,decode,kernel,Other kernels / copies,triton_poi_fused__scaled_dot_product_flash_attention__to_copy__unsafe_view_add_cat_index_copy_index_select_mul_slice_split_with_sizes_sub_transpose_unsqueeze_view_2,8,11.039,1.379875,0.7269520826693148
+2026-10-04-g4,final-run1,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_11,3,8.96,2.986666666666667,0.590043542052456
+2026-10-04-g4,final-run1,decode,kernel,Other kernels / copies,triton_poi_fused__to_copy__unsafe_view_mul_silu_split_7,8,8.704,1.088,0.5731851551366716
+2026-10-04-g4,final-run1,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_13,3,8.350999999999999,2.7836666666666665,0.549939020053578
+2026-10-04-g4,final-run1,decode,kernel,Other kernels / copies,triton_poi_fused__unsafe_view_clone_index_copy_split_with_sizes_transpose_view_3,8,7.8069999999999995,0.9758749999999999,0.5141149478575361
+2026-10-04-g4,final-run1,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_14,3,6.561,2.187,0.4320620177908665
+2026-10-04-g4,final-run1,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_12,3,5.344,1.7813333333333334,0.3519188268670005
+2026-10-04-g4,final-run1,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_15,1,3.295,3.295,0.2169858784668351
+2026-10-04-g4,final-run1,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_embedding_native_layer_norm_9,1,2.848,2.848,0.1875495544381021
+2026-10-04-g4,final-run1,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_embedding_native_layer_norm_5,1,2.56,2.56,0.16858386915784457
+2026-10-04-g4,final-run1,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_embedding_native_layer_norm_10,1,2.432,2.432,0.16015467569995231
+2026-10-04-g4,final-run1,decode,kernel,Other kernels / copies,triton_red_fused_embedding_native_layer_norm_0,1,1.76,1.76,0.11590141004601813
+2026-10-04-g4,final-run1,generate,kernel,FlexAttention (named),triton_tem_fused__to_copy_flex_attention_ones_slice_sort_sum_transpose_zeros_7,8,284.704,35.588,23.718415462156873
+2026-10-04-g4,final-run1,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_embedding_mm_native_layer_norm_view_11,8,276.863,34.607875,23.06518931978173
+2026-10-04-g4,final-run1,generate,kernel,GEMM-containing (named),triton_red_fused__to_copy__unsafe_view_mm_mul_silu_split_view_13,8,184.673,23.084125,15.384929395592952
+2026-10-04-g4,final-run1,generate,kernel,GEMM-containing (named),triton_red_fused_embedding_mm_native_layer_norm_view_1,8,158.303,19.787875,13.188070146207357
+2026-10-04-g4,final-run1,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_mm_native_layer_norm_view_23,1,87.808,87.808,7.31519973341109
+2026-10-04-g4,final-run1,generate,kernel,FlexAttention + GEMM (mixed),triton_red_fused__to_copy_flex_attention_mm_ones_slice_sort_sum_transpose_view_zeros_8,8,83.873,10.484125,6.9873786812179794
+2026-10-04-g4,final-run1,generate,kernel,GEMM-containing (named),triton_per_fused__to_copy__unsafe_view_mm_mul_silu_split_view_14,8,11.745,1.468125,0.9784646144874413
+2026-10-04-g4,final-run1,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_mm_native_layer_norm_view_20,3,9.792,3.264,0.815762069396426
+2026-10-04-g4,final-run1,generate,kernel,GEMM-containing (named),triton_poi_fused__to_copy__unsafe_view_add_cat_index_copy_index_select_mm_mul_slice_split_with_sizes_sub_transpose_unsqueeze_view_3,8,9.664,1.208,0.8050985129337277
+2026-10-04-g4,final-run1,generate,kernel,GEMM-containing (named),triton_per_fused__unsafe_view_add_embedding_mm_native_layer_norm_view_12,8,9.408,1.176,0.7837714000083309
+2026-10-04-g4,final-run1,generate,kernel,GEMM-containing (named),triton_red_fused_mm_native_layer_norm_view_17,4,9.376,2.344,0.7811055108926563
+2026-10-04-g4,final-run1,generate,kernel,GEMM-containing (named),triton_per_fused_embedding_mm_native_layer_norm_view_2,8,9.248,1.156,0.770441954429958
+2026-10-04-g4,final-run1,generate,kernel,GEMM-containing (named),triton_poi_fused__unsafe_view_index_copy_mm_split_with_sizes_transpose_view_4,8,7.967,0.995875,0.6637230807681093
+2026-10-04-g4,final-run1,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_mm_native_layer_norm_view_18,3,7.4239999999999995,2.4746666666666663,0.6184862748365061
+2026-10-04-g4,final-run1,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_mm_native_layer_norm_view_19,3,7.295999999999999,2.432,0.6078227183738076
+2026-10-04-g4,final-run1,generate,kernel,Other kernels / copies,triton_poi_fused_zeros_6,8,6.7829999999999995,0.8478749999999999,0.5650851834881493
+2026-10-04-g4,final-run1,generate,kernel,Other kernels / copies,triton_poi_fused_ones_5,8,6.7509999999999994,0.8438749999999999,0.5624192943724746
+2026-10-04-g4,final-run1,generate,kernel,FlexAttention + GEMM (mixed),triton_per_fused__to_copy__unsafe_view_add_flex_attention_mm_ones_slice_sort_sum_transpose_view_zeros_21,3,5.792,1.9306666666666665,0.48252592993710164
+2026-10-04-g4,final-run1,generate,kernel,FlexAttention + GEMM (mixed),triton_per_fused__to_copy_flex_attention_mm_ones_slice_sort_sum_transpose_view_zeros_9,4,5.248,1.312,0.43720581497063365
+2026-10-04-g4,final-run1,generate,kernel,Other kernels / copies,triton_red_fused_argmax_select_0,1,4.288,4.288,0.35722914150039575
+2026-10-04-g4,final-run1,generate,kernel,GEMM-containing (named),triton_red_fused_embedding_mm_native_layer_norm_view_0,1,2.783,2.783,0.23184904402882495
+2026-10-04-g4,final-run1,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_embedding_mm_native_layer_norm_view_15,1,2.752,2.752,0.22926646394801517
+2026-10-04-g4,final-run1,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_embedding_mm_native_layer_norm_view_10,1,2.529,2.529,0.21068854917315782
+2026-10-04-g4,final-run1,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_mm_native_layer_norm_view_22,1,1.728,1.728,0.14395801224642815
+2026-10-04-g4,final-run1,generate,kernel,FlexAttention + GEMM (mixed),triton_per_fused__to_copy__unsafe_view_add_embedding_flex_attention_mm_ones_slice_sort_sum_transpose_view_zeros_16,1,1.536,1.536,0.12796267755238055
+2026-10-04-g4,final-run1,generate,kernel,Other kernels / copies,triton_poi_fused_add_copy__0,1,1.024,1.024,0.08530845170158705
+2026-10-04-g4,final-run1,generate,gpu_memcpy,Other kernels / copies,Memcpy DtoD (Device -> Device),1,0.992,0.992,0.08264256258591245
+2026-10-04-g4,final-run2,prefill,kernel,GEMM-containing (named),void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_256x128_32x3_nn_align8>(cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_256x128_32x3_nn_align8::Params),9,2632.045,292.44944444444445,38.566253698311556
+2026-10-04-g4,final-run2,prefill,kernel,GEMM-containing (named),triton_tem_fused__to_copy__unsafe_view_mm_mul_silu_split_view_7,8,1213.381,151.672625,17.779163911981357
+2026-10-04-g4,final-run2,prefill,kernel,GEMM-containing (named),triton_tem_fused__unsafe_view_add_embedding_mm_native_layer_norm_view_9,7,1113.253,159.03614285714283,16.312030238239252
+2026-10-04-g4,final-run2,prefill,kernel,FlashAttention,"void pytorch_flash::flash_fwd_kernel<Flash_fwd_kernel_traits<128, 128, 64, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 128, 64, 4, cutlass::bfloat16_t> >, false, true, false, false, true, true, false, false>(pytorch_flash::Flash_fwd_params)",8,830.245,103.780625,12.165232471995987
+2026-10-04-g4,final-run2,prefill,kernel,GEMM-containing (named),triton_tem_fused__unsafe_view_clone_mm_transpose_view_4,8,463.617,57.952125,6.79318584630966
+2026-10-04-g4,final-run2,prefill,kernel,GEMM-containing (named),void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x128_32x4_nn_align8>(cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x128_32x4_nn_align8::Params),1,163.264,163.264,2.392239055107773
+2026-10-04-g4,final-run2,prefill,kernel,Other kernels / copies,triton_poi_fused__to_copy__unsafe_view_mul_silu_split_6,8,88.449,11.056125,1.2960061751839191
+2026-10-04-g4,final-run2,prefill,kernel,Other kernels / copies,triton_poi_fused__scaled_dot_product_flash_attention__to_copy__unsafe_view_add_cat_clone_mul_slice_split_with_sizes_sub_transpose_unsqueeze_view_1,8,66.623,8.327875,0.9761989328231891
+2026-10-04-g4,final-run2,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_14,3,42.977,14.325666666666665,0.6297239922540593
+2026-10-04-g4,final-run2,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_13,3,39.775999999999996,13.258666666666665,0.5828210790864291
+2026-10-04-g4,final-run2,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_11,3,37.824,12.607999999999999,0.5542192401288489
+2026-10-04-g4,final-run2,prefill,kernel,Other kernels / copies,triton_poi_fused__unsafe_view_clone_split_with_sizes_transpose_view_2,8,26.112,3.264,0.3826082063833678
+2026-10-04-g4,final-run2,prefill,kernel,Other kernels / copies,triton_poi_fused_clone_transpose_3,8,25.89,3.23625,0.3793553333052004
+2026-10-04-g4,final-run2,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_12,3,24.608,8.202666666666667,0.3605707239078552
+2026-10-04-g4,final-run2,prefill,kernel,Other kernels / copies,triton_red_fused_embedding_native_layer_norm_0,1,13.376,13.376,0.1959929292503036
+2026-10-04-g4,final-run2,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_15,1,13.056,13.056,0.1913041031916839
+2026-10-04-g4,final-run2,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_embedding_native_layer_norm_10,1,11.584,11.584,0.16973550332203324
+2026-10-04-g4,final-run2,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_embedding_native_layer_norm_8,1,11.456,11.456,0.16785997289858537
+2026-10-04-g4,final-run2,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_embedding_native_layer_norm_5,1,7.2,7.2,0.10549858631894332
+2026-10-04-g4,final-run2,decode,kernel,FlashAttention,"void pytorch_flash::flash_fwd_splitkv_kernel<Flash_fwd_kernel_traits<128, 64, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 4, cutlass::bfloat16_t> >, false, false, false, false, true, false, true, false>(pytorch_flash::Flash_fwd_params)",8,732.364,91.5455,48.14965786027235
+2026-10-04-g4,final-run2,decode,kernel,GEMM-containing (named),triton_tem_fused__unsafe_view_add_embedding_mm_native_layer_norm_view_6,8,256.739,32.092375,16.879441110415666
+2026-10-04-g4,final-run2,decode,kernel,GEMM-containing (named),triton_tem_fused_embedding_mm_native_layer_norm_view_1,8,146.019,18.252375,9.600096251452976
+2026-10-04-g4,final-run2,decode,kernel,GEMM-containing (named),triton_tem_fused__to_copy__unsafe_view_mm_mul_silu_split_view_8,8,137.602,17.20025,9.046716142367996
+2026-10-04-g4,final-run2,decode,kernel,GEMM-containing (named),triton_tem_fused__unsafe_view_add_mm_native_layer_norm_view_16,1,89.153,89.153,5.861411056819915
+2026-10-04-g4,final-run2,decode,kernel,GEMM-containing (named),triton_tem_fused_mm_transpose_view_4,8,58.688,7.336,3.8584735466293583
+2026-10-04-g4,final-run2,decode,kernel,FlashAttention,"void pytorch_flash::flash_fwd_splitkv_combine_kernel<Flash_fwd_kernel_traits<128, 64, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 4, cutlass::bfloat16_t> >, 4, 3, true>(pytorch_flash::Flash_fwd_params)",8,30.432000000000002,3.8040000000000003,2.000767907766914
+2026-10-04-g4,final-run2,decode,kernel,Other kernels / copies,triton_poi_fused__scaled_dot_product_flash_attention__to_copy__unsafe_view_add_cat_index_copy_index_select_mul_slice_split_with_sizes_sub_transpose_unsqueeze_view_2,8,10.847999999999999,1.3559999999999999,0.7132074876266916
+2026-10-04-g4,final-run2,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_11,3,8.992,2.9973333333333336,0.5911837876787621
+2026-10-04-g4,final-run2,decode,kernel,Other kernels / copies,triton_poi_fused__to_copy__unsafe_view_mul_silu_split_7,8,8.61,1.07625,0.566068995986893
+2026-10-04-g4,final-run2,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_13,3,8.448,2.8160000000000003,0.5554182204526448
+2026-10-04-g4,final-run2,decode,kernel,Other kernels / copies,triton_poi_fused__unsafe_view_clone_index_copy_split_with_sizes_transpose_view_3,8,7.873,0.984125,0.5176145418588628
+2026-10-04-g4,final-run2,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_14,3,6.5600000000000005,2.186666666666667,0.43129066360906126
+2026-10-04-g4,final-run2,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_12,3,5.28,1.76,0.347136387782903
+2026-10-04-g4,final-run2,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_15,1,3.296,3.296,0.2166972602523576
+2026-10-04-g4,final-run2,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_embedding_native_layer_norm_9,1,2.88,2.88,0.18934712060885617
+2026-10-04-g4,final-run2,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_embedding_native_layer_norm_5,1,2.56,2.56,0.1683085516523166
+2026-10-04-g4,final-run2,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_embedding_native_layer_norm_10,1,2.432,2.432,0.15989312406970077
+2026-10-04-g4,final-run2,decode,kernel,Other kernels / copies,triton_red_fused_embedding_native_layer_norm_0,1,2.24,2.24,0.14726998269577704
+2026-10-04-g4,final-run2,generate,kernel,FlexAttention (named),triton_tem_fused__to_copy_flex_attention_ones_slice_sort_sum_transpose_zeros_7,8,284.064,35.508,23.67452528269682
+2026-10-04-g4,final-run2,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_embedding_mm_native_layer_norm_view_11,8,278.08,34.76,23.175805419244718
+2026-10-04-g4,final-run2,generate,kernel,GEMM-containing (named),triton_red_fused__to_copy__unsafe_view_mm_mul_silu_split_view_13,8,183.61499999999998,22.951874999999998,15.302882307446124
+2026-10-04-g4,final-run2,generate,kernel,GEMM-containing (named),triton_red_fused_embedding_mm_native_layer_norm_view_1,8,159.393,19.924125,13.284166977810965
+2026-10-04-g4,final-run2,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_mm_native_layer_norm_view_23,1,87.296,87.296,7.275442713889482
+2026-10-04-g4,final-run2,generate,kernel,FlexAttention + GEMM (mixed),triton_red_fused__to_copy_flex_attention_mm_ones_slice_sort_sum_transpose_view_zeros_8,8,83.775,10.471875,6.981994746106251
+2026-10-04-g4,final-run2,generate,kernel,GEMM-containing (named),triton_per_fused__to_copy__unsafe_view_mm_mul_silu_split_view_14,8,11.841,1.480125,0.9868552645615531
+2026-10-04-g4,final-run2,generate,kernel,GEMM-containing (named),triton_poi_fused__to_copy__unsafe_view_add_cat_index_copy_index_select_mm_mul_slice_split_with_sizes_sub_transpose_unsqueeze_view_3,8,9.825,1.228125,0.8188373426498825
+2026-10-04-g4,final-run2,generate,kernel,GEMM-containing (named),triton_per_fused_embedding_mm_native_layer_norm_view_2,8,9.728,1.216,0.8107531470023468
+2026-10-04-g4,final-run2,generate,kernel,GEMM-containing (named),triton_per_fused__unsafe_view_add_embedding_mm_native_layer_norm_view_12,8,9.472,1.184,0.7894175378707061
+2026-10-04-g4,final-run2,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_mm_native_layer_norm_view_20,3,9.439,3.146333333333333,0.7866672445060806
+2026-10-04-g4,final-run2,generate,kernel,GEMM-containing (named),triton_red_fused_mm_native_layer_norm_view_17,4,9.28,2.32,0.7734158310219755
+2026-10-04-g4,final-run2,generate,kernel,GEMM-containing (named),triton_poi_fused__unsafe_view_index_copy_mm_split_with_sizes_transpose_view_4,8,7.648,0.956,0.6374013228077661
+2026-10-04-g4,final-run2,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_mm_native_layer_norm_view_18,3,7.265,2.4216666666666664,0.6054812513334755
+2026-10-04-g4,final-run2,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_mm_native_layer_norm_view_19,3,7.2330000000000005,2.411,0.6028143001920205
+2026-10-04-g4,final-run2,generate,kernel,Other kernels / copies,triton_poi_fused_zeros_6,8,6.688,0.836,0.5573927885641135
+2026-10-04-g4,final-run2,generate,kernel,Other kernels / copies,triton_poi_fused_ones_5,8,6.686,0.83575,0.5572261041177725
+2026-10-04-g4,final-run2,generate,kernel,FlexAttention + GEMM (mixed),triton_per_fused__to_copy__unsafe_view_add_flex_attention_mm_ones_slice_sort_sum_transpose_view_zeros_21,3,5.792,1.9306666666666665,0.4827181566033709
+2026-10-04-g4,final-run2,generate,kernel,FlexAttention + GEMM (mixed),triton_per_fused__to_copy_flex_attention_mm_ones_slice_sort_sum_transpose_view_zeros_9,4,5.184,1.296,0.4320460849157243
+2026-10-04-g4,final-run2,generate,kernel,Other kernels / copies,triton_red_fused_argmax_select_0,1,4.224,4.224,0.3520375506720717
+2026-10-04-g4,final-run2,generate,kernel,GEMM-containing (named),triton_red_fused_embedding_mm_native_layer_norm_view_0,1,2.784,2.784,0.23202474930659267
+2026-10-04-g4,final-run2,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_embedding_mm_native_layer_norm_view_15,1,2.752,2.752,0.2293577981651376
+2026-10-04-g4,final-run2,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_embedding_mm_native_layer_norm_view_10,1,2.56,2.56,0.21335609131640706
+2026-10-04-g4,final-run2,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_mm_native_layer_norm_view_22,1,1.728,1.728,0.14401536163857478
+2026-10-04-g4,final-run2,generate,kernel,FlexAttention + GEMM (mixed),triton_per_fused__to_copy__unsafe_view_add_embedding_flex_attention_mm_ones_slice_sort_sum_transpose_view_zeros_16,1,1.536,1.536,0.12801365478984425
+2026-10-04-g4,final-run2,generate,gpu_memcpy,Other kernels / copies,Memcpy DtoD (Device -> Device),1,0.992,0.992,0.08267548538510774
+2026-10-04-g4,final-run2,generate,kernel,Other kernels / copies,triton_poi_fused_add_copy__0,1,0.992,0.992,0.08267548538510774
+2026-10-10-g4-cuda,final-run1,prefill,kernel,GEMM-containing (named),void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_256x128_32x3_nn_align8>(cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_256x128_32x3_nn_align8::Params),9,2619.765,291.085,38.41251468823982
+2026-10-10-g4-cuda,final-run1,prefill,kernel,GEMM-containing (named),triton_tem_fused__to_copy__unsafe_view_mm_mul_silu_split_view_7,8,1212.2640000000001,151.53300000000002,17.774918248783518
+2026-10-10-g4-cuda,final-run1,prefill,kernel,GEMM-containing (named),triton_tem_fused__unsafe_view_add_embedding_mm_native_layer_norm_view_9,7,1113.164,159.02342857142858,16.321856540727808
+2026-10-10-g4-cuda,final-run1,prefill,kernel,FlashAttention,"void pytorch_flash::flash_fwd_kernel<Flash_fwd_kernel_traits<128, 128, 64, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 128, 64, 4, cutlass::bfloat16_t> >, false, true, false, false, true, true, false, false>(pytorch_flash::Flash_fwd_params)",8,828.038,103.50475,12.141173669172893
+2026-10-10-g4-cuda,final-run1,prefill,kernel,GEMM-containing (named),triton_tem_fused__unsafe_view_clone_mm_transpose_view_4,8,462.242,57.78025,6.77766044455184
+2026-10-10-g4-cuda,final-run1,prefill,kernel,GEMM-containing (named),void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x128_32x4_nn_align8>(cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x128_32x4_nn_align8::Params),1,166.818,166.818,2.445982321033677
+2026-10-10-g4-cuda,final-run1,prefill,kernel,Other kernels / copies,triton_poi_fused__to_copy__unsafe_view_mul_silu_split_6,8,89.088,11.136,1.3062599540592033
+2026-10-10-g4-cuda,final-run1,prefill,kernel,Other kernels / copies,triton_poi_fused__scaled_dot_product_flash_attention__to_copy__unsafe_view_add_cat_clone_mul_slice_split_with_sizes_sub_transpose_unsqueeze_view_1,8,63.265,7.908125,0.9276281428874316
+2026-10-10-g4-cuda,final-run1,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_14,3,44.96,14.986666666666666,0.6592296104357689
+2026-10-10-g4-cuda,final-run1,prefill,kernel,Other kernels / copies,triton_poi_fused_clone_transpose_3,8,42.559,5.319875,0.6240247551275776
+2026-10-10-g4-cuda,final-run1,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_13,3,40.128,13.376,0.5883800224102878
+2026-10-10-g4-cuda,final-run1,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_11,3,33.888,11.296,0.4968855213177788
+2026-10-10-g4-cuda,final-run1,prefill,kernel,Other kernels / copies,triton_poi_fused__unsafe_view_clone_split_with_sizes_transpose_view_2,8,26.015,3.251875,0.38144702659000285
+2026-10-10-g4-cuda,final-run1,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_12,3,25.024,8.341333333333333,0.36691640950944576
+2026-10-10-g4-cuda,final-run1,prefill,kernel,Other kernels / copies,triton_red_fused_embedding_native_layer_norm_0,1,12.704,12.704,0.18627342017295392
+2026-10-10-g4-cuda,final-run1,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_embedding_native_layer_norm_10,1,11.456,11.456,0.16797451995445215
+2026-10-10-g4-cuda,final-run1,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_15,1,11.2,11.2,0.16422089939681075
+2026-10-10-g4-cuda,final-run1,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_embedding_native_layer_norm_8,1,10.592,10.592,0.15530605057241248
+2026-10-10-g4-cuda,final-run1,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_embedding_native_layer_norm_5,1,6.912,6.912,0.1013477550563175
+2026-10-10-g4-cuda,final-run1,decode,kernel,FlashAttention,"void pytorch_flash::flash_fwd_splitkv_kernel<Flash_fwd_kernel_traits<128, 64, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 4, cutlass::bfloat16_t> >, false, false, false, false, true, false, true, false>(pytorch_flash::Flash_fwd_params)",8,731.944,91.493,48.15053588015651
+2026-10-10-g4-cuda,final-run1,decode,kernel,GEMM-containing (named),triton_tem_fused__unsafe_view_add_embedding_mm_native_layer_norm_view_6,8,263.076,32.8845,17.306310834173182
+2026-10-10-g4-cuda,final-run1,decode,kernel,GEMM-containing (named),triton_tem_fused_embedding_mm_native_layer_norm_view_1,8,146.81599999999997,18.351999999999997,9.658210294477525
+2026-10-10-g4-cuda,final-run1,decode,kernel,GEMM-containing (named),triton_tem_fused__to_copy__unsafe_view_mm_mul_silu_split_view_8,8,137.189,17.148625,9.024903362638113
+2026-10-10-g4-cuda,final-run1,decode,kernel,GEMM-containing (named),triton_tem_fused__unsafe_view_add_mm_native_layer_norm_view_16,1,87.681,87.681,5.768046649071518
+2026-10-10-g4-cuda,final-run1,decode,kernel,GEMM-containing (named),triton_tem_fused_mm_transpose_view_4,8,58.72,7.34,3.8628630972899436
+2026-10-10-g4-cuda,final-run1,decode,kernel,FlashAttention,"void pytorch_flash::flash_fwd_splitkv_combine_kernel<Flash_fwd_kernel_traits<128, 64, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 4, cutlass::bfloat16_t> >, 4, 3, true>(pytorch_flash::Flash_fwd_params)",8,30.72,3.84,2.0208984051217143
+2026-10-10-g4-cuda,final-run1,decode,kernel,Other kernels / copies,triton_poi_fused__scaled_dot_product_flash_attention__to_copy__unsafe_view_add_cat_index_copy_index_select_mul_slice_split_with_sizes_sub_transpose_unsqueeze_view_2,8,10.753,1.344125,0.7073802262458917
+2026-10-10-g4-cuda,final-run1,decode,kernel,Other kernels / copies,triton_poi_fused__to_copy__unsafe_view_mul_silu_split_7,8,9.182,1.14775,0.6040328501245958
+2026-10-10-g4-cuda,final-run1,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_14,3,7.968,2.656,0.5241705238284446
+2026-10-10-g4-cuda,final-run1,decode,kernel,Other kernels / copies,triton_poi_fused__unsafe_view_clone_index_copy_split_with_sizes_transpose_view_3,8,7.649,0.956125,0.5031852832283852
+2026-10-10-g4-cuda,final-run1,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_11,3,6.464,2.154666666666667,0.42523070607769414
+2026-10-10-g4-cuda,final-run1,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_13,3,5.5040000000000004,1.834666666666667,0.36207763091764056
+2026-10-10-g4-cuda,final-run1,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_12,3,5.312,1.7706666666666668,0.3494470158856298
+2026-10-10-g4-cuda,final-run1,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_embedding_native_layer_norm_10,1,2.689,2.689,0.1768943949014417
+2026-10-10-g4-cuda,final-run1,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_embedding_native_layer_norm_9,1,2.369,2.369,0.15584336984809055
+2026-10-10-g4-cuda,final-run1,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_embedding_native_layer_norm_5,1,2.272,2.272,0.14946227787879346
+2026-10-10-g4-cuda,final-run1,decode,kernel,Other kernels / copies,triton_red_fused_embedding_native_layer_norm_0,1,2.048,2.048,0.13472656034144764
+2026-10-10-g4-cuda,final-run1,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_15,1,1.76,1.76,0.11578063779343155
+2026-10-10-g4-cuda,final-run1,generate,kernel,FlexAttention (named),triton_tem_fused__to_copy_flex_attention_ones_slice_sort_sum_transpose_zeros_7,8,288.897,36.112125,24.344589487308912
+2026-10-10-g4-cuda,final-run1,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_embedding_mm_native_layer_norm_view_13,8,268.546,33.56825,22.62966430409059
+2026-10-10-g4-cuda,final-run1,generate,kernel,GEMM-containing (named),triton_red_fused__to_copy__unsafe_view_mm_mul_silu_split_view_15,8,166.399,20.799875,14.022005580185034
+2026-10-10-g4-cuda,final-run1,generate,kernel,GEMM-containing (named),triton_red_fused_embedding_mm_native_layer_norm_view_1,8,162.145,20.268125,13.66353220151024
+2026-10-10-g4-cuda,final-run1,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_mm_native_layer_norm_view_25,1,87.361,87.361,7.361681437331623
+2026-10-10-g4-cuda,final-run1,generate,kernel,FlexAttention + GEMM (mixed),triton_red_fused__to_copy_flex_attention_mm_ones_slice_sort_sum_transpose_view_zeros_10,8,81.506,10.18825,6.868296004294265
+2026-10-10-g4-cuda,final-run1,generate,kernel,FlexAttention (named),triton_per_fused__to_copy_flex_attention_ones_slice_sort_sum_transpose_zeros_9,8,11.202,1.40025,0.9439630437035844
+2026-10-10-g4-cuda,final-run1,generate,kernel,GEMM-containing (named),triton_poi_fused__to_copy__unsafe_view_add_cat_index_copy_index_select_mm_mul_slice_split_with_sizes_sub_transpose_unsqueeze_view_3,8,10.177,1.272125,0.8575889926594695
+2026-10-10-g4-cuda,final-run1,generate,kernel,FlexAttention (named),triton_per_fused__to_copy_flex_attention_ones_slice_sort_sum_transpose_zeros_8,8,9.631,1.203875,0.8115790103471899
+2026-10-10-g4-cuda,final-run1,generate,kernel,GEMM-containing (named),triton_per_fused__unsafe_view_add_embedding_mm_native_layer_norm_view_14,8,9.440999999999999,1.1801249999999999,0.7955682106414514
+2026-10-10-g4-cuda,final-run1,generate,kernel,GEMM-containing (named),triton_per_fused__to_copy__unsafe_view_mm_mul_silu_split_view_16,8,9.312,1.164,0.7846977203149239
+2026-10-10-g4-cuda,final-run1,generate,kernel,GEMM-containing (named),triton_per_fused_embedding_mm_native_layer_norm_view_2,8,8.45,1.05625,0.7120592500709951
+2026-10-10-g4-cuda,final-run1,generate,kernel,GEMM-containing (named),triton_red_fused_mm_native_layer_norm_view_19,4,8.416,2.104,0.7091941595973368
+2026-10-10-g4-cuda,final-run1,generate,kernel,GEMM-containing (named),triton_poi_fused__unsafe_view_index_copy_mm_split_with_sizes_transpose_view_4,8,7.487,0.935875,0.6309097757729635
+2026-10-10-g4-cuda,final-run1,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_mm_native_layer_norm_view_22,3,7.231999999999999,2.4106666666666663,0.609421597220525
+2026-10-10-g4-cuda,final-run1,generate,kernel,Other kernels / copies,triton_poi_fused_zeros_6,8,6.561,0.820125,0.5528781940492071
+2026-10-10-g4-cuda,final-run1,generate,kernel,Other kernels / copies,triton_poi_fused_ones_5,8,6.528,0.816,0.5500973709424208
+2026-10-10-g4-cuda,final-run1,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_mm_native_layer_norm_view_21,3,6.079000000000001,2.0263333333333335,0.5122613232167551
+2026-10-10-g4-cuda,final-run1,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_mm_native_layer_norm_view_20,3,5.696,1.8986666666666665,0.4799869217046614
+2026-10-10-g4-cuda,final-run1,generate,kernel,FlexAttention + GEMM (mixed),triton_per_fused__to_copy_flex_attention_mm_ones_slice_sort_sum_transpose_view_zeros_11,4,5.281000000000001,1.3202500000000001,0.44501596445265396
+2026-10-10-g4-cuda,final-run1,generate,kernel,Other kernels / copies,triton_red_fused_argmax_select_0,1,4.0,4.0,0.3370694674892285
+2026-10-10-g4-cuda,final-run1,generate,kernel,GEMM-containing (named),triton_red_fused_embedding_mm_native_layer_norm_view_0,1,3.776,3.776,0.31819357730983167
+2026-10-10-g4-cuda,final-run1,generate,kernel,FlexAttention + GEMM (mixed),triton_per_fused__to_copy__unsafe_view_add_flex_attention_mm_ones_slice_sort_sum_transpose_view_zeros_23,3,3.3920000000000003,1.1306666666666667,0.2858349084308658
+2026-10-10-g4-cuda,final-run1,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_embedding_mm_native_layer_norm_view_17,1,2.24,2.24,0.18875890179396798
+2026-10-10-g4-cuda,final-run1,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_embedding_mm_native_layer_norm_view_12,1,1.984,1.984,0.16718645587465733
+2026-10-10-g4-cuda,final-run1,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_mm_native_layer_norm_view_24,1,1.792,1.792,0.1510071214351744
+2026-10-10-g4-cuda,final-run1,generate,kernel,FlexAttention + GEMM (mixed),triton_per_fused__to_copy__unsafe_view_add_embedding_flex_attention_mm_ones_slice_sort_sum_transpose_view_zeros_18,1,1.28,1.28,0.10786222959655312
+2026-10-10-g4-cuda,final-run1,generate,kernel,Other kernels / copies,triton_poi_fused_add_copy__0,1,0.96,0.96,0.08089667219741484
+2026-10-10-g4-cuda,final-run1,generate,gpu_memcpy,Other kernels / copies,Memcpy DtoD (Device -> Device),1,0.928,0.928,0.07820011645750102
+2026-10-10-g4-cuda,final-run2,prefill,kernel,GEMM-containing (named),void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_256x128_32x3_nn_align8>(cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_256x128_32x3_nn_align8::Params),9,2632.878,292.54200000000003,38.50573846913219
+2026-10-10-g4-cuda,final-run2,prefill,kernel,GEMM-containing (named),triton_tem_fused__to_copy__unsafe_view_mm_mul_silu_split_view_7,8,1217.829,152.228625,17.810701815323302
+2026-10-10-g4-cuda,final-run2,prefill,kernel,GEMM-containing (named),triton_tem_fused__unsafe_view_add_embedding_mm_native_layer_norm_view_9,7,1117.763,159.68042857142856,16.347240452642545
+2026-10-10-g4-cuda,final-run2,prefill,kernel,FlashAttention,"void pytorch_flash::flash_fwd_kernel<Flash_fwd_kernel_traits<128, 128, 64, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 128, 64, 4, cutlass::bfloat16_t> >, false, true, false, false, true, true, false, false>(pytorch_flash::Flash_fwd_params)",8,827.683,103.460375,12.10483172154074
+2026-10-10-g4-cuda,final-run2,prefill,kernel,GEMM-containing (named),triton_tem_fused__unsafe_view_clone_mm_transpose_view_4,8,461.859,57.732375,6.754669932907991
+2026-10-10-g4-cuda,final-run2,prefill,kernel,GEMM-containing (named),void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x128_32x4_nn_align8>(cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x128_32x4_nn_align8::Params),1,164.001,164.001,2.3985082539624507
+2026-10-10-g4-cuda,final-run2,prefill,kernel,Other kernels / copies,triton_poi_fused__to_copy__unsafe_view_mul_silu_split_6,8,86.398,10.79975,1.2635673936491105
+2026-10-10-g4-cuda,final-run2,prefill,kernel,Other kernels / copies,triton_poi_fused__scaled_dot_product_flash_attention__to_copy__unsafe_view_add_cat_clone_mul_slice_split_with_sizes_sub_transpose_unsqueeze_view_1,8,69.28,8.66,1.013217308641524
+2026-10-10-g4-cuda,final-run2,prefill,kernel,Other kernels / copies,triton_poi_fused_clone_transpose_3,8,42.495000000000005,5.311875000000001,0.6214877241732326
+2026-10-10-g4-cuda,final-run2,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_13,3,40.031,13.343666666666666,0.5854518198936034
+2026-10-10-g4-cuda,final-run2,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_14,3,39.263,13.087666666666665,0.5742198497285241
+2026-10-10-g4-cuda,final-run2,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_11,3,33.408,11.136000000000001,0.48859070218094736
+2026-10-10-g4-cuda,final-run2,prefill,kernel,Other kernels / copies,triton_poi_fused__unsafe_view_clone_split_with_sizes_transpose_view_2,8,26.305,3.288125,0.3847096031151167
+2026-10-10-g4-cuda,final-run2,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_12,3,25.088,8.362666666666668,0.36691102539258885
+2026-10-10-g4-cuda,final-run2,prefill,kernel,Other kernels / copies,triton_red_fused_embedding_native_layer_norm_0,1,14.304,14.304,0.20919544432460102
+2026-10-10-g4-cuda,final-run2,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_embedding_native_layer_norm_10,1,11.744,11.744,0.17175554377433686
+2026-10-10-g4-cuda,final-run2,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_embedding_native_layer_norm_8,1,10.208,10.208,0.14929160344417836
+2026-10-10-g4-cuda,final-run2,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_15,1,10.112,10.112,0.14788760717354346
+2026-10-10-g4-cuda,final-run2,prefill,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_embedding_native_layer_norm_5,1,6.976,6.976,0.10202372899946985
+2026-10-10-g4-cuda,final-run2,decode,kernel,FlashAttention,"void pytorch_flash::flash_fwd_splitkv_kernel<Flash_fwd_kernel_traits<128, 64, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 4, cutlass::bfloat16_t> >, false, false, false, false, true, false, true, false>(pytorch_flash::Flash_fwd_params)",8,733.64,91.705,48.351995992855684
+2026-10-10-g4-cuda,final-run2,decode,kernel,GEMM-containing (named),triton_tem_fused__unsafe_view_add_embedding_mm_native_layer_norm_view_6,8,262.881,32.860125,17.325692517580688
+2026-10-10-g4-cuda,final-run2,decode,kernel,GEMM-containing (named),triton_tem_fused_embedding_mm_native_layer_norm_view_1,8,145.731,18.216375,9.604689940617812
+2026-10-10-g4-cuda,final-run2,decode,kernel,GEMM-containing (named),triton_tem_fused__to_copy__unsafe_view_mm_mul_silu_split_view_8,8,137.633,17.204125,9.070975225566636
+2026-10-10-g4-cuda,final-run2,decode,kernel,GEMM-containing (named),triton_tem_fused__unsafe_view_add_mm_native_layer_norm_view_16,1,87.745,87.745,5.783007862702582
+2026-10-10-g4-cuda,final-run2,decode,kernel,GEMM-containing (named),triton_tem_fused_mm_transpose_view_4,8,58.303,7.287875,3.8425745902233586
+2026-10-10-g4-cuda,final-run2,decode,kernel,FlashAttention,"void pytorch_flash::flash_fwd_splitkv_combine_kernel<Flash_fwd_kernel_traits<128, 64, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 4, cutlass::bfloat16_t> >, 4, 3, true>(pytorch_flash::Flash_fwd_params)",8,30.049,3.756125,1.9804388086654496
+2026-10-10-g4-cuda,final-run2,decode,kernel,Other kernels / copies,triton_poi_fused__scaled_dot_product_flash_attention__to_copy__unsafe_view_add_cat_index_copy_index_select_mul_slice_split_with_sizes_sub_transpose_unsqueeze_view_2,8,11.167,1.395875,0.7359832332645704
+2026-10-10-g4-cuda,final-run2,decode,kernel,Other kernels / copies,triton_poi_fused__to_copy__unsafe_view_mul_silu_split_7,8,9.119,1.139875,0.6010057404978613
+2026-10-10-g4-cuda,final-run2,decode,kernel,Other kernels / copies,triton_poi_fused__unsafe_view_clone_index_copy_split_with_sizes_transpose_view_3,8,7.936,0.992,0.5230377844709977
+2026-10-10-g4-cuda,final-run2,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_14,3,5.824,1.9413333333333334,0.3838422450553289
+2026-10-10-g4-cuda,final-run2,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_13,3,5.535,1.845,0.3647951281561205
+2026-10-10-g4-cuda,final-run2,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_11,3,5.343,1.781,0.35214098820924145
+2026-10-10-g4-cuda,final-run2,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_12,3,5.312,1.7706666666666668,0.35009787186365166
+2026-10-10-g4-cuda,final-run2,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_embedding_native_layer_norm_9,1,2.4,2.4,0.1581767493359872
+2026-10-10-g4-cuda,final-run2,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_native_layer_norm_15,1,2.304,2.304,0.1518496793625477
+2026-10-10-g4-cuda,final-run2,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_embedding_native_layer_norm_5,1,2.272,2.272,0.14974065603806785
+2026-10-10-g4-cuda,final-run2,decode,kernel,Other kernels / copies,triton_red_fused__unsafe_view_add_embedding_native_layer_norm_10,1,2.08,2.08,0.1370865160911889
+2026-10-10-g4-cuda,final-run2,decode,kernel,Other kernels / copies,triton_red_fused_embedding_native_layer_norm_0,1,2.016,2.016,0.13286846944222924
+2026-10-10-g4-cuda,final-run2,generate,kernel,FlexAttention (named),triton_tem_fused__to_copy_flex_attention_ones_slice_sort_sum_transpose_zeros_7,8,289.41,36.17625,24.32871378349706
+2026-10-10-g4-cuda,final-run2,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_embedding_mm_native_layer_norm_view_13,8,268.578,33.57225,22.577510419626385
+2026-10-10-g4-cuda,final-run2,generate,kernel,GEMM-containing (named),triton_red_fused__to_copy__unsafe_view_mm_mul_silu_split_view_15,8,165.729,20.716125,13.931700378788516
+2026-10-10-g4-cuda,final-run2,generate,kernel,GEMM-containing (named),triton_red_fused_embedding_mm_native_layer_norm_view_1,8,163.234,20.40425,13.721962840728928
+2026-10-10-g4-cuda,final-run2,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_mm_native_layer_norm_view_25,1,87.489,87.489,7.354600187292679
+2026-10-10-g4-cuda,final-run2,generate,kernel,FlexAttention + GEMM (mixed),triton_red_fused__to_copy_flex_attention_mm_ones_slice_sort_sum_transpose_view_zeros_10,8,82.881,10.360125,6.96723723122912
+2026-10-10-g4-cuda,final-run2,generate,kernel,FlexAttention (named),triton_per_fused__to_copy_flex_attention_ones_slice_sort_sum_transpose_zeros_9,8,10.625,1.328125,0.8931708785102666
+2026-10-10-g4-cuda,final-run2,generate,kernel,GEMM-containing (named),triton_per_fused__to_copy__unsafe_view_mm_mul_silu_split_view_16,8,10.177,1.272125,0.8555105911151983
+2026-10-10-g4-cuda,final-run2,generate,kernel,GEMM-containing (named),triton_poi_fused__to_copy__unsafe_view_add_cat_index_copy_index_select_mm_mul_slice_split_with_sizes_sub_transpose_unsqueeze_view_3,8,9.663,1.207875,0.8123021363806783
+2026-10-10-g4-cuda,final-run2,generate,kernel,FlexAttention (named),triton_per_fused__to_copy_flex_attention_ones_slice_sort_sum_transpose_zeros_8,8,9.539,1.192375,0.8018783068338289
+2026-10-10-g4-cuda,final-run2,generate,kernel,GEMM-containing (named),triton_per_fused__unsafe_view_add_embedding_mm_native_layer_norm_view_14,8,9.121,1.140125,0.7667399136839662
+2026-10-10-g4-cuda,final-run2,generate,kernel,GEMM-containing (named),triton_red_fused_mm_native_layer_norm_view_19,4,8.511,2.12775,0.7154613973647885
+2026-10-10-g4-cuda,final-run2,generate,kernel,GEMM-containing (named),triton_per_fused_embedding_mm_native_layer_norm_view_2,8,8.417,1.052125,0.7075594620631448
+2026-10-10-g4-cuda,final-run2,generate,kernel,GEMM-containing (named),triton_poi_fused__unsafe_view_index_copy_mm_split_with_sizes_transpose_view_4,8,7.648,0.956,0.6429149062443782
+2026-10-10-g4-cuda,final-run2,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_mm_native_layer_norm_view_22,3,7.231999999999999,2.4106666666666663,0.6079446393775292
+2026-10-10-g4-cuda,final-run2,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_mm_native_layer_norm_view_20,3,7.071999999999999,2.357333333333333,0.5944945367364334
+2026-10-10-g4-cuda,final-run2,generate,kernel,Other kernels / copies,triton_poi_fused_ones_5,8,6.5280000000000005,0.8160000000000001,0.5487641877567079
+2026-10-10-g4-cuda,final-run2,generate,kernel,Other kernels / copies,triton_poi_fused_zeros_6,8,6.495,0.811875,0.5459901040869818
+2026-10-10-g4-cuda,final-run2,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_mm_native_layer_norm_view_21,3,6.082,2.0273333333333334,0.5112720266446532
+2026-10-10-g4-cuda,final-run2,generate,kernel,FlexAttention + GEMM (mixed),triton_per_fused__to_copy_flex_attention_mm_ones_slice_sort_sum_transpose_view_zeros_11,4,5.248,1.312,0.4411633666279416
+2026-10-10-g4-cuda,final-run2,generate,kernel,Other kernels / copies,triton_red_fused_argmax_select_0,1,4.096,4.096,0.34432262761205196
+2026-10-10-g4-cuda,final-run2,generate,kernel,FlexAttention + GEMM (mixed),triton_per_fused__to_copy__unsafe_view_add_flex_attention_mm_ones_slice_sort_sum_transpose_view_zeros_23,3,3.424,1.1413333333333333,0.28783219651944963
+2026-10-10-g4-cuda,final-run2,generate,kernel,GEMM-containing (named),triton_red_fused_embedding_mm_native_layer_norm_view_0,1,3.328,3.328,0.2797621349347922
+2026-10-10-g4-cuda,final-run2,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_embedding_mm_native_layer_norm_view_17,1,2.207,2.207,0.1855273533056149
+2026-10-10-g4-cuda,final-run2,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_embedding_mm_native_layer_norm_view_12,1,1.984,1.984,0.16678127274958765
+2026-10-10-g4-cuda,final-run2,generate,kernel,GEMM-containing (named),triton_red_fused__unsafe_view_add_mm_native_layer_norm_view_24,1,1.76,1.76,0.14795112905205357
+2026-10-10-g4-cuda,final-run2,generate,kernel,FlexAttention + GEMM (mixed),triton_per_fused__to_copy__unsafe_view_add_embedding_flex_attention_mm_ones_slice_sort_sum_transpose_view_zeros_18,1,1.248,1.248,0.10491080060054707
+2026-10-10-g4-cuda,final-run2,generate,kernel,Other kernels / copies,triton_poi_fused_add_copy__0,1,0.96,0.96,0.08070061584657467
+2026-10-10-g4-cuda,final-run2,generate,gpu_memcpy,Other kernels / copies,Memcpy DtoD (Device -> Device),1,0.896,0.896,0.07532057479013637
