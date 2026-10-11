@@ -1,0 +1,10 @@
+{
+  "checked_at_utc": "2026-10-11T09:33:13.650352+00:00",
+  "cli_version": "0.7.4",
+  "stopped_sessions": [
+    "swiglu-a100-20261011",
+    "swiglu-g4-20261011"
+  ],
+  "server_sessions_output": "[colab] No active sessions found on server.",
+  "active_sessions": []
+}

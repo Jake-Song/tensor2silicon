@@ -20,7 +20,7 @@ x `[M,K]`, w `[K,N]`, b `[N]`은 bf16, 누적은 fp32, 출력 y `[M,N]`은 bf16�
 
 | | GPU | TPU |
 |---|---|---|
-| 디렉터리 | [`gpu/`](gpu) | [`tpu/`](tpu) |
+| 디렉터리 | [`gpu/triton/`](gpu/triton) | [`tpu/`](tpu) |
 | Colab 런타임 | A100 | v6e-1 |
 | 커널 언어 | Triton | Pallas (Mosaic) |
 | 시작 커널 | 64×64×32 타일, `num_stages=2`, autotune 없음 | 128³ 블록, fp32 VMEM 누산기 |
@@ -47,7 +47,7 @@ x `[M,K]`, w `[K,N]`, b `[N]`은 bf16, 누적은 fp32, 출력 y `[M,N]`은 bf16�
 노트북이 저장소 clone, 베이스라인 측정, Claude Code 설치, 진행 그래프, Drive 저장을 맡는다. 에이전트는 Colab 터미널에서 시작한다.
 
 ```bash
-cd /content/tensor2silicon/autoresearch/gpu     # 또는 tpu
+cd /content/tensor2silicon/autoresearch/gpu/triton     # 또는 tpu
 export PATH="$HOME/.local/bin:$PATH"
 claude
 ```
@@ -91,11 +91,15 @@ colab console               # 원격 tmux 셸: git clone 후 위 명령 실행
 
 ## 새 과제 추가
 
-`gpu/`나 `tpu/`를 복사한 뒤 `bench.py`의 `SHAPES`/`reference`/벤더 기준선, `kernel.py`의 시작 커널, `program.md`의 과제 설명을 바꾼다. 요약 블록 형식은 그대로 둔다.
+`gpu/triton/`이나 `tpu/`를 복사한 뒤 `bench.py`의 `SHAPES`/`reference`/벤더 기준선, `kernel.py`의 시작 커널, `program.md`의 과제 설명을 바꾼다. 요약 블록 형식은 그대로 둔다.
 
 ## LLM 모델 전체 최적화
 
-실제 실행 기록: [2026-09-27 A100·TPU v6e 결과](results/2026-09-27/README.md).
+A100 CUDA C++ 버전: [`cuda/`](gpu/cuda/README.md). 시작 후보는 SwiGLU를 CUDA 커널로
+교체하고 기존 LLM 검증기를 공유한다. G4 SM120 버전은 [`cuda_g4/`](gpu/cuda_g4/README.md)에 있다.
+
+실제 실행 기록: [2026-09-27 A100·TPU v6e 결과](results/2026-09-27/README.md),
+[2026-10-11 native CUDA SwiGLU A100·G4 검증](results/2026-10-11-swiglu/README.md).
 
 단일 ReLU 커널과 별도로, [roofline 결과 노트북](../notebooks/llm_roofline_results.ipynb)의
 Transformer 전체 forward를 최적화하는 실험이다. 학습이나 모델 품질 개선이 아니라,

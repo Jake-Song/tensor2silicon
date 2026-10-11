@@ -1,0 +1,85 @@
+{
+  "note": "Measured JSON and logs retain original source paths and hashes. Kernel and model contents are unchanged; entrypoints only adjust the repository-root lookup after moving one level deeper.",
+  "files": [
+    {
+      "original_path": "autoresearch/llm_cuda/model.py",
+      "current_path": "autoresearch/gpu/cuda/model.py",
+      "original_sha256": "b62bc42043fec864460c0b05418f67f7b8ffdc41d0b6c8761cd5e5beb94e342b",
+      "current_sha256": "b62bc42043fec864460c0b05418f67f7b8ffdc41d0b6c8761cd5e5beb94e342b",
+      "change": "path only; content unchanged",
+      "previous_paths": [
+        "autoresearch/gpu/llm_cuda/model.py"
+      ]
+    },
+    {
+      "original_path": "autoresearch/llm_cuda/swiglu.cu",
+      "current_path": "autoresearch/gpu/cuda/swiglu.cu",
+      "original_sha256": "5f830f26b8105508b661d0c4040798e745fa0de234ce4b5c9511f86fc92589c8",
+      "current_sha256": "5f830f26b8105508b661d0c4040798e745fa0de234ce4b5c9511f86fc92589c8",
+      "change": "path only; content unchanged",
+      "previous_paths": [
+        "autoresearch/gpu/llm_cuda/swiglu.cu"
+      ]
+    },
+    {
+      "original_path": "autoresearch/llm_cuda/bindings.cpp",
+      "current_path": "autoresearch/gpu/cuda/bindings.cpp",
+      "original_sha256": "bd5c1d097b286c6f39a35c1b21c6f87ac752a50f1a369ec7462952b69a81a31e",
+      "current_sha256": "bd5c1d097b286c6f39a35c1b21c6f87ac752a50f1a369ec7462952b69a81a31e",
+      "change": "path only; content unchanged",
+      "previous_paths": [
+        "autoresearch/gpu/llm_cuda/bindings.cpp"
+      ]
+    },
+    {
+      "original_path": "autoresearch/llm_cuda/bench.py",
+      "current_path": "autoresearch/gpu/cuda/bench.py",
+      "original_sha256": "6544dd35167bbd9151d06568d0a1fbe27681b324e21b6bf674f8b0f18b6fdd9d",
+      "current_sha256": "3a45a16854ac52f8d3b370d3d3cbd7e5103103540d43a7185b8dfd19ce9972f9",
+      "change": "repository root lookup: parents[2] -> parents[3]",
+      "previous_paths": [
+        "autoresearch/gpu/llm_cuda/bench.py"
+      ]
+    },
+    {
+      "original_path": "autoresearch/llm_cuda_g4/model.py",
+      "current_path": "autoresearch/gpu/cuda_g4/model.py",
+      "original_sha256": "9200a5549304e08e90c279a6bab9cdaa017a928ec6b122ab8dec37b977ae4985",
+      "current_sha256": "9200a5549304e08e90c279a6bab9cdaa017a928ec6b122ab8dec37b977ae4985",
+      "change": "path only; content unchanged",
+      "previous_paths": [
+        "autoresearch/gpu/llm_cuda_g4/model.py"
+      ]
+    },
+    {
+      "original_path": "autoresearch/llm_cuda_g4/swiglu.cu",
+      "current_path": "autoresearch/gpu/cuda_g4/swiglu.cu",
+      "original_sha256": "4d23f661cc8d4f6e691a86ab20c487327a997ab41cb0e071df1e94fa9434e6b8",
+      "current_sha256": "4d23f661cc8d4f6e691a86ab20c487327a997ab41cb0e071df1e94fa9434e6b8",
+      "change": "path only; content unchanged",
+      "previous_paths": [
+        "autoresearch/gpu/llm_cuda_g4/swiglu.cu"
+      ]
+    },
+    {
+      "original_path": "autoresearch/llm_cuda_g4/bindings.cpp",
+      "current_path": "autoresearch/gpu/cuda_g4/bindings.cpp",
+      "original_sha256": "bd5c1d097b286c6f39a35c1b21c6f87ac752a50f1a369ec7462952b69a81a31e",
+      "current_sha256": "bd5c1d097b286c6f39a35c1b21c6f87ac752a50f1a369ec7462952b69a81a31e",
+      "change": "path only; content unchanged",
+      "previous_paths": [
+        "autoresearch/gpu/llm_cuda_g4/bindings.cpp"
+      ]
+    },
+    {
+      "original_path": "autoresearch/llm_cuda_g4/bench.py",
+      "current_path": "autoresearch/gpu/cuda_g4/bench.py",
+      "original_sha256": "1f3ac38c7acaccf101c55e371743e84401cf02017b07ae916378eee6101b8b27",
+      "current_sha256": "1c17bd38fded541fcce0fa20dff45519de4cc0ff4c29d99d6bc218f03c2df682",
+      "change": "repository root lookup: parents[2] -> parents[3]",
+      "previous_paths": [
+        "autoresearch/gpu/llm_cuda_g4/bench.py"
+      ]
+    }
+  ]
+}
