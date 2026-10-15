@@ -1,0 +1,44 @@
+.PHONY: all build clean regs sass profile bench
+
+NVCC ?= nvcc
+ARCH ?= sm_80
+NVCCFLAGS ?= -O3 -std=c++17 -arch=$(ARCH) -lineinfo
+BUILD_DIR := build
+BIN := $(BUILD_DIR)/tc_gemm
+SRCS := main.cu runner.cu
+HDRS := runner.cuh $(wildcard kernels/*.cuh)
+
+all: build
+
+build: $(BIN)
+
+$(BIN): $(SRCS) $(HDRS)
+	@mkdir -p $(BUILD_DIR)
+	$(NVCC) $(NVCCFLAGS) -o $@ $(SRCS) -lcublas
+
+# 커널별 레지스터·SMEM 사용량 (spill 확인)
+regs:
+	@mkdir -p $(BUILD_DIR)
+	$(NVCC) $(NVCCFLAGS) -Xptxas -v -c runner.cu -o $(BUILD_DIR)/runner.o 2>&1 \
+		| c++filt | grep -E "Function properties|Compiling entry|registers|spill"
+
+# 사용법: make sass KERNEL=tcgemmSwizzle
+KERNEL ?= tcgemmSwizzle
+sass: build
+	cuobjdump -sass $(BIN) | c++filt > $(BUILD_DIR)/all.sass
+	@grep -n "Function : .*$(KERNEL)" $(BUILD_DIR)/all.sass | head
+	@echo "HMMA count:" $$(grep -c HMMA $(BUILD_DIR)/all.sass)
+
+# 사용법: make profile K=4 SIZE=4096
+K ?= 5
+SIZE ?= 4096
+profile: build
+	@mkdir -p results
+	ncu --set full -k regex:tcgemm -c 1 --export results/kernel_$(K) --force-overwrite \
+		$(BIN) $(K) $(SIZE)
+
+bench: build
+	bash bench.sh
+
+clean:
+	rm -rf $(BUILD_DIR)

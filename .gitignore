@@ -30,3 +30,6 @@ autoresearch/gpu/*/run.log
 # llm bench
 llm_bench/results
 llm_bench_tpu/results
+
+# tensor core gemm
+tensor_core_gemm/results

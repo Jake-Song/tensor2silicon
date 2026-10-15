@@ -1,0 +1,444 @@
+# Colab A100-SXM4-40GB, CUDA 13.0.88, 2026-10-15 — kernels 0-7 after ncu-driven optimization (2 runs)
+ 
+##### run 1 kernel 0 exit 0
+Device 0: NVIDIA A100-SXM4-40GB (sm_80, 108 SMs, smem/block opt-in 163 KB)
+Running kernel 0: cuBLAS FP32 (SIMT baseline)
+dimensions(m=n=k) 128, alpha: 0.5, beta: 3.0
+Average elapsed time: (0.000011) s, performance: (  387.1) GFLOPS. size: (128).
+dimensions(m=n=k) 256, alpha: 0.5, beta: 3.0
+Average elapsed time: (0.000017) s, performance: ( 2030.2) GFLOPS. size: (256).
+dimensions(m=n=k) 512, alpha: 0.5, beta: 3.0
+Average elapsed time: (0.000037) s, performance: ( 7310.2) GFLOPS. size: (512).
+dimensions(m=n=k) 1024, alpha: 0.5, beta: 3.0
+Average elapsed time: (0.000166) s, performance: (12905.6) GFLOPS. size: (1024).
+dimensions(m=n=k) 2048, alpha: 0.5, beta: 3.0
+Average elapsed time: (0.001250) s, performance: (13747.3) GFLOPS. size: (2048).
+dimensions(m=n=k) 4096, alpha: 0.5, beta: 3.0
+Average elapsed time: (0.007606) s, performance: (18070.9) GFLOPS. size: (4096).
+dimensions(m=n=k) 8192, alpha: 0.5, beta: 3.0
+Average elapsed time: (0.057352) s, performance: (19171.4) GFLOPS. size: (8192).
+
+##### run 1 kernel 100 exit 0
+Device 0: NVIDIA A100-SXM4-40GB (sm_80, 108 SMs, smem/block opt-in 163 KB)
+Running kernel 100: cuBLAS TF32 (Tensor Core)
+dimensions(m=n=k) 128, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.0528, max|ref| 147.9, rel 3.571e-04 -> PASS
+Average elapsed time: (0.000009) s, performance: (  457.1) GFLOPS. size: (128).
+dimensions(m=n=k) 256, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.07671, max|ref| 209.8, rel 3.657e-04 -> PASS
+Average elapsed time: (0.000013) s, performance: ( 2512.9) GFLOPS. size: (256).
+dimensions(m=n=k) 512, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1186, max|ref| 321.1, rel 3.693e-04 -> PASS
+Average elapsed time: (0.000015) s, performance: (18306.1) GFLOPS. size: (512).
+dimensions(m=n=k) 1024, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1639, max|ref| 485.1, rel 3.379e-04 -> PASS
+Average elapsed time: (0.000043) s, performance: (50003.6) GFLOPS. size: (1024).
+dimensions(m=n=k) 2048, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.262, max|ref| 716.2, rel 3.659e-04 -> PASS
+Average elapsed time: (0.000231) s, performance: (74255.2) GFLOPS. size: (2048).
+dimensions(m=n=k) 4096, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.3573, max|ref| 1109, rel 3.220e-04 -> PASS
+Average elapsed time: (0.001321) s, performance: (104010.9) GFLOPS. size: (4096).
+dimensions(m=n=k) 8192, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.5581, max|ref| 1596, rel 3.497e-04 -> PASS
+Average elapsed time: (0.008166) s, performance: (134647.3) GFLOPS. size: (8192).
+
+##### run 1 kernel 1 exit 0
+Device 0: NVIDIA A100-SXM4-40GB (sm_80, 108 SMs, smem/block opt-in 163 KB)
+Running kernel 1: WMMA naive
+dimensions(m=n=k) 128, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.05767, max|ref| 142.8, rel 4.039e-04 -> PASS
+Average elapsed time: (0.000010) s, performance: (  419.7) GFLOPS. size: (128).
+dimensions(m=n=k) 256, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.08059, max|ref| 207.4, rel 3.885e-04 -> PASS
+Average elapsed time: (0.000016) s, performance: ( 2103.2) GFLOPS. size: (256).
+dimensions(m=n=k) 512, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1171, max|ref| 322.9, rel 3.626e-04 -> PASS
+Average elapsed time: (0.000043) s, performance: ( 6289.4) GFLOPS. size: (512).
+dimensions(m=n=k) 1024, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1707, max|ref| 477.4, rel 3.575e-04 -> PASS
+Average elapsed time: (0.000238) s, performance: ( 9012.3) GFLOPS. size: (1024).
+dimensions(m=n=k) 2048, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.2556, max|ref| 777.5, rel 3.287e-04 -> PASS
+Average elapsed time: (0.001852) s, performance: ( 9278.8) GFLOPS. size: (2048).
+dimensions(m=n=k) 4096, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.39, max|ref| 1028, rel 3.795e-04 -> PASS
+Average elapsed time: (0.011124) s, performance: (12355.0) GFLOPS. size: (4096).
+dimensions(m=n=k) 8192, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.5927, max|ref| 1589, rel 3.730e-04 -> PASS
+Average elapsed time: (0.087171) s, performance: (12613.3) GFLOPS. size: (8192).
+
+##### run 1 kernel 2 exit 0
+Device 0: NVIDIA A100-SXM4-40GB (sm_80, 108 SMs, smem/block opt-in 163 KB)
+Running kernel 2: WMMA + SMEM warptiling
+dimensions(m=n=k) 128, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.04946, max|ref| 150.6, rel 3.284e-04 -> PASS
+Average elapsed time: (0.000030) s, performance: (  140.6) GFLOPS. size: (128).
+dimensions(m=n=k) 256, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.07595, max|ref| 217, rel 3.499e-04 -> PASS
+Average elapsed time: (0.000051) s, performance: (  656.1) GFLOPS. size: (256).
+dimensions(m=n=k) 512, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1139, max|ref| 303.4, rel 3.754e-04 -> PASS
+Average elapsed time: (0.000097) s, performance: ( 2775.2) GFLOPS. size: (512).
+dimensions(m=n=k) 1024, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.163, max|ref| 503.8, rel 3.235e-04 -> PASS
+Average elapsed time: (0.000185) s, performance: (11577.5) GFLOPS. size: (1024).
+dimensions(m=n=k) 2048, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.2641, max|ref| 745.2, rel 3.544e-04 -> PASS
+Average elapsed time: (0.001118) s, performance: (15365.2) GFLOPS. size: (2048).
+dimensions(m=n=k) 4096, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.3792, max|ref| 1048, rel 3.619e-04 -> PASS
+Average elapsed time: (0.005250) s, performance: (26177.9) GFLOPS. size: (4096).
+dimensions(m=n=k) 8192, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.5641, max|ref| 1503, rel 3.753e-04 -> PASS
+Average elapsed time: (0.035346) s, performance: (31106.7) GFLOPS. size: (8192).
+
+##### run 1 kernel 3 exit 0
+Device 0: NVIDIA A100-SXM4-40GB (sm_80, 108 SMs, smem/block opt-in 163 KB)
+Running kernel 3: mma.sync m16n8k8 TF32
+dimensions(m=n=k) 128, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.05774, max|ref| 152.1, rel 3.797e-04 -> PASS
+Average elapsed time: (0.000029) s, performance: (  147.1) GFLOPS. size: (128).
+dimensions(m=n=k) 256, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.07821, max|ref| 237.1, rel 3.299e-04 -> PASS
+Average elapsed time: (0.000045) s, performance: (  744.7) GFLOPS. size: (256).
+dimensions(m=n=k) 512, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1119, max|ref| 323.6, rel 3.459e-04 -> PASS
+Average elapsed time: (0.000082) s, performance: ( 3280.9) GFLOPS. size: (512).
+dimensions(m=n=k) 1024, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1811, max|ref| 463.6, rel 3.906e-04 -> PASS
+Average elapsed time: (0.000151) s, performance: (14218.0) GFLOPS. size: (1024).
+dimensions(m=n=k) 2048, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.2598, max|ref| 700.7, rel 3.708e-04 -> PASS
+Average elapsed time: (0.000936) s, performance: (18351.0) GFLOPS. size: (2048).
+dimensions(m=n=k) 4096, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.4135, max|ref| 1067, rel 3.876e-04 -> PASS
+Average elapsed time: (0.003745) s, performance: (36702.8) GFLOPS. size: (4096).
+dimensions(m=n=k) 8192, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.5731, max|ref| 1616, rel 3.547e-04 -> PASS
+Average elapsed time: (0.028328) s, performance: (38814.0) GFLOPS. size: (8192).
+
+##### run 1 kernel 4 exit 0
+Device 0: NVIDIA A100-SXM4-40GB (sm_80, 108 SMs, smem/block opt-in 163 KB)
+Running kernel 4: cp.async 3-stage pipeline
+dimensions(m=n=k) 128, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.05802, max|ref| 155.6, rel 3.728e-04 -> PASS
+Average elapsed time: (0.000022) s, performance: (  193.4) GFLOPS. size: (128).
+dimensions(m=n=k) 256, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.0751, max|ref| 212.8, rel 3.528e-04 -> PASS
+Average elapsed time: (0.000032) s, performance: ( 1059.1) GFLOPS. size: (256).
+dimensions(m=n=k) 512, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1169, max|ref| 349.8, rel 3.343e-04 -> PASS
+Average elapsed time: (0.000052) s, performance: ( 5136.0) GFLOPS. size: (512).
+dimensions(m=n=k) 1024, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1617, max|ref| 543.2, rel 2.978e-04 -> PASS
+Average elapsed time: (0.000093) s, performance: (23183.2) GFLOPS. size: (1024).
+dimensions(m=n=k) 2048, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.2574, max|ref| 732.2, rel 3.515e-04 -> PASS
+Average elapsed time: (0.000435) s, performance: (39485.1) GFLOPS. size: (2048).
+dimensions(m=n=k) 4096, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.3994, max|ref| 1080, rel 3.697e-04 -> PASS
+Average elapsed time: (0.002604) s, performance: (52780.5) GFLOPS. size: (4096).
+dimensions(m=n=k) 8192, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.5453, max|ref| 1570, rel 3.473e-04 -> PASS
+Average elapsed time: (0.015551) s, performance: (70702.5) GFLOPS. size: (8192).
+
+##### run 1 kernel 5 exit 0
+Device 0: NVIDIA A100-SXM4-40GB (sm_80, 108 SMs, smem/block opt-in 163 KB)
+Running kernel 5: XOR swizzle + tuned tiles
+dimensions(m=n=k) 128, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.05124, max|ref| 147.6, rel 3.472e-04 -> PASS
+Average elapsed time: (0.000017) s, performance: (  245.3) GFLOPS. size: (128).
+dimensions(m=n=k) 256, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.07252, max|ref| 217.1, rel 3.340e-04 -> PASS
+Average elapsed time: (0.000026) s, performance: ( 1311.8) GFLOPS. size: (256).
+dimensions(m=n=k) 512, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1259, max|ref| 309.4, rel 4.069e-04 -> PASS
+Average elapsed time: (0.000043) s, performance: ( 6250.5) GFLOPS. size: (512).
+dimensions(m=n=k) 1024, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1739, max|ref| 471.1, rel 3.692e-04 -> PASS
+Average elapsed time: (0.000077) s, performance: (27747.4) GFLOPS. size: (1024).
+dimensions(m=n=k) 2048, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.248, max|ref| 741.4, rel 3.346e-04 -> PASS
+Average elapsed time: (0.000491) s, performance: (35018.2) GFLOPS. size: (2048).
+dimensions(m=n=k) 4096, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.3565, max|ref| 1067, rel 3.341e-04 -> PASS
+Average elapsed time: (0.002317) s, performance: (59315.9) GFLOPS. size: (4096).
+dimensions(m=n=k) 8192, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.5704, max|ref| 1533, rel 3.721e-04 -> PASS
+Average elapsed time: (0.013395) s, performance: (82086.5) GFLOPS. size: (8192).
+
+##### run 1 kernel 6 exit 0
+Device 0: NVIDIA A100-SXM4-40GB (sm_80, 108 SMs, smem/block opt-in 163 KB)
+Running kernel 6: vectorized fragments + fast TF32 round
+dimensions(m=n=k) 128, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.05144, max|ref| 146.4, rel 3.513e-04 -> PASS
+Average elapsed time: (0.000015) s, performance: (  278.3) GFLOPS. size: (128).
+dimensions(m=n=k) 256, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.07276, max|ref| 215.5, rel 3.376e-04 -> PASS
+Average elapsed time: (0.000021) s, performance: ( 1592.2) GFLOPS. size: (256).
+dimensions(m=n=k) 512, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1196, max|ref| 323.9, rel 3.693e-04 -> PASS
+Average elapsed time: (0.000034) s, performance: ( 7992.2) GFLOPS. size: (512).
+dimensions(m=n=k) 1024, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1794, max|ref| 497.3, rel 3.609e-04 -> PASS
+Average elapsed time: (0.000058) s, performance: (36856.8) GFLOPS. size: (1024).
+dimensions(m=n=k) 2048, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.2611, max|ref| 700.3, rel 3.729e-04 -> PASS
+Average elapsed time: (0.000333) s, performance: (51517.6) GFLOPS. size: (2048).
+dimensions(m=n=k) 4096, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.3872, max|ref| 1038, rel 3.731e-04 -> PASS
+Average elapsed time: (0.001937) s, performance: (70951.6) GFLOPS. size: (4096).
+dimensions(m=n=k) 8192, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.5501, max|ref| 1582, rel 3.478e-04 -> PASS
+Average elapsed time: (0.011839) s, performance: (92873.0) GFLOPS. size: (8192).
+
+##### run 1 kernel 7 exit 0
+Device 0: NVIDIA A100-SXM4-40GB (sm_80, 108 SMs, smem/block opt-in 163 KB)
+Running kernel 7: fragment double buffering (warp-level pipeline)
+dimensions(m=n=k) 128, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.05009, max|ref| 136.3, rel 3.676e-04 -> PASS
+Average elapsed time: (0.000015) s, performance: (  276.0) GFLOPS. size: (128).
+dimensions(m=n=k) 256, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.07997, max|ref| 208.6, rel 3.833e-04 -> PASS
+Average elapsed time: (0.000020) s, performance: ( 1643.3) GFLOPS. size: (256).
+dimensions(m=n=k) 512, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1203, max|ref| 328.7, rel 3.659e-04 -> PASS
+Average elapsed time: (0.000031) s, performance: ( 8589.3) GFLOPS. size: (512).
+dimensions(m=n=k) 1024, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1632, max|ref| 452.6, rel 3.605e-04 -> PASS
+Average elapsed time: (0.000052) s, performance: (40944.0) GFLOPS. size: (1024).
+dimensions(m=n=k) 2048, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.2607, max|ref| 762.9, rel 3.417e-04 -> PASS
+Average elapsed time: (0.000295) s, performance: (58310.9) GFLOPS. size: (2048).
+dimensions(m=n=k) 4096, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.3638, max|ref| 1049, rel 3.470e-04 -> PASS
+Average elapsed time: (0.001625) s, performance: (84588.2) GFLOPS. size: (4096).
+dimensions(m=n=k) 8192, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.5828, max|ref| 1583, rel 3.681e-04 -> PASS
+Average elapsed time: (0.009322) s, performance: (117946.9) GFLOPS. size: (8192).
+
+##### run 2 kernel 0 exit 0
+Device 0: NVIDIA A100-SXM4-40GB (sm_80, 108 SMs, smem/block opt-in 163 KB)
+Running kernel 0: cuBLAS FP32 (SIMT baseline)
+dimensions(m=n=k) 128, alpha: 0.5, beta: 3.0
+Average elapsed time: (0.000011) s, performance: (  394.6) GFLOPS. size: (128).
+dimensions(m=n=k) 256, alpha: 0.5, beta: 3.0
+Average elapsed time: (0.000016) s, performance: ( 2081.8) GFLOPS. size: (256).
+dimensions(m=n=k) 512, alpha: 0.5, beta: 3.0
+Average elapsed time: (0.000037) s, performance: ( 7326.6) GFLOPS. size: (512).
+dimensions(m=n=k) 1024, alpha: 0.5, beta: 3.0
+Average elapsed time: (0.000166) s, performance: (12907.1) GFLOPS. size: (1024).
+dimensions(m=n=k) 2048, alpha: 0.5, beta: 3.0
+Average elapsed time: (0.001244) s, performance: (13806.4) GFLOPS. size: (2048).
+dimensions(m=n=k) 4096, alpha: 0.5, beta: 3.0
+Average elapsed time: (0.007556) s, performance: (18189.4) GFLOPS. size: (4096).
+dimensions(m=n=k) 8192, alpha: 0.5, beta: 3.0
+Average elapsed time: (0.057354) s, performance: (19170.7) GFLOPS. size: (8192).
+
+##### run 2 kernel 100 exit 0
+Device 0: NVIDIA A100-SXM4-40GB (sm_80, 108 SMs, smem/block opt-in 163 KB)
+Running kernel 100: cuBLAS TF32 (Tensor Core)
+dimensions(m=n=k) 128, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.05475, max|ref| 178.9, rel 3.060e-04 -> PASS
+Average elapsed time: (0.000009) s, performance: (  480.8) GFLOPS. size: (128).
+dimensions(m=n=k) 256, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.08392, max|ref| 242.7, rel 3.457e-04 -> PASS
+Average elapsed time: (0.000013) s, performance: ( 2512.9) GFLOPS. size: (256).
+dimensions(m=n=k) 512, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1105, max|ref| 329.6, rel 3.352e-04 -> PASS
+Average elapsed time: (0.000015) s, performance: (18409.0) GFLOPS. size: (512).
+dimensions(m=n=k) 1024, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1608, max|ref| 477.8, rel 3.365e-04 -> PASS
+Average elapsed time: (0.000043) s, performance: (50123.1) GFLOPS. size: (1024).
+dimensions(m=n=k) 2048, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.2603, max|ref| 707.4, rel 3.679e-04 -> PASS
+Average elapsed time: (0.000231) s, performance: (74307.8) GFLOPS. size: (2048).
+dimensions(m=n=k) 4096, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.3664, max|ref| 1098, rel 3.335e-04 -> PASS
+Average elapsed time: (0.001321) s, performance: (104017.3) GFLOPS. size: (4096).
+dimensions(m=n=k) 8192, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.5687, max|ref| 1603, rel 3.548e-04 -> PASS
+Average elapsed time: (0.008250) s, performance: (133273.5) GFLOPS. size: (8192).
+
+##### run 2 kernel 1 exit 0
+Device 0: NVIDIA A100-SXM4-40GB (sm_80, 108 SMs, smem/block opt-in 163 KB)
+Running kernel 1: WMMA naive
+dimensions(m=n=k) 128, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.0491, max|ref| 135.6, rel 3.621e-04 -> PASS
+Average elapsed time: (0.000010) s, performance: (  414.6) GFLOPS. size: (128).
+dimensions(m=n=k) 256, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.08226, max|ref| 218.4, rel 3.767e-04 -> PASS
+Average elapsed time: (0.000016) s, performance: ( 2100.5) GFLOPS. size: (256).
+dimensions(m=n=k) 512, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.124, max|ref| 318.7, rel 3.889e-04 -> PASS
+Average elapsed time: (0.000043) s, performance: ( 6274.4) GFLOPS. size: (512).
+dimensions(m=n=k) 1024, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.16, max|ref| 512.1, rel 3.124e-04 -> PASS
+Average elapsed time: (0.000238) s, performance: ( 9013.0) GFLOPS. size: (1024).
+dimensions(m=n=k) 2048, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.244, max|ref| 752.7, rel 3.241e-04 -> PASS
+Average elapsed time: (0.001847) s, performance: ( 9302.2) GFLOPS. size: (2048).
+dimensions(m=n=k) 4096, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.3786, max|ref| 1064, rel 3.557e-04 -> PASS
+Average elapsed time: (0.011127) s, performance: (12351.7) GFLOPS. size: (4096).
+dimensions(m=n=k) 8192, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.5714, max|ref| 1508, rel 3.789e-04 -> PASS
+Average elapsed time: (0.087166) s, performance: (12614.0) GFLOPS. size: (8192).
+
+##### run 2 kernel 2 exit 0
+Device 0: NVIDIA A100-SXM4-40GB (sm_80, 108 SMs, smem/block opt-in 163 KB)
+Running kernel 2: WMMA + SMEM warptiling
+dimensions(m=n=k) 128, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.04929, max|ref| 135.9, rel 3.626e-04 -> PASS
+Average elapsed time: (0.000030) s, performance: (  140.6) GFLOPS. size: (128).
+dimensions(m=n=k) 256, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.07588, max|ref| 210.3, rel 3.609e-04 -> PASS
+Average elapsed time: (0.000051) s, performance: (  656.4) GFLOPS. size: (256).
+dimensions(m=n=k) 512, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1081, max|ref| 322.9, rel 3.348e-04 -> PASS
+Average elapsed time: (0.000097) s, performance: ( 2772.8) GFLOPS. size: (512).
+dimensions(m=n=k) 1024, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1739, max|ref| 529.7, rel 3.282e-04 -> PASS
+Average elapsed time: (0.000186) s, performance: (11569.9) GFLOPS. size: (1024).
+dimensions(m=n=k) 2048, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.2526, max|ref| 693.6, rel 3.641e-04 -> PASS
+Average elapsed time: (0.001115) s, performance: (15410.3) GFLOPS. size: (2048).
+dimensions(m=n=k) 4096, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.3666, max|ref| 1006, rel 3.643e-04 -> PASS
+Average elapsed time: (0.005057) s, performance: (27179.6) GFLOPS. size: (4096).
+dimensions(m=n=k) 8192, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.5718, max|ref| 1534, rel 3.727e-04 -> PASS
+Average elapsed time: (0.035360) s, performance: (31095.1) GFLOPS. size: (8192).
+
+##### run 2 kernel 3 exit 0
+Device 0: NVIDIA A100-SXM4-40GB (sm_80, 108 SMs, smem/block opt-in 163 KB)
+Running kernel 3: mma.sync m16n8k8 TF32
+dimensions(m=n=k) 128, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.04993, max|ref| 155.2, rel 3.217e-04 -> PASS
+Average elapsed time: (0.000029) s, performance: (  146.6) GFLOPS. size: (128).
+dimensions(m=n=k) 256, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.07852, max|ref| 234.3, rel 3.351e-04 -> PASS
+Average elapsed time: (0.000045) s, performance: (  741.7) GFLOPS. size: (256).
+dimensions(m=n=k) 512, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.111, max|ref| 313.5, rel 3.542e-04 -> PASS
+Average elapsed time: (0.000082) s, performance: ( 3276.0) GFLOPS. size: (512).
+dimensions(m=n=k) 1024, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1651, max|ref| 482.9, rel 3.419e-04 -> PASS
+Average elapsed time: (0.000151) s, performance: (14208.3) GFLOPS. size: (1024).
+dimensions(m=n=k) 2048, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.2621, max|ref| 753.3, rel 3.479e-04 -> PASS
+Average elapsed time: (0.000939) s, performance: (18302.2) GFLOPS. size: (2048).
+dimensions(m=n=k) 4096, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.3749, max|ref| 1053, rel 3.560e-04 -> PASS
+Average elapsed time: (0.003897) s, performance: (35265.7) GFLOPS. size: (4096).
+dimensions(m=n=k) 8192, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.5753, max|ref| 1672, rel 3.440e-04 -> PASS
+Average elapsed time: (0.028328) s, performance: (38814.1) GFLOPS. size: (8192).
+
+##### run 2 kernel 4 exit 0
+Device 0: NVIDIA A100-SXM4-40GB (sm_80, 108 SMs, smem/block opt-in 163 KB)
+Running kernel 4: cp.async 3-stage pipeline
+dimensions(m=n=k) 128, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.04634, max|ref| 164.3, rel 2.821e-04 -> PASS
+Average elapsed time: (0.000022) s, performance: (  193.2) GFLOPS. size: (128).
+dimensions(m=n=k) 256, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.08199, max|ref| 211.8, rel 3.872e-04 -> PASS
+Average elapsed time: (0.000032) s, performance: ( 1060.5) GFLOPS. size: (256).
+dimensions(m=n=k) 512, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1145, max|ref| 309.7, rel 3.697e-04 -> PASS
+Average elapsed time: (0.000052) s, performance: ( 5132.0) GFLOPS. size: (512).
+dimensions(m=n=k) 1024, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1629, max|ref| 475.3, rel 3.427e-04 -> PASS
+Average elapsed time: (0.000093) s, performance: (23178.1) GFLOPS. size: (1024).
+dimensions(m=n=k) 2048, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.286, max|ref| 715.9, rel 3.995e-04 -> PASS
+Average elapsed time: (0.000436) s, performance: (39388.7) GFLOPS. size: (2048).
+dimensions(m=n=k) 4096, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.4218, max|ref| 1101, rel 3.832e-04 -> PASS
+Average elapsed time: (0.002602) s, performance: (52812.1) GFLOPS. size: (4096).
+dimensions(m=n=k) 8192, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.5452, max|ref| 1546, rel 3.527e-04 -> PASS
+Average elapsed time: (0.015540) s, performance: (70752.7) GFLOPS. size: (8192).
+
+##### run 2 kernel 5 exit 0
+Device 0: NVIDIA A100-SXM4-40GB (sm_80, 108 SMs, smem/block opt-in 163 KB)
+Running kernel 5: XOR swizzle + tuned tiles
+dimensions(m=n=k) 128, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.05423, max|ref| 131.8, rel 4.113e-04 -> PASS
+Average elapsed time: (0.000017) s, performance: (  243.5) GFLOPS. size: (128).
+dimensions(m=n=k) 256, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.08618, max|ref| 213.1, rel 4.043e-04 -> PASS
+Average elapsed time: (0.000026) s, performance: ( 1305.5) GFLOPS. size: (256).
+dimensions(m=n=k) 512, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1074, max|ref| 337.1, rel 3.186e-04 -> PASS
+Average elapsed time: (0.000043) s, performance: ( 6226.7) GFLOPS. size: (512).
+dimensions(m=n=k) 1024, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1662, max|ref| 480.7, rel 3.457e-04 -> PASS
+Average elapsed time: (0.000078) s, performance: (27666.9) GFLOPS. size: (1024).
+dimensions(m=n=k) 2048, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.277, max|ref| 727.4, rel 3.808e-04 -> PASS
+Average elapsed time: (0.000490) s, performance: (35027.0) GFLOPS. size: (2048).
+dimensions(m=n=k) 4096, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.3573, max|ref| 1088, rel 3.284e-04 -> PASS
+Average elapsed time: (0.002257) s, performance: (60893.5) GFLOPS. size: (4096).
+dimensions(m=n=k) 8192, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.5634, max|ref| 1554, rel 3.625e-04 -> PASS
+Average elapsed time: (0.013409) s, performance: (81995.8) GFLOPS. size: (8192).
+
+##### run 2 kernel 6 exit 0
+Device 0: NVIDIA A100-SXM4-40GB (sm_80, 108 SMs, smem/block opt-in 163 KB)
+Running kernel 6: vectorized fragments + fast TF32 round
+dimensions(m=n=k) 128, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.04802, max|ref| 137.4, rel 3.494e-04 -> PASS
+Average elapsed time: (0.000015) s, performance: (  277.5) GFLOPS. size: (128).
+dimensions(m=n=k) 256, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.08696, max|ref| 204.2, rel 4.258e-04 -> PASS
+Average elapsed time: (0.000021) s, performance: ( 1578.4) GFLOPS. size: (256).
+dimensions(m=n=k) 512, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1179, max|ref| 306.4, rel 3.846e-04 -> PASS
+Average elapsed time: (0.000034) s, performance: ( 7977.6) GFLOPS. size: (512).
+dimensions(m=n=k) 1024, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1737, max|ref| 473.6, rel 3.668e-04 -> PASS
+Average elapsed time: (0.000058) s, performance: (36753.5) GFLOPS. size: (1024).
+dimensions(m=n=k) 2048, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.2531, max|ref| 773.6, rel 3.271e-04 -> PASS
+Average elapsed time: (0.000334) s, performance: (51473.3) GFLOPS. size: (2048).
+dimensions(m=n=k) 4096, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.4113, max|ref| 1080, rel 3.808e-04 -> PASS
+Average elapsed time: (0.001932) s, performance: (71126.1) GFLOPS. size: (4096).
+dimensions(m=n=k) 8192, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.5744, max|ref| 1577, rel 3.642e-04 -> PASS
+Average elapsed time: (0.011838) s, performance: (92881.2) GFLOPS. size: (8192).
+
+##### run 2 kernel 7 exit 0
+Device 0: NVIDIA A100-SXM4-40GB (sm_80, 108 SMs, smem/block opt-in 163 KB)
+Running kernel 7: fragment double buffering (warp-level pipeline)
+dimensions(m=n=k) 128, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.05352, max|ref| 143.5, rel 3.730e-04 -> PASS
+Average elapsed time: (0.000015) s, performance: (  277.1) GFLOPS. size: (128).
+dimensions(m=n=k) 256, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.07743, max|ref| 197.3, rel 3.925e-04 -> PASS
+Average elapsed time: (0.000020) s, performance: ( 1649.9) GFLOPS. size: (256).
+dimensions(m=n=k) 512, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1124, max|ref| 335.6, rel 3.350e-04 -> PASS
+Average elapsed time: (0.000031) s, performance: ( 8606.2) GFLOPS. size: (512).
+dimensions(m=n=k) 1024, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1751, max|ref| 476.5, rel 3.675e-04 -> PASS
+Average elapsed time: (0.000052) s, performance: (41056.2) GFLOPS. size: (1024).
+dimensions(m=n=k) 2048, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.2534, max|ref| 750.2, rel 3.378e-04 -> PASS
+Average elapsed time: (0.000295) s, performance: (58302.8) GFLOPS. size: (2048).
+dimensions(m=n=k) 4096, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.3608, max|ref| 1055, rel 3.418e-04 -> PASS
+Average elapsed time: (0.001627) s, performance: (84482.7) GFLOPS. size: (4096).
+dimensions(m=n=k) 8192, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.563, max|ref| 1632, rel 3.449e-04 -> PASS
+Average elapsed time: (0.009324) s, performance: (117916.9) GFLOPS. size: (8192).
+
+
+# ncu (4096, clocks locked by ncu) — key metrics
+kernel 5 (128x256): tensor pipe 51.9%, inst 441.3M, regs 222, stalls/issue wait 1.28 math 1.29
+kernel 6 cfg1 (256x128): tensor pipe 62.2%, inst 199.2M, stalls wait 2.68 math 2.14 mio 0.77 barrier 0.61 long_sb 0.49
+kernel 7 cfg1 (256x128): tensor pipe 73.9%, inst 199.6M, stalls wait 2.18 math 2.15 mio 0.66 barrier 0.08 long_sb 0.48
+cuBLAS TF32 = cutlass_80_tensorop_s1688gemm_128x256_32x3_nn: tensor pipe 91.4%, inst 280.9M, regs 230

@@ -112,6 +112,14 @@ uv run --with jax python -m llm_roofline.jax_llm --preset tiny                  
 uv run --with matplotlib python -m llm_roofline.plot llm_roofline/results/*.json --out-dir plots
 ```
 
+## A100 Tensor Core GEMM (TF32, CUDA C++)
+
+[SGEMM_CUDA](https://github.com/siboehm/SGEMM_CUDA)의 단계별 최적화를 TF32 Tensor Core로 옮긴 커널 7개입니다.
+WMMA에서 시작해 `mma.sync`, `cp.async` 파이프라인, XOR swizzle을 거쳐 ncu로 찾은 병목을 줄입니다. 최종 kernel 7은 A100 8192에서 cuBLAS TF32의 88%(117.9 TFLOPs/s)입니다.
+
+- [단계별 설명과 실행 방법](tensor_core_gemm/README.md)
+- [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jake-Song/tensor2silicon/blob/main/notebooks/tensor_core_gemm_a100.ipynb) [A100에서 cuBLAS FP32·TF32와 비교](notebooks/tensor_core_gemm_a100.ipynb)
+
 ## BF16 전체 추론: PyTorch · Triton 비교
 
 같은 모델을 컴파일 PyTorch, 컴파일 PyTorch + 직접 작성한 Triton, 전체 계산을 직접 작성한 Triton으로 비교합니다.
