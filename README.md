@@ -120,42 +120,6 @@ WMMA에서 시작해 `mma.sync`, `cp.async` 파이프라인, XOR swizzle을 거�
 - [단계별 설명과 실행 방법](tensor_core_gemm/README.md)
 - [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jake-Song/tensor2silicon/blob/main/notebooks/tensor_core_gemm_a100.ipynb) [A100에서 cuBLAS FP32·TF32와 비교](notebooks/tensor_core_gemm_a100.ipynb)
 
-## BF16 전체 추론: PyTorch · Triton 비교
-
-같은 모델을 컴파일 PyTorch, 컴파일 PyTorch + 직접 작성한 Triton, 전체 계산을 직접 작성한 Triton으로 비교합니다.
-Prefill·B=8 decode·128토큰 생성의 실제 GPU 시간과 wall-clock 시간, FP32 기준 정확도를 확인합니다.
-
-- [실행 방법과 측정 조건](llm_bench/README.md)
-- [G4 실측 보고서와 원시 결과](llm_bench/results/2026-10-04-g4/report.md)
-- [코드·결과가 내장된 분석 노트북](notebooks/llm_backend_comparison_g4.ipynb)
-
-## BF16 전체 추론: JAX · Pallas 비교 (TPU v6e)
-
-같은 8층 decoder를 JAX, attention만 Pallas로 교체한 JAX+Pallas, 모든 모델 연산을 Pallas로 작성한 native Pallas로 비교합니다.
-Colab TPU v6e에서 prefill·B=8 decode를 측정하고, 전체 logits·KV 정확도와 실제 Pallas 실행 경로를 검사합니다.
-
-- [실행 방법과 비교 조건](llm_bench_tpu/README.md)
-- [Colab 실행 노트북](notebooks/llm_backend_comparison_tpu_v6e.ipynb)
-- [TPU v6e 실측 보고서](llm_bench_tpu/results/2026-10-05-v6e/report.md)
-- [TPU 프로파일링·Pallas 최적화 결과](llm_bench_tpu/results/2026-10-05-v6e-optimized/report.md)
-
-## autoresearch: 에이전트가 커널을 최적화하는 실험
-
-Claude Code가 Colab 터미널에서 `kernel.py`만 고치며 fused `ReLU(XW + b)` 커널을 반복 실험으로 빠르게 만든다.
-고정된 `bench.py`가 정확도·반칙 여부·속도를 채점하고, 빨라진 커밋만 남긴다. 느려지거나 실패한 시도까지 모든 실험의 가설·결과·교훈은 `report.md`에 기록된다. 자세한 내용은 [autoresearch/README.md](autoresearch/README.md)를 보세요.
-
-- [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jake-Song/tensor2silicon/blob/main/notebooks/autoresearch_gpu_a100.ipynb) [A100 · Triton launcher](notebooks/autoresearch_gpu_a100.ipynb): cuBLAS 대비 `speedup`
-- [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jake-Song/tensor2silicon/blob/main/notebooks/autoresearch_tpu_v6e.ipynb) [TPU v6e · Pallas launcher](notebooks/autoresearch_tpu_v6e.ipynb): XLA 대비 `speedup`
-
-### LLM 전체 모델 autoresearch
-
-Roofline 노트북의 Transformer를 대상으로 `model.py`를 최적화한다. prefill·decode를 별도 실험으로 실행하며,
-전체 logits와 KV cache 정확도를 유지한 채 forward 지연 시간을 줄인다. framework 연산과 직접 만든 커널을 함께 허용한다.
-
-- [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jake-Song/tensor2silicon/blob/main/notebooks/autoresearch_llm_gpu_a100.ipynb) [LLM A100 · PyTorch + Triton](notebooks/autoresearch_llm_gpu_a100.ipynb)
-- [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jake-Song/tensor2silicon/blob/main/notebooks/autoresearch_llm_tpu_v5e.ipynb) [LLM TPU v6e / v5e · JAX + Pallas](notebooks/autoresearch_llm_tpu_v5e.ipynb)
-- 실행 방법과 고정 평가 규칙: [autoresearch 안내](autoresearch/README.md#llm-모델-전체-최적화)
-
 ## 학습 문서
 
 ### 2주차: 모델에서 실리콘까지

@@ -15,21 +15,5 @@ wheels/
 # toy compiler build outputs
 toy/_build/
 
-# autoresearch run outputs
-autoresearch/*/results.tsv
-autoresearch/*/run.log
-autoresearch/llm_*/runs/
-autoresearch/llm_*/baseline.json
-autoresearch/llm_*/baseline.log
-autoresearch/gpu/*/runs/
-autoresearch/gpu/*/baseline.json
-autoresearch/gpu/*/baseline.log
-autoresearch/gpu/*/results.tsv
-autoresearch/gpu/*/run.log
-
-# llm bench
-llm_bench/results
-llm_bench_tpu/results
-
 # tensor core gemm
 tensor_core_gemm/results
