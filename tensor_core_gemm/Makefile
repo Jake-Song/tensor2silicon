@@ -5,16 +5,18 @@ ARCH ?= sm_80
 NVCCFLAGS ?= -O3 -std=c++17 -arch=$(ARCH) -lineinfo
 BUILD_DIR := build
 BIN := $(BUILD_DIR)/tc_gemm
-SRCS := main.cu runner.cu
 HDRS := runner.cuh $(wildcard kernels/*.cuh)
 
 all: build
 
 build: $(BIN)
 
-$(BIN): $(SRCS) $(HDRS)
+$(BUILD_DIR)/runner.o: runner.cu $(HDRS)
 	@mkdir -p $(BUILD_DIR)
-	$(NVCC) $(NVCCFLAGS) -o $@ $(SRCS) -lcublas
+	$(NVCC) $(NVCCFLAGS) -c runner.cu -o $@
+
+$(BIN): main.cu $(BUILD_DIR)/runner.o $(HDRS)
+	$(NVCC) $(NVCCFLAGS) -o $@ main.cu $(BUILD_DIR)/runner.o -lcublas
 
 # 커널별 레지스터·SMEM 사용량 (spill 확인)
 regs:
@@ -42,3 +44,19 @@ bench: build
 
 clean:
 	rm -rf $(BUILD_DIR)
+
+# Native sweep: input generation and FP32 reference run once per matrix size.
+$(BUILD_DIR)/tc_tune: tune.cu $(BUILD_DIR)/runner.o $(HDRS)
+	@mkdir -p $(BUILD_DIR)
+	$(NVCC) $(NVCCFLAGS) -o $@ tune.cu $(BUILD_DIR)/runner.o -lcublas
+
+.PHONY: tune
+tune: $(BUILD_DIR)/tc_tune
+	$(BUILD_DIR)/tc_tune
+
+$(BUILD_DIR)/tc_check: check.cu $(BUILD_DIR)/runner.o $(HDRS)
+	$(NVCC) $(NVCCFLAGS) -o $@ check.cu $(BUILD_DIR)/runner.o -lcublas
+
+.PHONY: check
+check: $(BUILD_DIR)/tc_check
+	$(BUILD_DIR)/tc_check

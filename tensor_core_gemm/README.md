@@ -137,3 +137,123 @@ cuBLAS가 고른 커널은 `cutlass_80_tensorop_s1688gemm_128x256_32x3_nn`입니
 
 - 모든 커널을 로컬 CUDA 12.4와 Colab CUDA 13.0에서 `-arch=sm_80`로 경고·spill 없이 빌드했습니다.
 - kernel 3~7의 SMEM 인덱스, swizzle, k·n 순열, `m16n8k8` fragment 매핑을 Python으로 시뮬레이션했습니다. 블록 하나의 결과가 행렬곱과 일치했고, 모든 fragment load(LDS.32/64/128)에서 bank conflict가 없었습니다.
+
+### 추가 튜닝 실험 (2026-10-16, 진행 중)
+
+kernel 7에서 `TC7_ORDER=0`은 기존 행 우선, `1`은 행 serpentine,
+`2`는 열 serpentine HMMA 순회다. `3`은 LDMATRIX A + 행 우선,
+`4`는 LDMATRIX A + 행 serpentine이다. 자동 설정은 작은 정사각 행렬에서 `0`,
+4096~8192에서 `3`을 선택한다.
+`TC7_CFG=4/5`는 64×128 / 128×64 타일(32×32 warp, 72 KiB SMEM),
+`6`은 64×64 타일(32×32 warp, 48 KiB SMEM)이다.
+
+GPU에서 아래 명령으로 정확도를 통과한 측정만 비교할 수 있다.
+실행 순서를 섞어 여러 번 측정하고 중앙값과 cuBLAS TF32 대비 비율을 저장한다.
+
+```bash
+cd tensor_core_gemm
+make
+python3 tune.py --rounds 3
+# 후보만 재측정
+python3 tune.py --sizes 1024 2048 --configs 2 4 5 6 --orders 0 1 2 --rounds 3
+```
+
+원시 로그와 `summary.json`은 `results/tuning/`에 저장된다.
+
+
+전체 조합은 네이티브 튜너로 더 빠르게 비교할 수 있다. 입력 생성, 할당,
+FP32 reference를 크기당 한 번만 수행하고 같은 입력으로 모든 조합을 검증한다.
+`legacy`는 최적화 전의 크기별 설정이며, `default`는 현재 기본 설정이다.
+
+```bash
+make build/tc_tune
+mkdir -p results
+./build/tc_tune 8192 128 3 > results/native.jsonl  # max, min, rounds
+```
+
+`TC7_COPY=1`은 다음 타일의 global→SMEM 복사 명령을 4개 MMA 단계에 분산한다.
+복사 그룹은 마지막 단계에서 한 번 commit하며, stage 전환 전에 필요한 그룹을 기다린다.
+정사각 행렬의 자동 복사 설정은 128~512와 4096~8192에서 `1`, 1024~2048에서 `0`이다.
+256×128 타일을 선택하면 큰 행렬에서 단계별 포인터를 유지하는 `TC7_COPY=2`를 쓴다.
+네이티브 튜너는 세 복사 방식을 모두 비교한다.
+
+
+현재 자동 타일은 정사각 행렬 기준 128~1024에서 cfg 6, 2048에서 cfg 4,
+4096~8192에서 cfg 0이다. 특정 조합만 네이티브 튜너에서 재측정하려면
+`TC_TUNE_VARIANTS`에 이름을 쉼표로 구분해 지정한다. cuBLAS, legacy, default는
+항상 함께 측정한다. 입력 생성 RNG와 실행 순서 RNG는 분리되어 있다.
+
+```bash
+TC_TUNE_VARIANTS=cfg1-order0-copy0,cfg1-order0-copy1 ./build/tc_tune 8192 4096 5
+```
+
+### 1140 MHz에서 확인한 v3 기본 경로 (2026-10-16)
+
+A100-SXM4-40GB에서 SM 1140 MHz, 메모리 1215 MHz로 비교했다.
+기존 구성과 v3 자동 설정, cuBLAS TF32를 같은 입력으로 섞어 5회 실행한 중앙값이다.
+이 표의 낮은 클럭 때문에 위의 2026-10-15 절대 TFLOPS와 직접 비교하면 안 된다.
+
+| 크기 | 기존 구성 TFLOPS | 새 기본 TFLOPS | cuBLAS TF32 TFLOPS | cuBLAS 대비 |
+|---|---:|---:|---:|---:|
+| 128 | 0.293 | 0.507 | 0.515 | 98.5% |
+| 256 | 1.722 | 3.180 | 2.686 | 118.4% |
+| 512 | 8.954 | 18.109 | 19.105 | 94.8% |
+| 1024 | 42.679 | 46.712 | 52.113 | 89.6% |
+| 2048 | 60.634 | 69.088 | 77.181 | 89.5% |
+| 4096 | 87.917 | 95.885 | 108.227 | 88.6% |
+| 8192 | 96.243 | 105.368 | 117.328 | 89.8% |
+
+빌드 소스 manifest 일치를 확인했고, 네이티브 정확도 검증 105/105 및 기존 CLI의
+kernel 7·100에서 각각 7/7 PASS했다. 원시 측정값은
+[a100_2026-10-16-default-summary.json](a100_2026-10-16-default-summary.json)에 있다.
+8192 Tensor 파이프의 elapsed 사용률은 기존 76.6% → 분산 복사 83.9%였고,
+cuBLAS는 93.4%였다. 아직 cuBLAS와 같은 활용률에 도달한 상태는 아니다.
+
+
+이후 단계별 포인터 경로(copy2)는 4096에서 97.37, 8192에서 107.15 TFLOPS로
+개선됐다(1140 MHz, 5회 중앙값). 같은 실행의 cuBLAS는 각각 108.23, 117.37이다.
+8192 Tensor elapsed 사용률은 copy1 83.28% → copy2 85.21%였고 register spill은 없었다.
+추가 C prefetch 실험의 진행 상태와 코드별 측정 근거는 [WORKLOG.md](WORKLOG.md)에 기록한다.
+
+
+LDMATRIX 경로(cfg0/order3/copy1)는 5회 재확인에서 4096 **99.69**, 8192
+**110.05 TFLOPS**였다. 같은 실행의 cuBLAS는 108.24 / 117.46 TFLOPS였으며,
+8192 Tensor elapsed 사용률은 87.42%였다(기존 copy2 85.22%, cuBLAS 93.38%).
+이 조합을 큰 정사각 행렬의 자동 설정에 반영했다.
+
+`TC7_EPI=4/8`은 order3에서 C 값을 4/8개 float4씩 먼저 읽는 epilogue 실험이다.
+자동 경로는 1024 이하에서 cfg6/order3/copy0/epi4, 2048에서
+cfg4/order3/copy0/epi4, 4096 이상 큰 정사각 행렬에서 cfg0/order6/copy4/epi4를 선택한다.
+작은 행렬 설정은 같은 입력·1140 MHz·무작위 실행 순서의 5회 측정으로 확인했다.
+이 자동 정책은 새 빌드에서 전체 정확도 검사와 크기별 5회 측정으로 재확인했다.
+비교하려면 `TC7_CFG`, `TC7_ORDER`, `TC7_COPY`, `TC7_EPI`를 함께 고정한다.
+
+
+C 버퍼 수를 제한한 epilogue4 경로는 독립 5회 재확인에서 4096 **104.16**,
+8192 **112.98 TFLOPS**였다(같은 실행의 cuBLAS 108.25 / 117.41, 약 **96.2%**).
+8192 Tensor elapsed 사용률은 87.39% → **89.99%**, C 읽기 long scoreboard/issue는
+0.22 → 0.06으로 줄었다. cuBLAS 사용률 93.38%까지는 아직 차이가 남아 있다.
+측정값은 [epilogue summary](a100_2026-10-16-epilogue-summary.json)에 보존했다.
+
+B 복사 배치를 변경한 최신 후보는 스레드가 K 행을 나눠 맡고 N 방향의 연속
+구간을 복사한다. 같은 글로벌 기준 주소와 상수 오프셋을 재사용하며,
+order6의 자연 N 배치·행 serpentine MMA와 함께 사용한다.
+`TC7_COPY=4`가 이 경로이며 `TC7_ORDER=6`, `TC7_EPI=4`, `TC7_ROUND=0`을 요구한다.
+
+교체된 A100에서 1140 MHz·동일 입력·무작위 순서의 5회 중앙값은 다음과 같다.
+
+| 크기 | 이전 경로 TFLOPS | B 복사 변경 TFLOPS | cuBLAS TFLOPS | cuBLAS 대비 |
+|---:|---:|---:|---:|---:|
+| 4096 | 104.48 | 107.40 | 108.55 | 98.9% |
+| 8192 | 113.42 | 116.57 | 117.89 | 98.9% |
+
+8192 Tensor elapsed 사용률은 이전 경로 **90.11% → 기본 copy4 경로 92.34%**,
+cuBLAS는 **93.43%**다. 아직 cuBLAS와 같은 활용률에 도달하지 않았다.
+기본 경로를 새로 빌드해 128~8192의 5회 측정과 기존 CLI 실행을 모두 확인했다.
+[측정 요약](a100_2026-10-16-rake-summary.json)에 반복 측정값을 보존했다.
+
+`make check`는 직사각형·짧은 K·alpha/beta 조합과 행 그룹 경계를 검사한다.
+원래 FP32 입력의 cuBLAS 결과에는 상대오차 1e-3, CUDA TF32 변환 명령으로
+별도 변환한 입력의 FP32 GEMM 결과에는 1e-5를 적용한다.
+현재 기본 경로와 모든 지원 설정은 **13,224건**을 통과했으며,
+최대 오차는 각각 **3.13e-4 / 1.10e-6**였다.
