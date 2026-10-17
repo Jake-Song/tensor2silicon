@@ -1,0 +1,20 @@
+{
+  "before": {
+    "command": [
+      "nvidia-smi",
+      "-q",
+      "-d",
+      "PERFORMANCE"
+    ],
+    "returncode": 0,
+    "output": "\n==============NVSMI LOG==============\n\nTimestamp                                 : Sat Oct 17 06:08:28 2026\nDriver Version                            : 580.82.07\nCUDA Version                              : 13.0\n\nAttached GPUs                             : 1\nGPU 00000000:05:00.0\n    Performance State                     : P0\n    Clocks Event Reasons\n        Idle                              : Not Active\n        Applications Clocks Setting       : Not Active\n        SW Power Cap                      : Not Active\n        HW Slowdown                       : Not Active\n            HW Thermal Slowdown           : Not Active\n            HW Power Brake Slowdown       : Not Active\n        Sync Boost                        : Not Active\n        SW Thermal Slowdown               : Not Active\n        Display Clock Setting             : Not Active\n    Clocks Event Reasons Counters\n        SW Power Capping                  : 125538267 us\n        Sync Boost                        : 0 us\n        SW Thermal Slowdown               : 1259915 us\n        HW Thermal Slowdown               : 0 us\n        HW Power Braking                  : 0 us\n    Sparse Operation Mode                 : N/A\n\n"
+  },
+  "set": {
+    "command": [
+      "nvidia-smi",
+      "--lock-gpu-clocks=2100,2100"
+    ],
+    "returncode": 0,
+    "output": "GPU clocks set to \"(gpuClkMin 2100, gpuClkMax 2100)\" for GPU 00000000:05:00.0\n\nWarning: persistence mode is disabled on device 00000000:05:00.0. See the Known Issues section of the nvidia-smi(1) man page for more information. Run with [--help | -h] switch to get more information on how to enable persistence mode.\nAll done.\n"
+  }
+}

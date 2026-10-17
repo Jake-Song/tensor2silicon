@@ -1,0 +1,1306 @@
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi3ELb1ELb1ELb1ELb1ELb1EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi3ELb1ELb1ELb1ELb1ELb1EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 226 registers, used 1 barriers
+ptxas info    : Compile time = 64.193 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi3ELb1ELb1ELb1ELb0ELb1EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi3ELb1ELb1ELb1ELb0ELb1EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 70.494 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi3ELb1ELb1ELb1ELb1ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi3ELb1ELb1ELb1ELb1ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 222 registers, used 1 barriers
+ptxas info    : Compile time = 60.952 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi2ELb1ELb1ELb1ELb1ELb1EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi2ELb1ELb1ELb1ELb1ELb1EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 230 registers, used 1 barriers
+ptxas info    : Compile time = 63.444 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi2ELb1ELb1ELb1ELb0ELb1EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi2ELb1ELb1ELb1ELb0ELb1EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 230 registers, used 1 barriers
+ptxas info    : Compile time = 69.650 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi2ELb1ELb1ELb1ELb1ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi2ELb1ELb1ELb1ELb1ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 220 registers, used 1 barriers
+ptxas info    : Compile time = 62.985 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb1ELb1ELb1EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb1ELb1ELb1EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 234 registers, used 1 barriers
+ptxas info    : Compile time = 63.921 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb1ELb0ELb1EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb1ELb0ELb1EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 236 registers, used 1 barriers
+ptxas info    : Compile time = 68.663 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb1ELb1ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb1ELb1ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 164 registers, used 1 barriers
+ptxas info    : Compile time = 20.842 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi2ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi2ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 71.897 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi2ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi2ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 190 registers, used 1 barriers
+ptxas info    : Compile time = 26.130 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi1ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi1ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 71.467 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi1ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi1ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 194 registers, used 1 barriers
+ptxas info    : Compile time = 25.673 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi0ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi0ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 230 registers, used 1 barriers
+ptxas info    : Compile time = 66.262 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi0ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi0ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 192 registers, used 1 barriers
+ptxas info    : Compile time = 24.543 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 230 registers, used 1 barriers
+ptxas info    : Compile time = 66.455 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 192 registers, used 1 barriers
+ptxas info    : Compile time = 24.652 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi2ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi2ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 69.192 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi2ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi2ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 192 registers, used 1 barriers
+ptxas info    : Compile time = 22.295 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi1ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi1ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 69.451 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi1ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi1ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 192 registers, used 1 barriers
+ptxas info    : Compile time = 22.458 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 230 registers, used 1 barriers
+ptxas info    : Compile time = 65.630 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 192 registers, used 1 barriers
+ptxas info    : Compile time = 21.927 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 230 registers, used 1 barriers
+ptxas info    : Compile time = 65.163 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 192 registers, used 1 barriers
+ptxas info    : Compile time = 21.949 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi2ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi2ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 225 registers, used 1 barriers
+ptxas info    : Compile time = 71.590 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi2ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi2ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 188 registers, used 1 barriers
+ptxas info    : Compile time = 26.046 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi1ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi1ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 230 registers, used 1 barriers
+ptxas info    : Compile time = 71.776 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi1ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi1ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 192 registers, used 1 barriers
+ptxas info    : Compile time = 25.410 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi0ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi0ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 230 registers, used 1 barriers
+ptxas info    : Compile time = 67.027 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi0ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi0ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 188 registers, used 1 barriers
+ptxas info    : Compile time = 24.521 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 230 registers, used 1 barriers
+ptxas info    : Compile time = 66.731 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 188 registers, used 1 barriers
+ptxas info    : Compile time = 24.340 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi2ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi2ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 69.755 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi2ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi2ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 189 registers, used 1 barriers
+ptxas info    : Compile time = 22.483 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi1ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi1ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 232 registers, used 1 barriers
+ptxas info    : Compile time = 69.965 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi1ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi1ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 194 registers, used 1 barriers
+ptxas info    : Compile time = 22.594 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 230 registers, used 1 barriers
+ptxas info    : Compile time = 66.175 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 190 registers, used 1 barriers
+ptxas info    : Compile time = 21.765 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 230 registers, used 1 barriers
+ptxas info    : Compile time = 66.473 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 190 registers, used 1 barriers
+ptxas info    : Compile time = 21.736 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi4ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi4ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 70.354 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi4ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi4ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 203 registers, used 1 barriers
+ptxas info    : Compile time = 25.861 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi3ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi3ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 71.955 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi3ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi3ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 204 registers, used 1 barriers
+ptxas info    : Compile time = 25.372 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi2ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi2ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 69.465 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi2ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi2ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 203 registers, used 1 barriers
+ptxas info    : Compile time = 25.180 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 67.661 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 203 registers, used 1 barriers
+ptxas info    : Compile time = 25.190 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 67.336 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 203 registers, used 1 barriers
+ptxas info    : Compile time = 25.123 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi4ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi4ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 230 registers, used 1 barriers
+ptxas info    : Compile time = 66.644 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi4ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi4ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 203 registers, used 1 barriers
+ptxas info    : Compile time = 25.053 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi3ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi3ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 230 registers, used 1 barriers
+ptxas info    : Compile time = 66.738 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi3ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi3ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 204 registers, used 1 barriers
+ptxas info    : Compile time = 25.057 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi2ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi2ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 230 registers, used 1 barriers
+ptxas info    : Compile time = 67.265 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi2ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi2ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 203 registers, used 1 barriers
+ptxas info    : Compile time = 25.032 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 230 registers, used 1 barriers
+ptxas info    : Compile time = 65.530 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 203 registers, used 1 barriers
+ptxas info    : Compile time = 25.153 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 230 registers, used 1 barriers
+ptxas info    : Compile time = 65.368 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 203 registers, used 1 barriers
+ptxas info    : Compile time = 25.244 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi4ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi4ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 66.776 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi4ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi4ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 192 registers, used 1 barriers
+ptxas info    : Compile time = 24.350 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi3ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi3ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 66.884 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi3ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi3ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 193 registers, used 1 barriers
+ptxas info    : Compile time = 24.396 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi2ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi2ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 67.319 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi2ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi2ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 192 registers, used 1 barriers
+ptxas info    : Compile time = 24.372 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 65.669 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 192 registers, used 1 barriers
+ptxas info    : Compile time = 24.354 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 65.651 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 192 registers, used 1 barriers
+ptxas info    : Compile time = 24.271 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi4ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi4ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 69.301 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi4ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi4ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 193 registers, used 1 barriers
+ptxas info    : Compile time = 25.809 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi3ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi3ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 69.604 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi3ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi3ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 196 registers, used 1 barriers
+ptxas info    : Compile time = 25.839 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi2ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi2ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 69.546 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi2ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi2ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 193 registers, used 1 barriers
+ptxas info    : Compile time = 25.905 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 193 registers, used 1 barriers
+ptxas info    : Compile time = 25.852 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 68.417 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 193 registers, used 1 barriers
+ptxas info    : Compile time = 25.942 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi4ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi4ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 232 registers, used 1 barriers
+ptxas info    : Compile time = 70.593 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi4ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi4ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 196 registers, used 1 barriers
+ptxas info    : Compile time = 25.904 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi3ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi3ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 232 registers, used 1 barriers
+ptxas info    : Compile time = 70.665 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi3ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi3ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 197 registers, used 1 barriers
+ptxas info    : Compile time = 25.987 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi2ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi2ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 232 registers, used 1 barriers
+ptxas info    : Compile time = 71.331 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi2ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi2ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 196 registers, used 1 barriers
+ptxas info    : Compile time = 25.989 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 232 registers, used 1 barriers
+ptxas info    : Compile time = 69.795 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 196 registers, used 1 barriers
+ptxas info    : Compile time = 25.935 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 232 registers, used 1 barriers
+ptxas info    : Compile time = 69.424 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 196 registers, used 1 barriers
+ptxas info    : Compile time = 25.957 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi4ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi4ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 66.182 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi4ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi4ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 192 registers, used 1 barriers
+ptxas info    : Compile time = 24.430 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi3ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi3ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 66.972 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi3ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi3ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 193 registers, used 1 barriers
+ptxas info    : Compile time = 24.406 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi2ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi2ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 66.709 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi2ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi2ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 192 registers, used 1 barriers
+ptxas info    : Compile time = 24.205 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 65.211 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 192 registers, used 1 barriers
+ptxas info    : Compile time = 24.240 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 65.143 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 192 registers, used 1 barriers
+ptxas info    : Compile time = 24.206 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi4ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi4ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 224 registers, used 1 barriers
+ptxas info    : Compile time = 66.631 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi4ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi4ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 193 registers, used 1 barriers
+ptxas info    : Compile time = 24.639 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi3ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi3ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 224 registers, used 1 barriers
+ptxas info    : Compile time = 67.649 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi3ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi3ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 193 registers, used 1 barriers
+ptxas info    : Compile time = 24.705 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi2ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi2ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 224 registers, used 1 barriers
+ptxas info    : Compile time = 67.631 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi2ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi2ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 193 registers, used 1 barriers
+ptxas info    : Compile time = 24.648 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 224 registers, used 1 barriers
+ptxas info    : Compile time = 65.910 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 193 registers, used 1 barriers
+ptxas info    : Compile time = 24.660 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 224 registers, used 1 barriers
+ptxas info    : Compile time = 66.019 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi5ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 193 registers, used 1 barriers
+ptxas info    : Compile time = 24.606 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi4ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi4ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 226 registers, used 1 barriers
+ptxas info    : Compile time = 68.772 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi4ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi4ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 205 registers, used 1 barriers
+ptxas info    : Compile time = 25.306 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi3ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi3ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 226 registers, used 1 barriers
+ptxas info    : Compile time = 69.862 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi3ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi3ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 206 registers, used 1 barriers
+ptxas info    : Compile time = 25.204 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi2ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi2ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 226 registers, used 1 barriers
+ptxas info    : Compile time = 70.071 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi2ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi2ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 205 registers, used 1 barriers
+ptxas info    : Compile time = 25.219 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 226 registers, used 1 barriers
+ptxas info    : Compile time = 68.154 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 205 registers, used 1 barriers
+ptxas info    : Compile time = 25.191 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 226 registers, used 1 barriers
+ptxas info    : Compile time = 68.405 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi4ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 205 registers, used 1 barriers
+ptxas info    : Compile time = 25.234 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi4ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi4ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 226 registers, used 1 barriers
+ptxas info    : Compile time = 69.360 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi4ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi4ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 192 registers, used 1 barriers
+ptxas info    : Compile time = 24.427 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi3ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi3ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 226 registers, used 1 barriers
+ptxas info    : Compile time = 69.736 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi3ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi3ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 193 registers, used 1 barriers
+ptxas info    : Compile time = 24.461 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi2ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi2ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 226 registers, used 1 barriers
+ptxas info    : Compile time = 69.979 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi2ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi2ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 192 registers, used 1 barriers
+ptxas info    : Compile time = 24.391 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 226 registers, used 1 barriers
+ptxas info    : Compile time = 68.478 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 192 registers, used 1 barriers
+ptxas info    : Compile time = 24.502 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 192 registers, used 1 barriers
+ptxas info    : Compile time = 24.267 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi4ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi4ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 69.618 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi4ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi4ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 196 registers, used 1 barriers
+ptxas info    : Compile time = 25.526 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi3ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi3ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 69.351 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi3ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi3ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 196 registers, used 1 barriers
+ptxas info    : Compile time = 25.420 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi2ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi2ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 69.721 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi2ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi2ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 196 registers, used 1 barriers
+ptxas info    : Compile time = 25.493 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 196 registers, used 1 barriers
+ptxas info    : Compile time = 25.346 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 68.176 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 196 registers, used 1 barriers
+ptxas info    : Compile time = 25.364 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi4ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi4ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 230 registers, used 1 barriers
+ptxas info    : Compile time = 69.508 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi4ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi4ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 198 registers, used 1 barriers
+ptxas info    : Compile time = 25.853 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi3ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi3ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 230 registers, used 1 barriers
+ptxas info    : Compile time = 69.768 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi3ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi3ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 202 registers, used 1 barriers
+ptxas info    : Compile time = 25.819 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi2ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi2ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 230 registers, used 1 barriers
+ptxas info    : Compile time = 70.138 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi2ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi2ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 198 registers, used 1 barriers
+ptxas info    : Compile time = 26.044 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 230 registers, used 1 barriers
+ptxas info    : Compile time = 68.376 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 198 registers, used 1 barriers
+ptxas info    : Compile time = 25.764 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 230 registers, used 1 barriers
+ptxas info    : Compile time = 68.179 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 198 registers, used 1 barriers
+ptxas info    : Compile time = 25.804 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi4ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi4ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 68.489 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi4ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi4ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 194 registers, used 1 barriers
+ptxas info    : Compile time = 24.271 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi3ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi3ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 68.474 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi3ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi3ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 195 registers, used 1 barriers
+ptxas info    : Compile time = 24.307 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi2ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi2ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 69.007 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi2ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi2ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 194 registers, used 1 barriers
+ptxas info    : Compile time = 24.242 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 67.378 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi1ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 194 registers, used 1 barriers
+ptxas info    : Compile time = 24.156 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 67.651 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 194 registers, used 1 barriers
+ptxas info    : Compile time = 24.076 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi64ELi32ELi64ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi64ELi32ELi64ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 152 registers, used 1 barriers
+ptxas info    : Compile time = 30.321 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi64ELi32ELi64ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi64ELi32ELi64ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 122 registers, used 1 barriers
+ptxas info    : Compile time = 14.317 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi64ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi64ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 196 registers, used 1 barriers
+ptxas info    : Compile time = 31.969 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 69.951 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi1ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 228 registers, used 1 barriers
+ptxas info    : Compile time = 68.529 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 226 registers, used 1 barriers
+ptxas info    : Compile time = 68.743 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 198 registers, used 1 barriers
+ptxas info    : Compile time = 26.163 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi3ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 194 registers, used 1 barriers
+ptxas info    : Compile time = 24.913 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 232 registers, used 1 barriers
+ptxas info    : Compile time = 68.720 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 194 registers, used 1 barriers
+ptxas info    : Compile time = 24.768 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb1ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 192 registers, used 1 barriers
+ptxas info    : Compile time = 22.211 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi64ELi32ELi64ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi64ELi32ELi64ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 161 registers, used 1 barriers
+ptxas info    : Compile time = 36.380 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi64ELi128ELi32ELi32ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi64ELi128ELi32ELi32ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 162 registers, used 1 barriers
+ptxas info    : Compile time = 38.101 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi64ELi64ELi32ELi32ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi64ELi64ELi32ELi32ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 96 registers, used 1 barriers
+ptxas info    : Compile time = 19.081 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi1ELb1ELb1ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi1ELb1ELb1ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 234 registers, used 1 barriers
+ptxas info    : Compile time = 61.519 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi1ELb1ELb1ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi1ELb1ELb1ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 232 registers, used 1 barriers
+ptxas info    : Compile time = 63.260 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi64ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi64ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 255 registers, used 1 barriers
+ptxas info    : Compile time = 86.546 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi1ELb1ELb1ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi1ELb1ELb1ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 236 registers, used 1 barriers
+ptxas info    : Compile time = 61.634 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi1ELb1ELb1ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi1ELb1ELb1ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 236 registers, used 1 barriers
+ptxas info    : Compile time = 62.630 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 246 registers, used 1 barriers
+ptxas info    : Compile time = 63.324 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb1ELb1ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 254 registers, used 1 barriers
+ptxas info    : Compile time = 64.697 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 206 registers, used 1 barriers
+ptxas info    : Compile time = 28.787 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb1ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 202 registers, used 1 barriers
+ptxas info    : Compile time = 25.391 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi64ELi32ELi64ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi64ELi32ELi64ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 162 registers, used 1 barriers
+ptxas info    : Compile time = 37.182 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi64ELi128ELi32ELi32ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi64ELi128ELi32ELi32ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 165 registers, used 1 barriers
+ptxas info    : Compile time = 40.945 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi64ELi64ELi32ELi32ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi64ELi64ELi32ELi32ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 96 registers, used 1 barriers
+ptxas info    : Compile time = 22.097 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi1ELb1ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi1ELb1ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 236 registers, used 1 barriers
+ptxas info    : Compile time = 61.185 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi1ELb1ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi1ELb1ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 236 registers, used 1 barriers
+ptxas info    : Compile time = 62.658 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 246 registers, used 1 barriers
+ptxas info    : Compile time = 63.620 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi4ELi1ELi1ELb1ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi4ELi1ELi1ELb1ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 254 registers, used 1 barriers
+ptxas info    : Compile time = 89.869 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 158 registers, used 1 barriers
+ptxas info    : Compile time = 35.736 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi64ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb1ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi64ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb1ELb0ELb0ELb0ELb0EEv7Problemi
+    8 bytes stack frame, 4 bytes spill stores, 4 bytes spill loads
+ptxas info    : Used 255 registers, used 1 barriers, 8 bytes cumulative stack size
+ptxas info    : Compile time = 89.974 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi1ELb1ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi1ELb1ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 240 registers, used 1 barriers
+ptxas info    : Compile time = 60.838 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi0ELb1ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi0ELb1ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 238 registers, used 1 barriers
+ptxas info    : Compile time = 61.826 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi0ELi0ELb1ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi4ELb1ELb1ELi0ELi0ELi0ELb1ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 255 registers, used 1 barriers
+ptxas info    : Compile time = 67.778 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb1ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 248 registers, used 1 barriers
+ptxas info    : Compile time = 62.608 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb1ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb1ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 254 registers, used 1 barriers
+ptxas info    : Compile time = 63.121 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi1ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi1ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 210 registers, used 1 barriers
+ptxas info    : Compile time = 29.412 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi1ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi1ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 210 registers, used 1 barriers
+ptxas info    : Compile time = 29.908 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi1ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi2ELi1ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 207 registers, used 1 barriers
+ptxas info    : Compile time = 28.704 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi1ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi1ELi1ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 210 registers, used 1 barriers
+ptxas info    : Compile time = 30.335 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi4ELi2ELi1ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi4ELi2ELi1ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 214 registers, used 1 barriers
+ptxas info    : Compile time = 42.364 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi64ELi64ELi32ELi2ELb1ELb1ELi4ELi2ELi1ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi64ELi64ELi32ELi2ELb1ELb1ELi4ELi2ELi1ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 128 registers, used 1 barriers
+ptxas info    : Compile time = 25.600 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi32ELi3ELb1ELb1ELi4ELi2ELi1ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi32ELi3ELb1ELb1ELi4ELi2ELi1ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 124 registers, used 1 barriers
+ptxas info    : Compile time = 21.325 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi32ELi3ELb1ELb1ELi4ELi1ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi32ELi3ELb1ELb1ELi4ELi1ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 128 registers, used 1 barriers
+ptxas info    : Compile time = 21.731 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi32ELi3ELb1ELb1ELi4ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi32ELi3ELb1ELb1ELi4ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 120 registers, used 1 barriers
+ptxas info    : Compile time = 21.015 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi32ELi3ELb1ELb1ELi1ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi32ELi3ELb1ELb1ELi1ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 120 registers, used 1 barriers
+ptxas info    : Compile time = 21.001 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi64ELi64ELi32ELi32ELi32ELi3ELb1ELb1ELi4ELi2ELi1ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi64ELi64ELi32ELi32ELi32ELi3ELb1ELb1ELi4ELi2ELi1ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 80 registers, used 1 barriers
+ptxas info    : Compile time = 15.634 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi64ELi64ELi32ELi32ELi32ELi3ELb1ELb1ELi4ELi1ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi64ELi64ELi32ELi32ELi32ELi3ELb1ELb1ELi4ELi1ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 94 registers, used 1 barriers
+ptxas info    : Compile time = 15.745 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi64ELi64ELi32ELi32ELi32ELi3ELb1ELb1ELi4ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi64ELi64ELi32ELi32ELi32ELi3ELb1ELb1ELi4ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 80 registers, used 1 barriers
+ptxas info    : Compile time = 15.153 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi64ELi64ELi32ELi32ELi32ELi3ELb1ELb1ELi1ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi64ELi64ELi32ELi32ELi32ELi3ELb1ELb1ELi1ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 80 registers, used 1 barriers
+ptxas info    : Compile time = 15.143 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi64ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi64ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 236 registers, used 1 barriers
+ptxas info    : Compile time = 40.653 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi64ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi64ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 232 registers, used 1 barriers
+ptxas info    : Compile time = 41.970 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi64ELi64ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi64ELi64ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 128 registers, used 1 barriers
+ptxas info    : Compile time = 23.480 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi64ELi64ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi64ELi64ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 128 registers, used 1 barriers
+ptxas info    : Compile time = 22.397 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi64ELi64ELi64ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi64ELi64ELi64ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 162 registers, used 1 barriers
+ptxas info    : Compile time = 27.124 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi64ELi64ELi64ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi64ELi64ELi64ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 162 registers, used 1 barriers
+ptxas info    : Compile time = 23.999 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi64ELi128ELi64ELi32ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi64ELi128ELi64ELi32ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 160 registers, used 1 barriers
+ptxas info    : Compile time = 28.189 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi64ELi128ELi64ELi32ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi64ELi128ELi64ELi32ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 164 registers, used 1 barriers
+ptxas info    : Compile time = 24.648 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi64ELi64ELi64ELi32ELi32ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi64ELi64ELi64ELi32ELi32ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 96 registers, used 1 barriers
+ptxas info    : Compile time = 16.845 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi64ELi64ELi64ELi32ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi64ELi64ELi64ELi32ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 96 registers, used 1 barriers
+ptxas info    : Compile time = 16.230 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi64ELi64ELi64ELi32ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi64ELi64ELi64ELi32ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 80 registers, used 1 barriers
+ptxas info    : Compile time = 14.542 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 202 registers, used 1 barriers
+ptxas info    : Compile time = 27.888 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi256ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 201 registers, used 1 barriers
+ptxas info    : Compile time = 25.393 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 202 registers, used 1 barriers
+ptxas info    : Compile time = 28.386 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi256ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 196 registers, used 1 barriers
+ptxas info    : Compile time = 25.690 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 212 registers, used 1 barriers
+ptxas info    : Compile time = 29.662 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 213 registers, used 1 barriers
+ptxas info    : Compile time = 27.213 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi32ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi32ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 128 registers, used 1 barriers
+ptxas info    : Compile time = 17.731 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 128 registers, used 1 barriers
+ptxas info    : Compile time = 15.420 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi64ELi32ELi64ELi32ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi64ELi32ELi64ELi32ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 124 registers, used 1 barriers
+ptxas info    : Compile time = 18.592 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi64ELi32ELi64ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi64ELi32ELi64ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 126 registers, used 1 barriers
+ptxas info    : Compile time = 18.128 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi64ELi32ELi64ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi64ELi32ELi64ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 124 registers, used 1 barriers
+ptxas info    : Compile time = 16.337 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi64ELi128ELi32ELi32ELi64ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi64ELi128ELi32ELi32ELi64ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 124 registers, used 1 barriers
+ptxas info    : Compile time = 19.469 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi64ELi128ELi32ELi32ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi64ELi128ELi32ELi32ELi64ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 126 registers, used 1 barriers
+ptxas info    : Compile time = 18.810 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi64ELi128ELi32ELi32ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi64ELi128ELi32ELi32ELi64ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 126 registers, used 1 barriers
+ptxas info    : Compile time = 16.444 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi64ELi32ELi64ELi32ELi32ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi64ELi32ELi64ELi32ELi32ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 120 registers, used 1 barriers
+ptxas info    : Compile time = 21.735 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi64ELi32ELi64ELi32ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi64ELi32ELi64ELi32ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 96 registers, used 1 barriers
+ptxas info    : Compile time = 19.192 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi64ELi32ELi64ELi32ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi64ELi32ELi64ELi32ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 120 registers, used 1 barriers
+ptxas info    : Compile time = 17.331 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi64ELi32ELi32ELi32ELi32ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi64ELi32ELi32ELi32ELi32ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 90 registers, used 1 barriers
+ptxas info    : Compile time = 13.975 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi64ELi32ELi32ELi32ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi64ELi32ELi32ELi32ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 92 registers, used 1 barriers
+ptxas info    : Compile time = 13.386 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi64ELi32ELi32ELi32ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi64ELi32ELi32ELi32ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 94 registers, used 1 barriers
+ptxas info    : Compile time = 11.758 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi32ELi64ELi64ELi32ELi32ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi32ELi64ELi64ELi32ELi32ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 96 registers, used 1 barriers
+ptxas info    : Compile time = 20.653 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi32ELi64ELi64ELi32ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi32ELi64ELi64ELi32ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 96 registers, used 1 barriers
+ptxas info    : Compile time = 18.563 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi32ELi64ELi64ELi32ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi32ELi64ELi64ELi32ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 96 registers, used 1 barriers
+ptxas info    : Compile time = 15.995 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi32ELi64ELi32ELi32ELi32ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi32ELi64ELi32ELi32ELi32ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 80 registers, used 1 barriers
+ptxas info    : Compile time = 15.231 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi32ELi64ELi32ELi32ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi32ELi64ELi32ELi32ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 80 registers, used 1 barriers
+ptxas info    : Compile time = 14.054 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi32ELi64ELi32ELi32ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi32ELi64ELi32ELi32ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 80 registers, used 1 barriers
+ptxas info    : Compile time = 12.556 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi32ELi32ELi64ELi32ELi32ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi32ELi32ELi64ELi32ELi32ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 128 registers, used 1 barriers
+ptxas info    : Compile time = 23.618 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi32ELi32ELi64ELi32ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi32ELi32ELi64ELi32ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 128 registers, used 1 barriers
+ptxas info    : Compile time = 22.740 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi32ELi32ELi64ELi32ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi32ELi32ELi64ELi32ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 128 registers, used 1 barriers
+ptxas info    : Compile time = 17.651 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi32ELi32ELi32ELi32ELi32ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi32ELi32ELi32ELi32ELi32ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 80 registers, used 1 barriers
+ptxas info    : Compile time = 13.710 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi32ELi32ELi32ELi32ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi32ELi32ELi32ELi32ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 96 registers, used 1 barriers
+ptxas info    : Compile time = 13.477 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi32ELi32ELi32ELi32ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi32ELi32ELi32ELi32ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 80 registers, used 1 barriers
+ptxas info    : Compile time = 11.415 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi64ELi64ELi32ELi32ELi32ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi64ELi64ELi32ELi32ELi32ELi4ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 79 registers, used 1 barriers
+ptxas info    : Compile time = 13.117 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi64ELi64ELi32ELi32ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi64ELi64ELi32ELi32ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 80 registers, used 1 barriers
+ptxas info    : Compile time = 13.305 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi64ELi64ELi32ELi32ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi64ELi64ELi32ELi32ELi32ELi2ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 80 registers, used 1 barriers
+ptxas info    : Compile time = 11.196 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi32ELi3ELb1ELb1ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 126 registers, used 1 barriers
+ptxas info    : Compile time = 17.055 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi32ELi3ELb1ELb0ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi32ELi3ELb1ELb0ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 126 registers, used 1 barriers
+ptxas info    : Compile time = 18.205 ms
+ptxas info    : Compiling entry function '_Z12bf16PipelineILi128ELi128ELi32ELi64ELi32ELi1ELb0ELb0ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16PipelineILi128ELi128ELi32ELi64ELi32ELi1ELb0ELb0ELi0ELi0ELi0ELb0ELb0ELb0ELb0ELb0EEv7Problemi
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 130 registers, used 1 barriers
+ptxas info    : Compile time = 42.000 ms
+ptxas info    : Compiling entry function '_Z12bf16WmmaSmem7Problem' for 'sm_120'
+ptxas info    : Function properties for _Z12bf16WmmaSmem7Problem
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 64 registers, used 1 barriers, 8192 bytes smem
+ptxas info    : Compile time = 8.250 ms
+ptxas info    : Compiling entry function '_Z13bf16WmmaNaive7Problem' for 'sm_120'
+ptxas info    : Function properties for _Z13bf16WmmaNaive7Problem
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 40 registers, used 0 barriers
+ptxas info    : Compile time = 7.495 ms
+ptxas info    : Compiling entry function '_Z8bf16Simt7Problem' for 'sm_120'
+ptxas info    : Function properties for _Z8bf16Simt7Problem
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 40 registers, used 0 barriers
+ptxas info    : Compile time = 5.945 ms

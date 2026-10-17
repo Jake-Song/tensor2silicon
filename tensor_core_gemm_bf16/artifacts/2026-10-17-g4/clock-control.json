@@ -1,0 +1,8 @@
+{
+  "command": [
+    "nvidia-smi",
+    "--lock-gpu-clocks=2430,2430"
+  ],
+  "returncode": 0,
+  "output": "GPU clocks set to \"(gpuClkMin 2430, gpuClkMax 2430)\" for GPU 00000000:05:00.0\n\nWarning: persistence mode is disabled on device 00000000:05:00.0. See the Known Issues section of the nvidia-smi(1) man page for more information. Run with [--help | -h] switch to get more information on how to enable persistence mode.\nAll done.\n"
+}

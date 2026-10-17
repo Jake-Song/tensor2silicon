@@ -1,0 +1,17 @@
+{
+  "operation": "D=A@B",
+  "input_dtype": "bfloat16",
+  "output_dtype": "float32",
+  "accumulation": "float32",
+  "target": "NVIDIA RTX PRO 6000 Blackwell Server Edition (sm_120)",
+  "selection": "Prefer the simpler configuration when confirmed differences are below 1 percent; native CUDA only.",
+  "conditions": [
+    {"size": 128, "variant": "t32x32k64w32x32s3", "group": 8},
+    {"size": 256, "variant": "t32x32k64w32x32s4", "group": 8},
+    {"size": 512, "variant": "t64x32k64w32x32s4", "group": 8},
+    {"size": 1024, "variant": "p128x64_s3", "group": 8},
+    {"size": 2048, "variant": "q128x64_s2", "group": 8},
+    {"size": 4096, "variant": "q128_s2", "group": 8},
+    {"size": 8192, "variant": "q128_s2", "group": 8}
+  ]
+}

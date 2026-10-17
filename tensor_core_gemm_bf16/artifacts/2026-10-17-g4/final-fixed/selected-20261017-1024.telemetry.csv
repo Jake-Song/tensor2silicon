@@ -1,0 +1,5 @@
+timestamp, clocks.current.sm [MHz], clocks.current.memory [MHz], power.draw [W], temperature.gpu
+2026/10/17 06:22:34.302, 2092 MHz, 12481 MHz, 109.67 W, 37
+2026/10/17 06:22:34.505, 2092 MHz, 12481 MHz, 108.37 W, 37
+2026/10/17 06:22:34.705, 2092 MHz, 12481 MHz, 128.43 W, 41
+2026/10/17 06:22:34.905, 2092 MHz, 12481 MHz, 171.73 W, 42

@@ -1,0 +1,2 @@
+{"kind":"device","name":"NVIDIA RTX PRO 6000 Blackwell Server Edition","sm":120,"sms":188,"smem_limit":101376,"memory_bytes":101974081536}
+{"kind":"library","m":4096,"n":4096,"k":4096,"algorithm_id":21,"heuristic_candidates":8,"workspace_bytes":33554432,"selection_timing":"cuda_graph"}

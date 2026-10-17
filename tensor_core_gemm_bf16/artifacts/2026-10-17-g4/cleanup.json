@@ -1,0 +1,11 @@
+{
+  "clock_reset_exit_code": 0,
+  "stop_exit_code": 0,
+  "stopped_session": "bf16-g4-1017",
+  "remaining_other_session": "qwen35-9b-a100-1017",
+  "balance_compute_units": 229.91,
+  "account_usage_rate_per_hour": 5.3,
+  "active_assignments": 1,
+  "release_sha256": "75bc71aa4a638b907c6f908f28d17582dc229571e61f71ffb73f570303269ec3",
+  "clock_reset_utc": "2026-10-17 06:29:08.241304+00:00"
+}

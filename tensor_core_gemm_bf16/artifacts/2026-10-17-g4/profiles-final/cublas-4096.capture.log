@@ -1,0 +1,4 @@
+==WARNING== Note: Running with unmodified GPU clocks. If not controlled otherwise, profiling results may be inconsistent.
+==PROF== Connected to process 14034 (/content/tensor_core_gemm_bf16/build/bf16_gemm)
+==PROF== Disconnected from process 14034
+==PROF== Report: /content/bf16-g4/profiles-final/cublas-4096.ncu-rep

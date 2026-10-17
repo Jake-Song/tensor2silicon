@@ -120,6 +120,15 @@ WMMA에서 시작해 `mma.sync`, `cp.async` 파이프라인, XOR swizzle을 거�
 - [단계별 설명과 실행 방법](tensor_core_gemm/README.md)
 - [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jake-Song/tensor2silicon/blob/main/notebooks/tensor_core_gemm_a100.ipynb) [A100에서 cuBLAS FP32·TF32와 비교](notebooks/tensor_core_gemm_a100.ipynb)
 
+## G4 BF16 matmul (CUDA C++)
+
+BF16 A/B와 FP32 출력으로 **`D = A @ B`만** 계산하는 별도 단계별 구현입니다.
+WMMA에서 시작해 SMEM 타일링·비동기 복사·fragment 로드·주소 계산을 최적화하고,
+같은 G4에서 cuBLASLt와 비교합니다.
+
+- [실행 방법·검증·실측 결과](tensor_core_gemm_bf16/README.md)
+- [저장 결과 분석 및 G4 재실행 노트북](notebooks/tensor_core_gemm_bf16_g4.ipynb)
+
 ## 학습 문서
 
 ### 2주차: 모델에서 실리콘까지

@@ -17,3 +17,4 @@ toy/_build/
 
 # tensor core gemm
 tensor_core_gemm/results
+tensor_core_gemm_bf16/results/

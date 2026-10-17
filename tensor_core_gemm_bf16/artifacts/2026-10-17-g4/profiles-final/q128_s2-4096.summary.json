@@ -1,0 +1,20 @@
+[
+  {
+    "source": "/content/bf16-g4/profiles-final/q128_s2-4096.metrics.csv",
+    "kernel": "void bf16Pipeline<128, 128, 32, 64, 64, 2, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0>(Problem, int)",
+    "tensor_elapsed_pct": 80.106084,
+    "registers_per_thread": 192.0,
+    "occupancy_active_pct": 15.703721,
+    "barrier_per_issue": 0.146651,
+    "wait_per_issue": 4.382578,
+    "short_scoreboard_per_issue": 0.289663,
+    "long_scoreboard_per_issue": 0.430282,
+    "instructions": 120815616.0,
+    "shared_ldsm_bank_conflicts": null,
+    "shared_ld_bank_conflicts": 26786.0,
+    "shared_st_bank_conflicts": 0.0,
+    "spilling_instructions": 0.0,
+    "profile_ms": 0.440832,
+    "profile_time_unit": "us"
+  }
+]

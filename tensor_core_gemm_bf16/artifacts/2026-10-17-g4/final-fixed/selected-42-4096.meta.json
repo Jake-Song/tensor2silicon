@@ -1,0 +1,34 @@
+{
+  "command": [
+    "/content/tensor_core_gemm_bf16/build/bf16_gemm",
+    "tune",
+    "4096",
+    "5",
+    "42"
+  ],
+  "group": 8,
+  "variants": "q128_s2,s0_simt,s1_wmma_global,s2_wmma_smem,s3_mma_ldmatrix,s4_async,s5_frag_double",
+  "started_unix": 1792218169.7124193,
+  "elapsed_s": 2.4304254055023193,
+  "returncode": 0,
+  "source_sha256": {
+    "profile_summary.py": "f5b49242216ad0e17c575b99dde5c22674be77fffe27b720f409165635aa69fd",
+    "main.cu": "9ee9c8a3c7f8184958625a330ef55863e8d8fb889d88960f3023f77763578c4f",
+    "test_analysis.py": "c6b9540344601002dfd33b0a80b483321890986ecea3764b0d0a69a986486b9b",
+    "Makefile": "b8d9d0e5759841317fe5c99eb9f46476250bfcac3edf8ef380ab857fbac13c1e",
+    "runner.cuh": "2e9c183ff88b03a1676c21275345a23f20645dc30675601d37deb14ab6a92a43",
+    "runner.cu": "b61c717d57e45b0f8ee9a909a18a7a92ad82c4d0fea336167189ca9eeb2f3c87",
+    "benchmark_selected.py": "85ca7508cf8b298d2f1d035fe671f5c3ed3318641734f80cd190e5e98c8837fc",
+    "selected.json": "92e9161eadb991973ce91376c0549fb00931af4022cadff6bb928612d48639bb",
+    "check_layout.py": "23944b7c8014bb0ef59f5663ce26b56315ba0e9b6b74c707d0a937e0ee21bdb7",
+    "analyze.py": "a707b489d7206c67e2917eabaa1c230e069a84bdff4f51dd7216add90bc67165",
+    "colab_job.py": "0c75e81e2adf6603fdb3e198d7a4cd88b9e33691fcfb6a3581fefa1b6d0cd6f7",
+    "kernels/pipeline.cuh": "4a9253e72e1a2da9248adc51024dbad0b470f3148f6f866959a41269e6ca80fc",
+    "kernels/basics.cuh": "92ba260540e3531c38f62612fddbc914e9681fbc3c170d2684b162a54e8fa88a",
+    "kernels/common.cuh": "78c26d67201c0d9642d655edbd8e606b602e1e606b05a769e2e076856d51e14f"
+  },
+  "operation": "D=A@B",
+  "input_dtype": "bfloat16",
+  "output_dtype": "float32",
+  "accumulation": "float32"
+}
