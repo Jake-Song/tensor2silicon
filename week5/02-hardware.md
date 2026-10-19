@@ -26,6 +26,8 @@ CUDA 커널의 thread block이 SM에 배치되고, scheduler가 실행 가능한
 
 타일과 Shared Memory 사용은 커널·컴파일러가 결정하고 캐시는 하드웨어가 관리한다. H100의 TMA는 메모리 복사를 돕는다. **자동 캐시 재사용과 명시적으로 보관한 타일은 구분**한다. H100의 L1·Shared Memory 결합 용량 256 KB와 사용 가능한 Shared Memory 최대 228 KB/SM도 같은 값이 아니다. [Hopper Tuning Guide: TMA / Memory System](https://docs.nvidia.com/cuda/hopper-tuning-guide/index.html)
 
+> **참고:** TMA(Tensor Memory Accelerator)는 전역 메모리와 Shared Memory 사이의 타일 전송을 비동기화해 계산과 데이터 이동을 겹치게 돕는다.
+
 ## 2. Google TPU v5e: TensorCore 안에 MXU·벡터·제어 장치가 있다
 
 ```mermaid
@@ -50,6 +52,8 @@ v5e는 칩당 TensorCore 하나와 MXU 네 개를 갖는다. [Google: v5e System
 MXU가 행렬곱을, VPU가 원소별 계산을, scalar unit이 제어를 담당하는 구조다. 컴파일러가 타일 이동과 계산의 겹침을 계획한다. VMEM은 GPU L2와 달리 명시적인 작업 버퍼로 설명되며, 구체적인 배치는 XLA 또는 Pallas 프로그램에 달려 있다. [Scaling Book 2장: What Is a TPU?](https://jax-ml.github.io/scaling-book/tpus/)
 
 **GPU Tensor Core는 행렬곱 하위 장치, TPU TensorCore는 MXU·VPU 등을 묶는 상위 단위**다. 이름을 보고 코어 개수를 직접 비교하지 않는다. 또한 TPU의 SMEM은 scalar memory를 뜻할 수 있어 GPU의 Shared Memory 약칭과 혼동하지 않는다. [Scaling Book 12장](https://jax-ml.github.io/scaling-book/gpus/), [2장](https://jax-ml.github.io/scaling-book/tpus/)
+
+> **참고:** DMA(Direct Memory Access)는 CPU가 데이터 하나하나를 복사하지 않고 메모리와 가속기 버퍼 사이의 전송을 수행한다. 전송 설정과 완료 동기화는 여전히 필요하다.
 
 ## 3. Intel Core Ultra 9 288V NPU: SoC 안의 추론 엔진
 

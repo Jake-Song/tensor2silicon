@@ -55,6 +55,8 @@ H100 SXM의 최대 TDP는 설정 가능한 **최대 700 W**다. 288V의 **Proces
 
 따라서 `TFLOP/s ÷ TDP`로 세 장치의 실제 추론 효율을 결론 내리지 않는다. 같은 품질·부하·측정 경계에서 구한 J/request 또는 J/sample이 필요하다. 계산 방법은 [⑤](./05-measurement.md)에 있다.
 
+> **참고:** TDP(Thermal Design Power)는 열·전력 설계를 위한 제품 사양이지, 작업 중 실제 소비전력이나 에너지 측정값은 아니다. 제품마다 전력 항목의 정의와 범위도 다를 수 있다.
+
 [h100]: https://www.nvidia.com/en-us/data-center/h100/
 [v5e]: https://docs.cloud.google.com/tpu/docs/v5e
 [intel]: https://www.intel.com/content/www/us/en/products/sku/240961/intel-core-ultra-9-processor-288v-12m-cache-up-to-5-10-ghz/specifications.html
