@@ -1,0 +1,7 @@
+{
+  "week5-torch-cuda-A100": "terminated",
+  "server_sessions_after_cleanup": [
+    "int8-triton-1019"
+  ],
+  "existing_user_session_preserved": true
+}

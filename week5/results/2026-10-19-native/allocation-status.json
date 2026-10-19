@@ -1,0 +1,16 @@
+{
+  "A100": {
+    "status": "measured",
+    "session": "week5-native-A100"
+  },
+  "v5e1": {
+    "status": "measured",
+    "session": "week5-native-v5e1"
+  },
+  "G4": {
+    "status": "allocation_failed",
+    "error": "POST assign: Service Unavailable",
+    "retry": false,
+    "reason": "User chose A100 and TPU only"
+  }
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "m": 1,
+    "config": 128,
+    "passed": false,
+    "error": "INTERNAL: Mosaic failed to compile TPU kernel with MLIR module name `<no name>` HLO name `tpu_custom_call.1`: Bad lhs type\n\nThe MLIR operation involved:\n  %2573 = \"tpu.matmul\"(%2554, %2570, %2572) <{dimension_numbers = #tpu.dot_dimension_numbers<[1], [0], [0], [1], [0, 0, 1, 1], [], []>, precision = #tpu.contract_precision<fp32>, transpose_lhs = false, transpose_lhs_hint = false, transpose_rhs = false}> : (vector<16x128xbf16>, vector<128x128xbf16>, vector<16x128xf32>) -> vector<16x128xf32>\n... additional diagnostics were skipped.\n\nPlease report a bug at: https://github.com/jax-ml/jax/issues/new/choose\n"
+  },
+  {
+    "m": 1,
+    "config": 256,
+    "passed": false,
+    "error": "INTERNAL: Mosaic failed to compile TPU kernel with MLIR module name `<no name>` HLO name `tpu_custom_call.1`: Bad lhs type\n\nThe MLIR operation involved:\n  %3100 = \"tpu.matmul\"(%3081, %3097, %3099) <{dimension_numbers = #tpu.dot_dimension_numbers<[1], [0], [0], [1], [0, 0, 1, 1], [], []>, precision = #tpu.contract_precision<fp32>, transpose_lhs = false, transpose_lhs_hint = false, transpose_rhs = false}> : (vector<16x128xbf16>, vector<128x128xbf16>, vector<16x128xf32>) -> vector<16x128xf32>\n... additional diagnostics were skipped.\n\nPlease report a bug at: https://github.com/jax-ml/jax/issues/new/choose\n"
+  },
+  {
+    "m": 1,
+    "config": 512,
+    "passed": false,
+    "error": "INTERNAL: Mosaic failed to compile TPU kernel with MLIR module name `<no name>` HLO name `tpu_custom_call.1`: Bad lhs type\n\nThe MLIR operation involved:\n  %5925 = \"tpu.matmul\"(%5906, %5922, %5924) <{dimension_numbers = #tpu.dot_dimension_numbers<[1], [0], [0], [1], [0, 0, 1, 1], [], []>, precision = #tpu.contract_precision<fp32>, transpose_lhs = false, transpose_lhs_hint = false, transpose_rhs = false}> : (vector<16x128xbf16>, vector<128x128xbf16>, vector<16x128xf32>) -> vector<16x128xf32>\n... additional diagnostics were skipped.\n\nPlease report a bug at: https://github.com/jax-ml/jax/issues/new/choose\n"
+  },
+  {
+    "m": 1,
+    "config": 1024,
+    "passed": false,
+    "error": "INTERNAL: Mosaic failed to compile TPU kernel with MLIR module name `<no name>` HLO name `tpu_custom_call.1`: Bad lhs type\n\nThe MLIR operation involved:\n  %11699 = \"tpu.matmul\"(%11680, %11696, %11698) <{dimension_numbers = #tpu.dot_dimension_numbers<[1], [0], [0], [1], [0, 0, 1, 1], [], []>, precision = #tpu.contract_precision<fp32>, transpose_lhs = false, transpose_lhs_hint = false, transpose_rhs = false}> : (vector<16x128xbf16>, vector<128x128xbf16>, vector<16x128xf32>) -> vector<16x128xf32>\n... additional diagnostics were skipped.\n\nPlease report a bug at: https://github.com/jax-ml/jax/issues/new/choose\n"
+  }
+]

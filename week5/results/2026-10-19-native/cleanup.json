@@ -1,0 +1,9 @@
+{
+  "week5-native-A100": "terminated",
+  "week5-native-v5e1": "terminated",
+  "week5-native-G4": "allocation failed; no assignment observed",
+  "server_sessions_after_cleanup": [
+    "int8-triton-1019"
+  ],
+  "existing_user_session_preserved": true
+}

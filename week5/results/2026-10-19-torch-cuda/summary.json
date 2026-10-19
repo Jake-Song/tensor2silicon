@@ -1,0 +1,62 @@
+[
+  {
+    "target": "A100",
+    "device": "NVIDIA A100-SXM4-40GB",
+    "M": 1,
+    "implementation": "torch",
+    "n": 5000,
+    "p50_ms": 0.0545185,
+    "p95_ms": 0.0719212,
+    "mean_ms": 0.0571354526,
+    "elapsed_s": 0.289819545,
+    "samples_per_s": 17252.114587371943,
+    "max_abs_error": 1.1920928955078125e-07,
+    "passed": true,
+    "selected_config": null
+  },
+  {
+    "target": "A100",
+    "device": "NVIDIA A100-SXM4-40GB",
+    "M": 1,
+    "implementation": "cuda",
+    "n": 5000,
+    "p50_ms": 0.019189,
+    "p95_ms": 0.020424700000000004,
+    "mean_ms": 0.019432981800000002,
+    "elapsed_s": 0.09933801,
+    "samples_per_s": 50333.20075568254,
+    "max_abs_error": 1.7881393432617188e-07,
+    "passed": true,
+    "selected_config": 16
+  },
+  {
+    "target": "A100",
+    "device": "NVIDIA A100-SXM4-40GB",
+    "M": 128,
+    "implementation": "torch",
+    "n": 5000,
+    "p50_ms": 0.055284,
+    "p95_ms": 0.0752126,
+    "mean_ms": 0.05919218539999999,
+    "elapsed_s": 0.300240774,
+    "samples_per_s": 2131622.5357186166,
+    "max_abs_error": 1.0728836059570312e-06,
+    "passed": true,
+    "selected_config": null
+  },
+  {
+    "target": "A100",
+    "device": "NVIDIA A100-SXM4-40GB",
+    "M": 128,
+    "implementation": "cuda",
+    "n": 5000,
+    "p50_ms": 0.046608,
+    "p95_ms": 0.049426,
+    "mean_ms": 0.047415304000000005,
+    "elapsed_s": 0.23931819199999999,
+    "samples_per_s": 2674263.8938204916,
+    "max_abs_error": 2.7418136596679688e-06,
+    "passed": true,
+    "selected_config": 8
+  }
+]

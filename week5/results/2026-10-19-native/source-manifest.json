@@ -1,0 +1,6 @@
+{
+  "native_relu.cu": "e414104b4bff538173b5d672ecf3e555763386a69fbd5fb8e1bae225234147f9",
+  "pallas_relu.py": "957ca3b8ab9304175368a2b8e2153f7f1d4a3ddcc9eb9bfb2d157134a985c3e3",
+  "run_native_experiment.py": "37a1b3f17c5b11d0175ca765af6298a9476fa51091596dda7ecb15ddedcbf5bb",
+  "summarize_native_experiment.py": "a96ec09862fbf641ec7fbe8e8435ed04ed7558c6545ba3eaf82c8b3ed95536fa"
+}
