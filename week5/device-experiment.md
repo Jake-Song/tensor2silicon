@@ -1,5 +1,7 @@
 # week5-06 Colab 장치 실험 — 2026-10-19
 
+이 문서는 첫 실험 기록이다. 이후 [GPU·TPU를 모두 JAX 0.11.1로 통일한 실측](./jax-device-experiment.md)을 추가했다.
+
 `Y = ReLU(XW+b)`, `K=N=1024`, `M=1,128`을 실제 장치에서 실행했다. TPU만 JAX/XLA, GPU는 PyTorch/CUDA를 사용한다. 최초 H100·v5e·Intel NPU 문헌 비교와 구분해 실제 할당 제품을 기록한다.
 
 ## 공통 조건

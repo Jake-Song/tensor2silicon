@@ -1,0 +1,28 @@
+{
+  "requested_parallel": [
+    "v5e1",
+    "v6e1",
+    "A100",
+    "G4"
+  ],
+  "measured": [
+    "v5e1",
+    "A100",
+    "G4"
+  ],
+  "jax_version": "0.11.1",
+  "v6e1": {
+    "attempts": 2,
+    "first_error": "HTTP 502 Bad Gateway",
+    "second_attempt": "HTTP 502 Bad Gateway",
+    "http_timeout_s": 600,
+    "automatic_retries": 0,
+    "status": "allocation_failed"
+  },
+  "experiment_sessions_stopped": [
+    "v5e1",
+    "A100",
+    "G4"
+  ],
+  "preexisting_session_untouched": "int8-val"
+}

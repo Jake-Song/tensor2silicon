@@ -1,0 +1,126 @@
+HloModule jit_graph, is_scheduled=true, entry_computation_layout={(bf16[1,1024]{1,0}, bf16[1024,1024]{1,0}, f32[1024]{0})->f32[1,1024]{1,0}}, allow_spmd_sharding_propagation_to_parameters={false,false,false}, allow_spmd_sharding_propagation_to_output={true}, frontend_attributes={fingerprint_before_lhs="5ce81c64e67632e66ce0c81511e09128",xla.sdy.meshes={empty_mesh = #sdy.mesh<[]>}}
+
+FileNames
+1 "<frozen runpy>"
+2 "/usr/local/lib/python3.13/dist-packages/colab_kernel_launcher.py"
+3 "/usr/local/lib/python3.13/dist-packages/traitlets/config/application.py"
+4 "/usr/local/lib/python3.13/dist-packages/ipykernel/kernelapp.py"
+5 "/usr/local/lib/python3.13/dist-packages/tornado/platform/asyncio.py"
+6 "/usr/local/lib/python3.13/dist-packages/ipykernel/kernelbase.py"
+7 "/usr/local/lib/python3.13/dist-packages/ipykernel/ipkernel.py"
+8 "/usr/local/lib/python3.13/dist-packages/ipykernel/zmqshell.py"
+9 "/usr/local/lib/python3.13/dist-packages/IPython/core/interactiveshell.py"
+10 "/usr/local/lib/python3.13/dist-packages/IPython/core/async_helpers.py"
+11 "/tmp/ipykernel_4043/3687317304.py"
+
+FunctionNames
+1 "_run_module_as_main"
+2 "_run_code"
+3 "<module>"
+4 "Application.launch_instance"
+5 "IPKernelApp.start"
+6 "BaseAsyncIOLoop.start"
+7 "Kernel.dispatch_queue"
+8 "Kernel.process_one"
+9 "Kernel.dispatch_shell"
+10 "Kernel.execute_request"
+11 "IPythonKernel.do_execute"
+12 "ZMQInteractiveShell.run_cell"
+13 "InteractiveShell.run_cell"
+14 "InteractiveShell._run_cell"
+15 "_pseudo_sync_runner"
+16 "InteractiveShell.run_cell_async"
+17 "InteractiveShell.run_ast_nodes"
+18 "InteractiveShell.run_code"
+19 "graph"
+
+FileLocations
+1 {file_name_id=1 function_name_id=1 line=203 end_line=204 column=11 end_column=42}
+2 {file_name_id=1 function_name_id=2 line=88 end_line=88 column=4 end_column=27}
+3 {file_name_id=2 function_name_id=3 line=37 end_line=37 column=2 end_column=34}
+4 {file_name_id=3 function_name_id=4 line=992 end_line=992 column=8 end_column=19}
+5 {file_name_id=4 function_name_id=5 line=712 end_line=712 column=16 end_column=36}
+6 {file_name_id=5 function_name_id=6 line=211 end_line=211 column=8 end_column=39}
+7 {file_name_id=6 function_name_id=7 line=510 end_line=510 column=16 end_column=40}
+8 {file_name_id=6 function_name_id=8 line=499 end_line=499 column=8 end_column=29}
+9 {file_name_id=6 function_name_id=9 line=406 end_line=406 column=20 end_column=32}
+10 {file_name_id=6 function_name_id=10 line=730 end_line=730 column=28 end_column=47}
+11 {file_name_id=7 function_name_id=11 line=383 end_line=388 column=26 end_column=21}
+12 {file_name_id=8 function_name_id=12 line=528 end_line=528 column=15 end_column=48}
+13 {file_name_id=9 function_name_id=13 line=2975 end_line=2977 column=21 end_column=13}
+14 {file_name_id=9 function_name_id=14 line=3030 end_line=3030 column=19 end_column=31}
+15 {file_name_id=10 function_name_id=15 line=78 end_line=78 column=8 end_column=23}
+16 {file_name_id=9 function_name_id=16 line=3257 end_line=3258 column=29 end_column=85}
+17 {file_name_id=9 function_name_id=17 line=3473 end_line=3473 column=24 end_column=70}
+18 {file_name_id=9 function_name_id=18 line=3553 end_line=3553 column=20 end_column=69}
+19 {file_name_id=11 function_name_id=3 line=66 end_line=66 column=22 end_column=42}
+20 {file_name_id=11 function_name_id=19 line=48 end_line=49 column=12 end_column=103}
+21 {file_name_id=11 function_name_id=19 line=50 end_line=50 column=15 end_column=49}
+22 {file_name_id=11 function_name_id=19 line=50 end_line=50 column=27 end_column=32}
+
+StackFrames
+1 {file_location_id=1 parent_frame_id=1}
+2 {file_location_id=2 parent_frame_id=2}
+3 {file_location_id=3 parent_frame_id=3}
+4 {file_location_id=4 parent_frame_id=4}
+5 {file_location_id=5 parent_frame_id=5}
+6 {file_location_id=6 parent_frame_id=6}
+7 {file_location_id=7 parent_frame_id=7}
+8 {file_location_id=8 parent_frame_id=8}
+9 {file_location_id=9 parent_frame_id=9}
+10 {file_location_id=10 parent_frame_id=10}
+11 {file_location_id=11 parent_frame_id=11}
+12 {file_location_id=12 parent_frame_id=12}
+13 {file_location_id=13 parent_frame_id=13}
+14 {file_location_id=14 parent_frame_id=14}
+15 {file_location_id=15 parent_frame_id=15}
+16 {file_location_id=16 parent_frame_id=16}
+17 {file_location_id=17 parent_frame_id=17}
+18 {file_location_id=18 parent_frame_id=18}
+19 {file_location_id=19 parent_frame_id=19}
+20 {file_location_id=20 parent_frame_id=20}
+21 {file_location_id=21 parent_frame_id=20}
+22 {file_location_id=22 parent_frame_id=20}
+
+
+%fused_multiply (param_0.6: bf16[1024,1024], param_1.4: bf16[1,1024]) -> f32[1024,1024] {
+  %param_1.4 = bf16[1,1024]{1,0} parameter(1)
+  %bitcast.5 = bf16[1024]{0} bitcast(%param_1.4), metadata={op_name="x"}
+  %convert.4.3 = f32[1024]{0} convert(%bitcast.5)
+  %broadcast.1.1 = f32[1024,1024]{1,0} broadcast(%convert.4.3), dimensions={0}, metadata={op_name="jit(graph)/dot_general" stack_frame_id=20}
+  %param_0.6 = bf16[1024,1024]{1,0} parameter(0)
+  %convert.1.1 = f32[1024,1024]{1,0} convert(%param_0.6), metadata={op_name="jit(graph)/dot_general" stack_frame_id=20}
+  ROOT %multiply.1.1 = f32[1024,1024]{1,0} multiply(%broadcast.1.1, %convert.1.1), metadata={op_name="jit(graph)/dot_general" stack_frame_id=20}
+}
+
+%fused_maximum (param_0.9: f32[1024], param_1.8: f32[1024]) -> f32[1024] {
+  %param_0.9 = f32[1024]{0} parameter(0)
+  %param_1.8 = f32[1024]{0} parameter(1)
+  %add.0.1 = f32[1024]{0} add(%param_0.9, %param_1.8), metadata={op_name="jit(graph)/add" stack_frame_id=22}
+  %constant_1_1 = f32[] constant(0)
+  %broadcast.2.1 = f32[1024]{0} broadcast(%constant_1_1), dimensions={}, metadata={op_name="jit(graph)/max" stack_frame_id=21}
+  ROOT %max.0.1 = f32[1024]{0} maximum(%add.0.1, %broadcast.2.1), metadata={op_name="jit(graph)/max" stack_frame_id=21}
+}
+
+%scalar_add_computation (scalar_lhs: f32[], scalar_rhs: f32[]) -> f32[] {
+  %scalar_rhs = f32[] parameter(1)
+  %scalar_lhs = f32[] parameter(0)
+  ROOT %add.2.0 = f32[] add(%scalar_lhs, %scalar_rhs)
+}
+
+%fused_reduce (param_0.10: f32[1024,1024]) -> f32[1024] {
+  %param_0.10 = f32[1024,1024]{1,0} parameter(0)
+  %constant_1_2 = f32[] constant(0)
+  ROOT %reduce.3 = f32[1024]{0} reduce(%param_0.10, %constant_1_2), dimensions={0}, to_apply=%scalar_add_computation, metadata={op_name="jit(graph)/dot_general" stack_frame_id=20}
+}
+
+ENTRY %main.1 (x.1: bf16[1,1024], w.1: bf16[1024,1024], b.1: f32[1024]) -> f32[1,1024] {
+  %b.1 = f32[1024]{0} parameter(2), sharding={replicated}, frontend_attributes={xla.sdy.sharding="#sdy.sharding<@empty_mesh, [{}]>"}, metadata={op_name="b"}
+  %w.1 = bf16[1024,1024]{1,0} parameter(1), sharding={replicated}, frontend_attributes={xla.sdy.sharding="#sdy.sharding<@empty_mesh, [{}, {}]>"}, metadata={op_name="w"}
+  %x.1 = bf16[1,1024]{1,0} parameter(0), sharding={replicated}, frontend_attributes={xla.sdy.sharding="#sdy.sharding<@empty_mesh, [{}, {}]>"}, metadata={op_name="x"}
+  %loop_multiply_fusion = f32[1024,1024]{1,0} fusion(%w.1, %x.1), kind=kLoop, calls=%fused_multiply, metadata={op_name="jit(graph)/dot_general" stack_frame_id=20}, backend_config={"device_type":"DEVICE_TYPE_INVALID","force_earliest_schedule":false,"native_emitter_backend_config":{"type":"NATIVE_EMITTER_TYPE_INVALID","unroll_factor":0},"operation_queue_id":"0","reification_cost":[]}
+  %input_reduce_fusion = f32[1024]{0} fusion(%loop_multiply_fusion), kind=kCustom, calls=%fused_reduce, metadata={op_name="jit(graph)/dot_general" stack_frame_id=20}, backend_config={"device_type":"DEVICE_TYPE_INVALID","force_earliest_schedule":false,"fusion_backend_config":{"block_level_fusion_config":{"is_tma_allowed":false,"is_warp_specialization_allowed":false,"num_ctas":1,"num_stages":1,"num_tiles_per_pid":0,"num_warps":"8","output_tiles":[{"sizes":["16"]}],"waves_per_eu":0},"kind":"__triton"},"operation_queue_id":"0","reification_cost":[]}
+  %loop_maximum_fusion = f32[1024]{0} fusion(%input_reduce_fusion, %b.1), kind=kLoop, calls=%fused_maximum, metadata={op_name="jit(graph)/max" stack_frame_id=21}, backend_config={"device_type":"DEVICE_TYPE_INVALID","force_earliest_schedule":false,"native_emitter_backend_config":{"type":"NATIVE_EMITTER_TYPE_INVALID","unroll_factor":0},"operation_queue_id":"0","reification_cost":[]}
+  ROOT %bitcast.1.0 = f32[1,1024]{1,0} bitcast(%loop_maximum_fusion), metadata={op_name="jit(graph)/max" stack_frame_id=21}
+}
+
