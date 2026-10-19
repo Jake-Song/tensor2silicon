@@ -1,0 +1,35 @@
+HloModule jit_graph, is_scheduled=true, entry_computation_layout={(bf16[128,1024]{1,0:T(8,128)(2,1)}, bf16[1024,1024]{1,0:T(8,128)(2,1)}, f32[1024]{0:T(1024)})->f32[128,1024]{1,0:T(8,128)}}, allow_spmd_sharding_propagation_to_parameters={false,false,false}, allow_spmd_sharding_propagation_to_output={true}, frontend_attributes={xla.sdy.meshes={empty_mesh = #sdy.mesh<[]>}}
+
+%bitcast_fusion (bitcast_input: bf16[128,1024]) -> bf16[128,1024] {
+  %bitcast_input = bf16[128,1024]{1,0:T(8,128)(2,1)} parameter(0)
+  ROOT %bitcast = bf16[128,1024]{1,0:T(8,128)(2,1)} bitcast(%bitcast_input)
+}
+
+%bitcast_fusion.1 (bitcast_input.1: bf16[1024,1024]) -> bf16[1024,1024] {
+  %bitcast_input.1 = bf16[1024,1024]{1,0:T(8,128)(2,1)S(1)} parameter(0)
+  ROOT %bitcast.1 = bf16[1024,1024]{1,0:T(8,128)(2,1)} bitcast(%bitcast_input.1)
+}
+
+%fused_computation.1 (param_0.5: bf16[128,1024], param_1.7: bf16[1024,1024], param_2.5: f32[1024]) -> f32[128,1024] {
+  %param_0.5 = bf16[128,1024]{1,0:T(8,128)(2,1)} parameter(0)
+  %fusion.1 = bf16[128,1024]{1,0:T(8,128)(2,1)} fusion(%param_0.5), kind=kLoop, calls=%bitcast_fusion
+  %param_1.7 = bf16[1024,1024]{1,0:T(8,128)(2,1)S(1)} parameter(1)
+  %fusion.2 = bf16[1024,1024]{1,0:T(8,128)(2,1)} fusion(%param_1.7), kind=kLoop, calls=%bitcast_fusion.1
+  %convolution.3 = f32[128,1024]{1,0:T(8,128)} convolution(%fusion.1, %fusion.2), dim_labels=bf_io->bf, operand_precision={highest,highest}, metadata={op_name="jit(graph)/dot_general" source_file="/tmp/ipykernel_1160/2504599154.py" source_line=43 source_end_line=44 source_column=12 source_end_column=103}
+  %param_2.5 = f32[1024]{0:T(1024)} parameter(2)
+  %broadcast.1 = f32[128,1024]{1,0:T(8,128)} broadcast(%param_2.5), dimensions={1}, metadata={op_name="jit(graph)/add" source_file="/tmp/ipykernel_1160/2504599154.py" source_line=45 source_end_line=45 source_column=27 source_end_column=32}
+  %add.2 = f32[128,1024]{1,0:T(8,128)} add(%convolution.3, %broadcast.1), metadata={op_name="jit(graph)/add" source_file="/tmp/ipykernel_1160/2504599154.py" source_line=45 source_end_line=45 source_column=27 source_end_column=32}
+  %constant.1 = f32[]{:T(128)} constant(0)
+  %broadcast.2 = f32[128,1024]{1,0:T(8,128)} broadcast(%constant.1), dimensions={}
+  ROOT %maximum.0 = f32[128,1024]{1,0:T(8,128)} maximum(%add.2, %broadcast.2), metadata={op_name="jit(graph)/max" source_file="/tmp/ipykernel_1160/2504599154.py" source_line=45 source_end_line=45 source_column=15 source_end_column=49}
+}
+
+ENTRY %main.13 (Arg_0.1: bf16[128,1024], Arg_1.2: bf16[1024,1024], Arg_2.3: f32[1024]) -> f32[128,1024] {
+  %Arg_1.2 = bf16[1024,1024]{1,0:T(8,128)(2,1)} parameter(1), sharding={replicated}, frontend_attributes={xla.sdy.sharding="#sdy.sharding<@empty_mesh, [{}, {}]>"}, metadata={op_name="w"}
+  %copy-start = (bf16[1024,1024]{1,0:T(8,128)(2,1)S(1)}, bf16[1024,1024]{1,0:T(8,128)(2,1)}, u32[]{:S(2)}) copy-start(%Arg_1.2), cross_program_prefetch_index=0
+  %Arg_2.3 = f32[1024]{0:T(1024)} parameter(2), sharding={replicated}, frontend_attributes={xla.sdy.sharding="#sdy.sharding<@empty_mesh, [{}]>"}, metadata={op_name="b"}
+  %Arg_0.1 = bf16[128,1024]{1,0:T(8,128)(2,1)} parameter(0), sharding={replicated}, frontend_attributes={xla.sdy.sharding="#sdy.sharding<@empty_mesh, [{}, {}]>"}, metadata={op_name="x"}
+  %copy-done = bf16[1024,1024]{1,0:T(8,128)(2,1)S(1)} copy-done(%copy-start)
+  ROOT %fusion = f32[128,1024]{1,0:T(8,128)} fusion(%Arg_0.1, %copy-done, %Arg_2.3), kind=kOutput, calls=%fused_computation.1, metadata={op_name="jit(graph)/dot_general" source_file="/tmp/ipykernel_1160/2504599154.py" source_line=43 source_end_line=44 source_column=12 source_end_column=103}, backend_config={"flag_configs":[],"window_config":{"kernel_window_bounds":["128","8"],"output_window_bounds":["16","8"],"input_window_bounds":["16","8"],"estimated_cycles":"7503","iteration_bounds":["1","1","1"]},"scoped_memory_configs":[],"used_scoped_memory_configs":[{"memory_space":"1","offset":"0","size":"937984"}],"retry_config":{"retry_count":"0"},"convolution_algorithm_config":{"emitter":"EmitAllBatchInSublanes"}}
+}
+

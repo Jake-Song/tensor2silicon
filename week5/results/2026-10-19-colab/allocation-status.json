@@ -1,0 +1,40 @@
+{
+  "requested_parallel": [
+    "v5e1",
+    "v6e1",
+    "A100",
+    "G4"
+  ],
+  "measured": [
+    "v5e1",
+    "A100",
+    "G4"
+  ],
+  "v6e1": {
+    "initial_cli_version": "0.7.4",
+    "failed_attempts": 3,
+    "failure": "requests.exceptions.ReadTimeout (read timeout=120)",
+    "updated_cli_version": "0.7.5.dev9+g006ff96ac",
+    "updated_cli_commit": "006ff96ac2d0e4dcfb702467a76493d687929be8",
+    "request_timeout_s": 600,
+    "automatic_retries": 0,
+    "status": "reallocation_failed_http_502",
+    "additional_user_wait_limit_s": 60,
+    "measurement": "not_run",
+    "cancellation": "stop command completed; allocation process had already exited successfully",
+    "prior_long_request": "allocated_late_then_stopped_before_new_user_instruction",
+    "reallocation_attempts": 2,
+    "reallocation_errors": [
+      "HTTP 502 Bad Gateway",
+      "HTTP 502 Bad Gateway"
+    ],
+    "server_session_exists_at_final_check": false
+  },
+  "experiment_sessions_stopped": [
+    "v5e1",
+    "A100",
+    "G4",
+    "v6e1_first_allocation"
+  ],
+  "preexisting_session_untouched": "int8-a100"
+}

@@ -1,0 +1,12 @@
+module @jit_graph attributes {mhlo.num_partitions = 1 : i32, mhlo.num_replicas = 1 : i32} {
+  sdy.mesh @empty_mesh = <[]>
+  func.func public @main(%arg0: tensor<1x1024xbf16> {sdy.sharding = #sdy.sharding<@empty_mesh, [{}, {}]>}, %arg1: tensor<1024x1024xbf16> {sdy.sharding = #sdy.sharding<@empty_mesh, [{}, {}]>}, %arg2: tensor<1024xf32> {sdy.sharding = #sdy.sharding<@empty_mesh, [{}]>}) -> (tensor<1x1024xf32> {jax.result_info = "result"}) {
+    %0 = stablehlo.dot_general %arg0, %arg1, contracting_dims = [1] x [0], precision = [HIGHEST, HIGHEST] : (tensor<1x1024xbf16>, tensor<1024x1024xbf16>) -> tensor<1x1024xf32>
+    %1 = stablehlo.broadcast_in_dim %arg2, dims = [1] : (tensor<1024xf32>) -> tensor<1x1024xf32>
+    %2 = stablehlo.add %0, %1 : tensor<1x1024xf32>
+    %cst = stablehlo.constant dense<0.000000e+00> : tensor<f32>
+    %3 = stablehlo.broadcast_in_dim %cst, dims = [] : (tensor<f32>) -> tensor<1x1024xf32>
+    %4 = stablehlo.maximum %2, %3 : tensor<1x1024xf32>
+    return %4 : tensor<1x1024xf32>
+  }
+}

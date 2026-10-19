@@ -1,0 +1,74 @@
+[
+  {
+    "target": "v5e1",
+    "device": "TPU v5 lite",
+    "m": 1,
+    "n": 5000,
+    "p50_ms": 0.13018,
+    "p95_ms": 0.150801,
+    "mean_ms": 0.13277695760000002,
+    "samples_per_s": 7462.501040477864,
+    "max_abs_error": 1.1920928955078125e-07,
+    "failed_elements": 0
+  },
+  {
+    "target": "v5e1",
+    "device": "TPU v5 lite",
+    "m": 128,
+    "n": 5000,
+    "p50_ms": 0.13886500000000002,
+    "p95_ms": 0.161801,
+    "mean_ms": 0.13771700500000003,
+    "samples_per_s": 920631.5406933109,
+    "max_abs_error": 2.384185791015625e-07,
+    "failed_elements": 0
+  },
+  {
+    "target": "A100",
+    "device": "NVIDIA A100-SXM4-40GB",
+    "m": 1,
+    "n": 5000,
+    "p50_ms": 0.055047,
+    "p95_ms": 0.07097940000000001,
+    "mean_ms": 0.0574246972,
+    "samples_per_s": 17170.00525628805,
+    "max_abs_error": 1.1920928955078125e-07,
+    "failed_elements": 0
+  },
+  {
+    "target": "A100",
+    "device": "NVIDIA A100-SXM4-40GB",
+    "m": 128,
+    "n": 5000,
+    "p50_ms": 0.0565095,
+    "p95_ms": 0.07232235,
+    "mean_ms": 0.05909894019999999,
+    "samples_per_s": 2136114.9965225714,
+    "max_abs_error": 1.0728836059570312e-06,
+    "failed_elements": 0
+  },
+  {
+    "target": "G4",
+    "device": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "m": 1,
+    "n": 5000,
+    "p50_ms": 0.01926,
+    "p95_ms": 0.02,
+    "mean_ms": 0.0189348686,
+    "samples_per_s": 52401.10619573597,
+    "max_abs_error": 1.1920928955078125e-07,
+    "failed_elements": 0
+  },
+  {
+    "target": "G4",
+    "device": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "m": 128,
+    "n": 5000,
+    "p50_ms": 0.02442,
+    "p95_ms": 0.02454,
+    "mean_ms": 0.0240558352,
+    "samples_per_s": 5287952.302934625,
+    "max_abs_error": 2.0265579223632812e-06,
+    "failed_elements": 0
+  }
+]
