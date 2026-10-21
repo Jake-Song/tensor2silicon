@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1150" viewBox="0 0 1600 1150">
+<rect x="0" y="0" width="1600" height="1150" rx="0" fill="#f3f6fb"/>
+<text x="65" y="78" font-family="UnDotum" font-size="44" font-weight="bold" fill="#18243b">Colab Mixed 벤치마크 · 실행 시간과 비용</text>
+<text x="67" y="122" font-family="UnDotum" font-size="23" font-weight="normal" fill="#53617a">ReLU(XW+b)  |  K=N=1024 · BF16 입력 / FP32 누산·출력  |  2026-10-19 실측</text>
+<rect x="65" y="155" width="475" height="165" rx="15" fill="#ffffff"/>
+<text x="90" y="198" font-family="UnDotum" font-size="28" font-weight="bold" fill="#18243b">TPU v5e1</text>
+<text x="90" y="247" font-family="UnDotum" font-size="37" font-weight="bold" fill="#146cba">$0.292 / 시간</text>
+<text x="90" y="289" font-family="UnDotum" font-size="23" font-weight="normal" fill="#65728a">2.92 CU/h  ·  사용자 실측 확인</text>
+<rect x="560" y="155" width="475" height="165" rx="15" fill="#ffffff"/>
+<text x="585" y="198" font-family="UnDotum" font-size="28" font-weight="bold" fill="#18243b">A100 40GB</text>
+<text x="585" y="247" font-family="UnDotum" font-size="37" font-weight="bold" fill="#146cba">$0.530 / 시간</text>
+<text x="585" y="289" font-family="UnDotum" font-size="23" font-weight="normal" fill="#65728a">5.30 CU/h  ·  사용자 실측 확인</text>
+<rect x="1055" y="155" width="475" height="165" rx="15" fill="#ffffff"/>
+<text x="1080" y="198" font-family="UnDotum" font-size="28" font-weight="bold" fill="#18243b">G4 · RTX PRO 6000</text>
+<text x="1080" y="247" font-family="UnDotum" font-size="37" font-weight="bold" fill="#146cba">$0.890 / 시간</text>
+<text x="1080" y="289" font-family="UnDotum" font-size="23" font-weight="normal" fill="#65728a">8.90 CU/h  ·  사용자 실측 확인</text>
+<text x="65" y="371" font-family="UnDotum" font-size="30" font-weight="bold" fill="#18243b">p50 기준 배치 실행 비용</text>
+<text x="65" y="410" font-family="UnDotum" font-size="23" font-weight="normal" fill="#53617a">비용 = p50(ms) × 실행 횟수 ÷ 3,600,000 × 시간당 가격  |  달러 환산: $0.10/CU 가정</text>
+<rect x="65" y="438" width="1470" height="60" rx="10" fill="#203654"/>
+<text x="85" y="476" font-family="UnDotum" font-size="23" font-weight="bold" fill="#ffffff">배치 M</text>
+<text x="225" y="476" font-family="UnDotum" font-size="23" font-weight="bold" fill="#ffffff">장치</text>
+<text x="600" y="476" font-family="UnDotum" font-size="23" font-weight="bold" fill="#ffffff">p50 / 배치</text>
+<text x="900" y="476" font-family="UnDotum" font-size="23" font-weight="bold" fill="#ffffff">100만 회 환산 시간</text>
+<text x="1215" y="476" font-family="UnDotum" font-size="23" font-weight="bold" fill="#ffffff">100만 회 환산 비용</text>
+<rect x="65" y="498" width="1470" height="67" rx="0" fill="#ffffff"/>
+<text x="85" y="541" font-family="UnDotum" font-size="25" font-weight="normal" fill="#18243b">1</text>
+<text x="225" y="541" font-family="UnDotum" font-size="25" font-weight="normal" fill="#18243b">TPU v5e1</text>
+<text x="600" y="541" font-family="UnDotum" font-size="25" font-weight="normal" fill="#18243b">0.130180 ms</text>
+<text x="900" y="541" font-family="UnDotum" font-size="25" font-weight="normal" fill="#18243b">130.180초</text>
+<text x="1215" y="541" font-family="UnDotum" font-size="25" font-weight="normal" fill="#18243b">$0.010559</text>
+<rect x="65" y="565" width="1470" height="67" rx="0" fill="#edf1f7"/>
+<text x="85" y="608" font-family="UnDotum" font-size="25" font-weight="normal" fill="#18243b">1</text>
+<text x="225" y="608" font-family="UnDotum" font-size="25" font-weight="normal" fill="#18243b">A100 40GB</text>
+<text x="600" y="608" font-family="UnDotum" font-size="25" font-weight="normal" fill="#18243b">0.055047 ms</text>
+<text x="900" y="608" font-family="UnDotum" font-size="25" font-weight="normal" fill="#18243b">55.047초</text>
+<text x="1215" y="608" font-family="UnDotum" font-size="25" font-weight="normal" fill="#18243b">$0.008104</text>
+<rect x="65" y="632" width="1470" height="67" rx="0" fill="#e6f4ef"/>
+<text x="85" y="675" font-family="UnDotum" font-size="25" font-weight="bold" fill="#147358">1</text>
+<text x="225" y="675" font-family="UnDotum" font-size="25" font-weight="bold" fill="#147358">G4 · RTX PRO 6000</text>
+<text x="600" y="675" font-family="UnDotum" font-size="25" font-weight="bold" fill="#147358">0.019260 ms</text>
+<text x="900" y="675" font-family="UnDotum" font-size="25" font-weight="bold" fill="#147358">19.260초</text>
+<text x="1215" y="675" font-family="UnDotum" font-size="25" font-weight="bold" fill="#147358">$0.004762</text>
+<rect x="65" y="699" width="1470" height="67" rx="0" fill="#edf1f7"/>
+<text x="85" y="742" font-family="UnDotum" font-size="25" font-weight="normal" fill="#18243b">128</text>
+<text x="225" y="742" font-family="UnDotum" font-size="25" font-weight="normal" fill="#18243b">TPU v5e1</text>
+<text x="600" y="742" font-family="UnDotum" font-size="25" font-weight="normal" fill="#18243b">0.138865 ms</text>
+<text x="900" y="742" font-family="UnDotum" font-size="25" font-weight="normal" fill="#18243b">138.865초</text>
+<text x="1215" y="742" font-family="UnDotum" font-size="25" font-weight="normal" fill="#18243b">$0.011263</text>
+<rect x="65" y="766" width="1470" height="67" rx="0" fill="#ffffff"/>
+<text x="85" y="809" font-family="UnDotum" font-size="25" font-weight="normal" fill="#18243b">128</text>
+<text x="225" y="809" font-family="UnDotum" font-size="25" font-weight="normal" fill="#18243b">A100 40GB</text>
+<text x="600" y="809" font-family="UnDotum" font-size="25" font-weight="normal" fill="#18243b">0.056509 ms</text>
+<text x="900" y="809" font-family="UnDotum" font-size="25" font-weight="normal" fill="#18243b">56.509초</text>
+<text x="1215" y="809" font-family="UnDotum" font-size="25" font-weight="normal" fill="#18243b">$0.008319</text>
+<rect x="65" y="833" width="1470" height="67" rx="0" fill="#e6f4ef"/>
+<text x="85" y="876" font-family="UnDotum" font-size="25" font-weight="bold" fill="#147358">128</text>
+<text x="225" y="876" font-family="UnDotum" font-size="25" font-weight="bold" fill="#147358">G4 · RTX PRO 6000</text>
+<text x="600" y="876" font-family="UnDotum" font-size="25" font-weight="bold" fill="#147358">0.024420 ms</text>
+<text x="900" y="876" font-family="UnDotum" font-size="25" font-weight="bold" fill="#147358">24.420초</text>
+<text x="1215" y="876" font-family="UnDotum" font-size="25" font-weight="bold" fill="#147358">$0.006037</text>
+<text x="65" y="951" font-family="UnDotum" font-size="23" font-weight="bold" fill="#18243b">Mixed 실험환경</text>
+<text x="65" y="987" font-family="UnDotum" font-size="20" font-weight="normal" fill="#58667c">• A100 SXM4 40GB / G4 RTX PRO 6000 Blackwell Server: PyTorch 2.11.0+cu130 · CUDA 13.0 · eager.</text>
+<text x="65" y="1017" font-family="UnDotum" font-size="20" font-weight="normal" fill="#58667c">• TPU v5e1 (TPU v5 lite, 1개): JAX/jaxlib 0.7.2 · libtpu 0.0.21.1 · XLA JIT.</text>
+<text x="65" y="1047" font-family="UnDotum" font-size="20" font-weight="normal" fill="#58667c">• 동일 입력·연산·정밀도 조건, 서로 다른 프레임워크 실행 경로를 비교합니다.</text>
+<text x="65" y="1077" font-family="UnDotum" font-size="20" font-weight="normal" fill="#58667c">• 장치 상주 입력 · seed 5개 · 각 50회 warmup 후 1,000회 측정. 호스트 호출부터 장치 완료까지의 p50.</text>
+<text x="65" y="1107" font-family="UnDotum" font-size="20" font-weight="normal" fill="#58667c">• 전송·컴파일·검증 제외. 100만 회 비용은 p50 기반 환산값. 실측 원본: 2026-10-19-colab/summary.json</text>
+</svg>
