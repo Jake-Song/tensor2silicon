@@ -163,6 +163,11 @@ Vector Add의 연산 시간과 메모리 시간을 손계산해 병목을 판단
 자료형·희소성·장치 수·품질·측정 범위를 구분하고, `ReLU(XW+b)`의 배치 1·128 비교 조건표를 만듭니다.
 [가상 장치 손계산](week5/06-comparison-exercise.md)과 [제출용 기록 양식](week5/comparison-template.md)을 포함하며, 실제 가속기 없이 문헌과 CPU 계산으로 참여할 수 있습니다.
 
+### 6주차: Python에서 Triton 커널로
+
+[6주차 자료](week6/README.md)에서 블록 인덱싱·마스킹, 행 단위 Softmax와 커널 결합을 살펴봅니다.
+HBM 이동량·메모리 시간 손계산과 [실습 노트북](notebooks/week6_triton.ipynb)을 포함합니다. GPU 벤치마크 또는 CPU 해석 모드로 실행할 수 있습니다.
+
 ## 테스트
 
 ```bash
