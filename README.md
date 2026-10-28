@@ -37,6 +37,13 @@ GCC가 없어도 그래프와 Python 결과는 볼 수 있습니다.
 
 `llm_roofline`의 colab 설정을 설명하는 교육용 시각화이며, 브라우저에서 모델 추론이나 성능 측정을 실행하지 않습니다.
 
+### Tensor Zoom (오프라인)
+
+[Tensor Zoom](web/scale.html)도 HTML 파일 하나로 동작합니다. ReLU MLP 하나를 따라 추상화 단계를 연속으로 확대해 들어갑니다.
+Transformer 모델 → ReLU 레이어 → torch.compile 그래프 → Triton 코드 → 행렬곱 A @ B → GPU 구조 → SM 순서이며, 각 단계는 앞 단계 안의 테두리 상자 속에 들어 있습니다.
+휠·핀치나 아래 슬라이더로 확대·축소하고, **Scale in / Scale out** 버튼이나 `←` / `→` 키로 단계를 옮깁니다. 테두리 상자를 누르면 안으로, 바깥 여백을 누르면 밖으로 이동합니다.
+코드와 커널 구성은 개념 설명을 위한 단순화이며, 실제 Inductor 출력은 설정과 버전에 따라 다릅니다.
+
 ### sim-gpu 연결 (선택)
 
 float32 ISA를 지원하는 `sim-gpu` 저장소가 이 프로젝트와 나란히 있어야 합니다.

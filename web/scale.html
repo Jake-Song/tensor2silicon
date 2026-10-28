@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090f18">
+<title>Tensor Zoom · Tensor to Silicon</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='12' fill='%230d1823'/%3E%3Crect x='7' y='9' width='26' height='22' rx='3' fill='none' stroke='%237ed7d5' stroke-width='2'/%3E%3Crect x='17' y='16' width='10' height='8' rx='1' fill='none' stroke='%23ffcc55' stroke-width='2'/%3E%3C/svg%3E">
+<style>
+:root{color-scheme:dark;--bg:#090f18;--text:#e2e8f3;--muted:#8e9bb1;--aqua:#83d8d6;font-family:Inter,"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 5% 0%,#211c3d 0,transparent 45%),radial-gradient(ellipse at 95% 0%,#19322c 0,transparent 40%),#090c13;color:var(--text);font-size:14px}
+button,input{font:inherit;-webkit-tap-highlight-color:transparent}
+button{color:inherit;cursor:pointer;border:0;touch-action:manipulation}
+button:disabled{opacity:.3;cursor:default}
+button:focus-visible,input:focus-visible{outline:2px solid var(--aqua);outline-offset:4px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.app{margin:14px;min-height:560px;height:calc(100dvh - 28px);border:1px solid #2c3540;border-radius:25px;overflow:hidden;background:var(--bg);display:flex;flex-direction:column;box-shadow:0 24px 100px #0005}
+.topbar{height:64px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 24px;border-bottom:1px solid #ffffff09;background:linear-gradient(110deg,#101c23aa,#0c131e)}
+.identity{display:flex;align-items:center;gap:19px;white-space:nowrap;min-width:0}
+.lights{display:flex;gap:7px}.lights i{width:9px;height:9px;border-radius:50%;background:#47515c}.lights i:last-child{background:#9bde72}
+.brand{font-size:13px;letter-spacing:2.1px;font-weight:700}.brand span{color:var(--muted);font-weight:400}
+.readout{display:flex;align-items:baseline;gap:10px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.readout-label{font-size:10px;letter-spacing:2px;color:var(--muted);font-weight:700}
+.readout strong{font-size:18px;font-weight:650;color:#fff;min-width:70px;text-align:right}
+.readout .where{font-size:12px;min-width:110px}
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) 340px;flex:1;min-height:0}
+.stage{display:flex;flex-direction:column;min-width:0;min-height:0;background:radial-gradient(ellipse at 35% 5%,#28463e44,transparent 48%),radial-gradient(ellipse at 95% 0%,#20344b44,transparent 48%),linear-gradient(160deg,#0c1820,#080e17 75%)}
+.view-wrap{position:relative;flex:1;min-height:0}
+#view{position:absolute;inset:0;display:block;width:100%;height:100%;touch-action:none;outline:none}
+#view.link{cursor:zoom-in}#view.back{cursor:zoom-out}
+#view:focus-visible{box-shadow:inset 0 0 0 2px var(--aqua)}
+.step{position:absolute;bottom:14px;display:flex;align-items:center;gap:8px;background:#0b141fcc;border:1px solid #25313f;color:#c9d4e5;border-radius:999px;padding:8px 14px;font-size:12px;letter-spacing:.3px;backdrop-filter:blur(6px);z-index:1}
+.step.out{left:16px}.step.in{right:16px}
+.step:hover:not(:disabled){background:#1b2a37;color:#fff}
+.step small{color:var(--muted);font-size:11px}
+.step svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.hint{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);color:#7a8a9f;font-size:11px;display:flex;align-items:center;gap:7px;pointer-events:none;white-space:nowrap}
+.hint i{width:5px;height:5px;background:var(--aqua);border-radius:50%;opacity:.8}
+.slider-row{display:flex;align-items:center;gap:14px;padding:6px 22px 14px;border-top:1px solid #ffffff08;flex-shrink:0}
+.slider-row .end{font-size:11px;color:var(--muted);white-space:nowrap}
+.slider{position:relative;flex:1;min-width:0}
+.marks{position:relative;height:10px;margin:0 8px}
+.marks i{position:absolute;top:3px;width:6px;height:6px;margin-left:-3px;border-radius:50%}
+.zoom{-webkit-appearance:none;appearance:none;display:block;width:100%;height:20px;margin:0;background:transparent;cursor:pointer}
+.zoom::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:linear-gradient(90deg,#e88abc66,#92cdb166,#aba9f466,#83d8d666,#ffcc5566,#79c7ed66,#f2a46b66)}
+.zoom::-moz-range-track{height:4px;border-radius:2px;background:linear-gradient(90deg,#e88abc66,#92cdb166,#aba9f466,#83d8d666,#ffcc5566,#79c7ed66,#f2a46b66)}
+.zoom::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;margin-top:-6px;border-radius:50%;background:#e2e8f3;box-shadow:0 0 0 4px #83d8d633}
+.zoom::-moz-range-thumb{width:16px;height:16px;border:0;border-radius:50%;background:#e2e8f3;box-shadow:0 0 0 4px #83d8d633}
+.ticks{position:relative;height:18px;margin:4px 8px 0}
+.ticks span{position:absolute;top:4px;transform:translateX(-50%);font-size:10.5px;color:#7f91a5;white-space:nowrap}
+.ticks span::before{content:"";position:absolute;left:50%;top:-5px;width:1px;height:4px;background:#3a4656}
+.inspector{border-left:1px solid #26313c66;background:linear-gradient(150deg,#111d29,#0d1621 55%);overflow:auto;padding:24px 22px;scrollbar-width:thin;scrollbar-color:#29323f transparent}
+.eyebrow{font-size:10px;letter-spacing:2.3px;font-weight:700;margin:0 0 10px}
+.inspector h1{margin:0;font-size:22px;letter-spacing:-.5px;font-weight:650}
+.sub{margin:8px 0 0;font-size:13px;color:#c9d4e5;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.desc{margin:16px 0 0;line-height:1.8;color:#b3c0d1;font-size:13.5px}
+.next{margin:16px 0 0;font-size:12px;line-height:1.6;color:#9fb0c5;padding:10px 12px;border:1px solid #26313e;border-left:2px solid var(--accent,#83d8d6);border-radius:8px;background:#0b141f}
+.list-title{margin:26px 0 10px;font-size:10px;letter-spacing:2.3px;color:var(--muted);font-weight:700}
+.stages{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px}
+.stages button{width:100%;display:flex;align-items:center;gap:10px;background:none;border-radius:8px;padding:7px 9px;text-align:left;color:#a9b7cb;font-size:12.5px}
+.stages button:hover{background:#ffffff08;color:#fff}
+.stages button[aria-current=true]{background:#1f2c39;color:#fff}
+.stages b{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-size:10px;color:#0b1219;flex-shrink:0}
+.stages span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stages small{color:#7f91a5;white-space:nowrap;font-size:11px}
+.note{font-size:10.5px;line-height:1.8;color:#71859c;margin:18px 0 0}
+@media(max-width:820px){
+  .app{margin:0;min-height:0;height:100dvh;border:0;border-radius:0}
+  .topbar{height:54px;padding:0 16px}
+  .lights,.brand span{display:none}
+  .workspace{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto}
+  .inspector{border-left:0;border-top:1px solid #26313c;max-height:36dvh;padding:14px 16px}
+  .inspector h1{font-size:18px}
+  .desc{margin-top:10px;font-size:13px;line-height:1.7}
+  .list-title,.stages,.note{display:none}
+  .slider-row{padding:4px 16px 10px;gap:10px}
+  .slider-row .end,.hint,.step small{display:none}
+  .step{bottom:10px;padding:7px 12px}.step.out{left:12px}.step.in{right:12px}
+}
+@media(max-width:400px){.readout .where{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="identity"><div class="lights" aria-hidden="true"><i></i><i></i><i></i></div><div class="brand">TENSOR ZOOM<span> · TENSOR TO SILICON</span></div></div>
+    <div class="readout"><span class="readout-label">배율</span><strong id="mag">×1</strong><span class="where" id="where"></span></div>
+  </header>
+  <main class="workspace">
+    <section class="stage" aria-label="추상화 단계 뷰">
+      <div class="view-wrap" id="wrap">
+        <canvas id="view" tabindex="0" role="img" aria-label="Transformer 모델에서 SM까지 추상화 단계를 확대해 들어가는 화면. 현재 단계는 설명 패널에 표시됩니다."></canvas>
+        <button class="step out" id="scale-out" title="바깥 단계로 (←)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m12 5-5 5 5 5"/></svg>Scale out <small>바깥으로</small></button>
+        <button class="step in" id="scale-in" title="안쪽 단계로 (→)">Scale in <small>안으로</small><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m8 5 5 5-5 5"/></svg></button>
+        <div class="hint" aria-hidden="true"><i></i>휠 · 핀치 · ← → 키 · 테두리 상자를 누르면 안으로</div>
+      </div>
+      <div class="slider-row">
+        <span class="end">모델</span>
+        <div class="slider">
+          <div class="marks" id="marks" aria-hidden="true"></div>
+          <input class="zoom" id="zoom" type="range" step="0.001" min="0" aria-label="추상화 단계">
+          <div class="ticks" id="ticks" aria-hidden="true"></div>
+        </div>
+        <span class="end">하드웨어</span>
+      </div>
+    </section>
+    <aside class="inspector" aria-label="현재 단계 설명">
+      <p class="eyebrow" id="eyebrow"></p>
+      <h1 id="name"></h1>
+      <p class="sub" id="sub"></p>
+      <p class="desc" id="desc"></p>
+      <p class="next" id="next"></p>
+      <h2 class="list-title">단계</h2>
+      <ol class="stages" id="stages"></ol>
+      <p class="note">ReLU MLP 한 개가 실행되기까지를 따라가는 개념도입니다. 코드는 마스킹 등을 뺀 단순화 버전이고, 실제 Inductor 출력과 커널 구성은 설정과 버전에 따라 달라집니다.</p>
+    </aside>
+  </main>
+  <p class="sr-only" id="live" aria-live="polite"></p>
+</div>
+<script>
+const LW = 1600, LH = 1000;   // every level is drawn in its own 1600 x 1000 canvas
+const C = {pink:'#e88abc', green:'#92cdb1', purple:'#aba9f4', aqua:'#83d8d6', gold:'#ffcc55', blue:'#79c7ed', orange:'#f2a46b', muted:'#8e9bb1', text:'#e2e8f3'};
+const FONT = 'Inter, "Noto Sans KR", "Apple SD Gothic Neo", system-ui, sans-serif';
+const MONO = 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
+const hexA = (h, a) => `rgba(${parseInt(h.slice(1, 3), 16)},${parseInt(h.slice(3, 5), 16)},${parseInt(h.slice(5, 7), 16)},${a})`;
+const tileColor = (p, a) => `hsla(${(p * 67 + 20) % 360},62%,66%,${a})`;
+const ACTIVE_TILE = 6;        // C tile (1, 2) in a 4 x 4 grid, followed down to its SM
+
+// ---------- drawing helpers (level units) ----------
+function rr(c, x, y, w, h, r) {
+  r = Math.max(0, Math.min(r, w / 2, h / 2));
+  c.beginPath();
+  if (c.roundRect) c.roundRect(x, y, w, h, r); else c.rect(x, y, w, h);
+}
+function box(c, x, y, w, h, r, fill, stroke, lw) {
+  rr(c, x, y, w, h, r);
+  if (fill) { c.fillStyle = fill; c.fill(); }
+  if (stroke) { c.strokeStyle = stroke; c.lineWidth = lw || 2; c.stroke(); }
+}
+function txt(c, s, x, y, o = {}) {
+  c.font = `${o.weight || 500} ${o.size || 22}px ${o.mono ? MONO : FONT}`;
+  c.fillStyle = o.color || C.text; c.textAlign = o.align || 'left'; c.textBaseline = 'middle';
+  c.fillText(s, x, y);
+}
+function para(c, s, x, y, maxW, o = {}) {
+  const size = o.size || 20, lh = o.lh || size * 1.5;
+  c.font = `${o.weight || 400} ${size}px ${FONT}`;
+  let line = '';
+  for (const w of s.split(' ')) {
+    const test = line ? `${line} ${w}` : w;
+    if (line && c.measureText(test).width > maxW) { txt(c, line, x, y, {...o, size}); y += lh; line = w; }
+    else line = test;
+  }
+  if (line) { txt(c, line, x, y, {...o, size}); y += lh; }
+  return y;
+}
+function arrow(c, x1, y1, x2, y2, color = '#6f8095', w = 3, dash) {
+  const a = Math.atan2(y2 - y1, x2 - x1), hl = 10 + w * 2;
+  c.strokeStyle = color; c.fillStyle = color; c.lineWidth = w;
+  if (dash) c.setLineDash(dash);
+  c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2 - Math.cos(a) * hl * .7, y2 - Math.sin(a) * hl * .7); c.stroke();
+  c.setLineDash([]);
+  c.beginPath(); c.moveTo(x2, y2);
+  c.lineTo(x2 - Math.cos(a - .45) * hl, y2 - Math.sin(a - .45) * hl);
+  c.lineTo(x2 - Math.cos(a + .45) * hl, y2 - Math.sin(a + .45) * hl);
+  c.closePath(); c.fill();
+}
+function path(c, pts, color, w = 3) {
+  c.strokeStyle = color; c.lineWidth = w; c.beginPath();
+  pts.slice(0, -1).forEach(([x, y], i) => i ? c.lineTo(x, y) : c.moveTo(x, y));
+  c.stroke();
+  const [a, b] = pts.slice(-2);
+  arrow(c, a[0], a[1], b[0], b[1], color, w);
+}
+function node(c, x, y, w, h, label, o = {}) {
+  box(c, x, y, w, h, o.r ?? 12, o.fill || '#121d2a', o.color || '#3a4a5c', o.lw || 2);
+  txt(c, label, x + w / 2, y + h / 2, {size: o.size || 22, align: 'center', mono: o.mono, color: o.text || C.text, weight: o.weight || 600});
+  if (o.sub) txt(c, o.sub, x + w / 2, y + h + 20, {size: 17, align: 'center', mono: true, color: C.muted});
+}
+function card(c, x, y, w, h, color, title, body) {
+  box(c, x, y, w, h, 12, '#101a26', '#26313e', 2);
+  c.fillStyle = color; c.fillRect(x, y + 12, 4, h - 24);
+  txt(c, title, x + 24, y + 32, {size: 21, weight: 700, color});
+  para(c, body, x + 24, y + 68, w - 44, {size: 19, color: '#b3c0d1', lh: 28});
+}
+function header(c, title, sub, color) {
+  c.fillStyle = color; c.fillRect(56, 40, 6, 76);
+  txt(c, title, 80, 62, {size: 38, weight: 700});
+  txt(c, sub, 80, 102, {size: 21, color: C.muted});
+}
+const CODE_RE = /(#.*$)|(@[\w.]+)|(\b(?:def|for|in|return|class|import|super)\b)|(\b(?:tl|torch|nn|triton)\.\w+)|(\b\d+(?:\.\d+)?\b)/g;
+const CODE_COLORS = [null, '#6f8095', C.pink, C.purple, C.aqua, C.gold];
+function code(c, lines, x, y, size, lh, marks = {}, markW = 900) {
+  c.font = `500 ${size}px ${MONO}`;
+  const cw = c.measureText('M').width;
+  lines.forEach((ln, i) => {
+    const yy = y + i * lh;
+    if (marks[i]) { c.fillStyle = marks[i]; c.fillRect(x - 16, yy - lh / 2, markW, lh); }
+    c.textAlign = 'left'; c.textBaseline = 'middle';
+    let last = 0, m;
+    const put = (s, at, color) => { if (s) { c.fillStyle = color; c.fillText(s, x + at * cw, yy); } };
+    CODE_RE.lastIndex = 0;
+    while ((m = CODE_RE.exec(ln))) {
+      put(ln.slice(last, m.index), last, '#d5deea');
+      put(m[0], m.index, CODE_COLORS[m.slice(1).findIndex(Boolean) + 1]);
+      last = CODE_RE.lastIndex;
+    }
+    put(ln.slice(last), last, '#d5deea');
+  });
+}
+
+// ---------- level 0: Transformer ----------
+function plus(c, x, y, r) {
+  c.strokeStyle = C.muted; c.lineWidth = 3; c.beginPath();
+  c.arc(x, y, r, 0, Math.PI * 2);
+  c.moveTo(x - r * .6, y); c.lineTo(x + r * .6, y); c.moveTo(x, y - r * .6); c.lineTo(x, y + r * .6);
+  c.stroke();
+}
+function drawModel(c) {
+  header(c, 'Transformer 디코더', '모델 전체 → 디코더 블록 하나 → MLP', C.pink);
+  txt(c, '모델 전체', 60, 168, {size: 18, weight: 700, color: C.muted});
+  const lx = 60, lw = 380, mid = lx + lw / 2;
+  node(c, lx, 192, lw, 50, '입력 토큰  "The cat sat"', {weight: 500, size: 19});
+  arrow(c, mid, 242, mid, 268);
+  node(c, lx, 270, lw, 50, 'Embedding   [B, T, d]', {weight: 500, size: 19});
+  arrow(c, mid, 320, mid, 346);
+  box(c, lx + 16, 364, lw, 110, 14, '#111a26', '#2c3a4a', 2);
+  box(c, lx + 8, 356, lw, 110, 14, '#121c29', '#2c3a4a', 2);
+  node(c, lx, 348, lw, 110, 'Decoder Block  × 32', {color: C.pink, fill: '#1d1a2a', text: '#f6d3e6', lw: 2.5, size: 21, weight: 700});
+  arrow(c, mid, 482, mid, 508);
+  node(c, lx, 510, lw, 50, 'Final LayerNorm', {weight: 500, size: 19});
+  arrow(c, mid, 560, mid, 586);
+  node(c, lx, 588, lw, 50, 'LM Head → 다음 토큰 확률', {weight: 500, size: 19});
+  c.strokeStyle = hexA(C.pink, .4); c.lineWidth = 2; c.setLineDash([8, 8]); c.beginPath();
+  c.moveTo(lx + lw, 348); c.lineTo(500, 40); c.moveTo(lx + lw, 458); c.lineTo(500, 730);
+  c.stroke(); c.setLineDash([]);
+
+  // one decoder block, centred so the zoom goes straight into its MLP
+  for (const k of [2, 1]) box(c, 500 + k * 12, 40 + k * 12, 600, 690, 18, '#0e1722', '#26313e', 2);
+  box(c, 500, 40, 600, 690, 18, '#0f1925', hexA(C.pink, .55), 2.5);
+  txt(c, 'Decoder Block 하나', 524, 70, {size: 21, weight: 700, color: '#f6d3e6'});
+  const cx = 800, nx = 620, nw = 360;
+  node(c, nx, 96, nw, 34, 'x   [B, T, d]', {mono: true, size: 17, weight: 500, r: 17});
+  arrow(c, cx, 130, cx, 146);
+  node(c, nx, 148, nw, 34, 'LayerNorm', {weight: 500, size: 17});
+  arrow(c, cx, 182, cx, 196);
+  box(c, nx, 198, nw, 60, 10, '#151d33', hexA(C.purple, .6), 2);
+  txt(c, 'Multi-Head Self-Attention', cx, 215, {size: 17, align: 'center', weight: 600});
+  for (let h = 0; h < 8; h++) box(c, nx + 18 + h * 41, 230, 35, 20, 4, hexA(C.purple, .28 + (h % 3) * .08));
+  arrow(c, cx, 258, cx, 272);
+  plus(c, cx, 287, 14);
+  arrow(c, cx, 301, cx, 314);
+  node(c, nx, 316, nw, 34, 'LayerNorm', {weight: 500, size: 17});
+  arrow(c, cx, 350, cx, 386);
+  arrow(c, cx, 613, cx, 625);
+  plus(c, cx, 640, 14);
+  arrow(c, cx, 654, cx, 690);
+  txt(c, '다음 블록으로', cx + 14, 700, {size: 15, color: C.muted});
+  path(c, [[nx, 113], [560, 113], [560, 287], [cx - 14, 287]], '#55677c', 2.5);
+  path(c, [[cx - 6, 300], [540, 300], [540, 640], [cx - 14, 640]], '#55677c', 2.5);
+  txt(c, 'residual', 568, 200, {size: 15, color: C.muted});
+  txt(c, 'residual', 548, 470, {size: 15, color: C.muted});
+  txt(c, 'MLP', 992, 404, {size: 20, weight: 700, color: C.green});
+  txt(c, 'FFN', 992, 430, {size: 15, color: C.muted});
+
+  card(c, 1140, 60, 410, 200, C.purple, 'Self-Attention', '토큰들이 서로의 정보를 섞는 부분입니다. Q·K·V 행렬곱과 softmax로 이루어집니다.');
+  card(c, 1140, 290, 410, 200, C.green, 'MLP (FFN)', '토큰마다 따로 적용되는 Linear 두 개와 활성화 함수입니다. 블록 가중치 행렬곱 FLOPs의 약 2/3을 차지합니다.');
+  card(c, 1140, 520, 410, 170, C.muted, 'Residual', '각 부분의 출력을 입력에 더해 깊게 쌓아도 학습이 안정됩니다.');
+  txt(c, '원 논문 구조의 ReLU MLP 예시 · 최근 LLM은 주로 SwiGLU를 씁니다', 800, 840, {size: 18, color: C.muted, align: 'center'});
+}
+
+// ---------- level 1: ReLU layer ----------
+function drawMLP(c) {
+  header(c, 'ReLU 레이어 (MLP 블록)', 'nn.Linear → ReLU → nn.Linear', C.green);
+  const y = 140, h = 80;
+  node(c, 60, y, 230, h, 'x', {mono: true, sub: '[B, T, 4096]'});
+  arrow(c, 290, y + h / 2, 336, y + h / 2);
+  node(c, 340, y, 360, h, 'fc1: Linear', {sub: 'W1 [16384 × 4096]'});
+  arrow(c, 700, y + h / 2, 756, y + h / 2);
+  node(c, 760, y, 200, h, 'ReLU', {color: C.green, fill: hexA(C.green, .16), text: C.green, size: 26, weight: 700, lw: 3, sub: '[B, T, 16384]'});
+  arrow(c, 960, y + h / 2, 1016, y + h / 2);
+  node(c, 1020, y, 330, h, 'fc2: Linear', {sub: 'W2 [4096 × 16384]'});
+  arrow(c, 1350, y + h / 2, 1396, y + h / 2);
+  node(c, 1400, y, 140, h, 'y', {mono: true, sub: '[B, T, 4096]'});
+
+  box(c, 40, 300, 520, 660, 16, '#0f1925', '#26313e', 2);
+  txt(c, 'ReLU(x) = max(0, x)', 64, 338, {size: 22, weight: 700, color: C.green});
+  const ox = 300, oy = 720;
+  arrow(c, 70, oy, 535, oy, '#4a5a6e', 2); arrow(c, ox, 900, ox, 400, '#4a5a6e', 2);
+  c.strokeStyle = C.green; c.lineWidth = 7; c.lineCap = 'round';
+  c.beginPath(); c.moveTo(80, oy); c.lineTo(ox, oy); c.lineTo(520, 500); c.stroke(); c.lineCap = 'butt';
+  txt(c, '음수 → 0', 80, 756, {size: 18, color: C.muted});
+  txt(c, '양수 → 그대로', 330, 480, {size: 18, color: C.muted});
+  txt(c, '[-2, 0.5, -1, 3] → [0, 0.5, 0, 3]', 64, 920, {size: 17, mono: true, color: '#c9d4e5'});
+
+  txt(c, 'torch.compile(mlp)', 800, 316, {size: 22, mono: true, color: C.purple, weight: 600, align: 'center'});
+  txt(c, '▸ 캡처된 연산 그래프', 800, 348, {size: 17, color: C.muted, align: 'center'});
+  card(c, 600, 670, 400, 220, C.purple, '그래프 캡처', 'torch.compile은 forward를 처음 실행할 때 연산을 추적해 그래프로 기록하고, 다음 호출부터 컴파일된 커널을 씁니다.');
+
+  box(c, 1040, 300, 520, 660, 16, '#0a121c', '#26313e', 2);
+  code(c, [
+    'class MLP(nn.Module):',
+    '    def __init__(self, d=4096, h=16384):',
+    '        super().__init__()',
+    '        self.fc1 = nn.Linear(d, h)',
+    '        self.fc2 = nn.Linear(h, d)',
+    '',
+    '    def forward(self, x):',
+    '        h = torch.relu(self.fc1(x))',
+    '        return self.fc2(h)',
+    '',
+    'mlp = torch.compile(MLP())',
+  ], 1064, 352, 18, 36, {7: hexA(C.green, .14), 10: hexA(C.purple, .16)}, 504);
+  arrow(c, 1046, 712, 1006, 570, hexA(C.purple, .8), 3, [10, 8]);
+}
+
+// ---------- level 2: torch.compile graph ----------
+function drawGraph(c) {
+  header(c, 'torch.compile 그래프', 'Dynamo → AOTAutograd → Inductor', C.purple);
+  [['Dynamo: forward → FX 그래프', 40], ['AOTAutograd: aten 연산으로 분해', 565], ['Inductor: 퓨전 · 코드 생성', 1090]].forEach(([s, x], i) => {
+    box(c, x, 140, 470, 50, 25, hexA(C.purple, .12), hexA(C.purple, .45), 2);
+    txt(c, s, x + 235, 165, {size: 19, align: 'center', color: '#d9d8ff'});
+    if (i < 2) arrow(c, x + 476, 165, x + 520, 165, hexA(C.purple, .7), 2.5);
+  });
+
+  txt(c, 'FX 그래프 (aten 연산)', 40, 232, {size: 18, weight: 700, color: C.muted});
+  const inp = (x, w, s) => node(c, x, 262, w, 44, s, {mono: true, size: 17, weight: 500, r: 22});
+  inp(50, 90, 'x'); inp(155, 180, 'fc1.weight'); inp(350, 160, 'fc1.bias');
+  box(c, 50, 336, 470, 194, 14, hexA(C.aqua, .05), hexA(C.aqua, .55), 2.5);
+  box(c, 50, 612, 470, 100, 14, null, '#3d4c5f', 2);
+  node(c, 80, 352, 390, 58, 'addmm(b1, x, W1ᵀ)', {mono: true, size: 19});
+  node(c, 175, 450, 200, 56, 'relu', {mono: true, size: 20, color: C.green, text: C.green});
+  node(c, 340, 548, 180, 44, 'fc2 W, b', {mono: true, size: 17, weight: 500, r: 22});
+  node(c, 80, 628, 390, 58, 'addmm(b2, h, W2ᵀ)', {mono: true, size: 19});
+  node(c, 185, 750, 180, 46, 'output', {mono: true, size: 17, weight: 500, r: 23});
+  const e = (x1, y1, x2, y2) => arrow(c, x1, y1, x2, y2, '#5b6c80', 2.5);
+  e(95, 306, 180, 350); e(245, 306, 260, 350); e(430, 306, 400, 350);
+  e(275, 410, 275, 448); e(275, 506, 275, 626); e(430, 592, 400, 626); e(275, 686, 275, 748);
+  txt(c, '퓨전 그룹 1', 510, 516, {size: 16, weight: 700, color: C.aqua, align: 'right'});
+  txt(c, '그룹 2', 510, 700, {size: 15, weight: 700, color: C.muted, align: 'right'});
+  arrow(c, 520, 433, 556, 433, hexA(C.aqua, .8), 2.5);
+  arrow(c, 520, 690, 1076, 770, '#4a5a6e', 2.5, [10, 8]);
+
+  box(c, 560, 260, 480, 400, 16, '#0f1925', hexA(C.aqua, .5), 2.5);
+  txt(c, 'kernel 1 · triton_mm_relu', 580, 290, {size: 20, mono: true, weight: 700, color: C.aqua});
+  txt(c, '행렬곱 템플릿 + epilogue (bias, ReLU)', 580, 322, {size: 16, color: C.muted});
+  txt(c, 'kernel 1 → kernel 2 순서로 GPU에서 실행', 800, 720, {size: 17, color: C.muted, align: 'center'});
+
+  txt(c, 'Inductor 출력', 1080, 232, {size: 18, weight: 700, color: C.muted});
+  card(c, 1080, 260, 470, 250, C.purple, '퓨전 조건', 'max-autotune 기준 예시입니다. 기본 설정에서는 행렬곱이 cuBLAS(extern addmm)로, ReLU가 별도 Triton 커널로 나뉠 수 있습니다.');
+  box(c, 1080, 720, 470, 120, 16, '#0f1925', '#2c3a4a', 2);
+  txt(c, 'kernel 2 · triton_mm', 1104, 760, {size: 19, mono: true, weight: 600, color: '#c9d4e5'});
+  txt(c, 'fc2 + bias (두 번째 Linear)', 1104, 798, {size: 16, color: C.muted});
+}
+
+// ---------- level 3: Triton code ----------
+function drawTriton(c) {
+  header(c, 'Triton 커널', 'Inductor가 생성한 코드 (단순화)', C.aqua);
+  box(c, 40, 140, 530, 820, 16, '#0a121c', '#26313e', 2);
+  txt(c, '① 어느 C 타일을 맡을까', 64, 176, {size: 20, weight: 700, color: C.blue});
+  code(c, [
+    '@triton.jit',
+    'def triton_mm_relu(A, B, bias, C,',
+    '        M, N, K, BLOCK_M: tl.constexpr,',
+    '        BLOCK_N: tl.constexpr,',
+    '        BLOCK_K: tl.constexpr):',
+    '    pid_m = tl.program_id(0)',
+    '    pid_n = tl.program_id(1)',
+    '    rm = pid_m * BLOCK_M + tl.arange(0, BLOCK_M)',
+    '    rn = pid_n * BLOCK_N + tl.arange(0, BLOCK_N)',
+    '    rk = tl.arange(0, BLOCK_K)',
+    '    acc = tl.zeros((BLOCK_M, BLOCK_N),',
+    '                   dtype=tl.float32)',
+  ], 64, 226, 16, 33, {5: hexA(C.blue, .14), 6: hexA(C.blue, .14)}, 514);
+  para(c, 'program 하나가 C의 BLOCK_M × BLOCK_N 타일 하나를 맡습니다. grid = (M / BLOCK_M, N / BLOCK_N)개의 program이 동시에 실행됩니다.', 64, 670, 480, {size: 18, color: '#b3c0d1', lh: 28});
+
+  box(c, 1030, 140, 530, 820, 16, '#0a121c', '#26313e', 2);
+  txt(c, '② K 루프 → ③ epilogue → ④ 저장', 1054, 176, {size: 20, weight: 700, color: C.gold});
+  const g = hexA(C.gold, .07);
+  code(c, [
+    '    for k in range(0, K, BLOCK_K):',
+    '        a = tl.load(A + rm[:, None] * K',
+    '                    + (k + rk)[None, :])',
+    '        b = tl.load(B + (k + rk)[:, None] * N',
+    '                    + rn[None, :])',
+    '        acc += tl.dot(a, b)',
+    '    acc += tl.load(bias + rn)[None, :]',
+    '    acc = tl.maximum(acc, 0.0)   # ReLU',
+    '    tl.store(C + rm[:, None] * N',
+    '             + rn[None, :], acc)',
+  ], 1054, 226, 16, 38, {0: g, 1: g, 2: g, 3: g, 4: g, 5: hexA(C.gold, .24), 6: hexA(C.green, .14), 7: hexA(C.green, .14), 8: hexA(C.aqua, .1), 9: hexA(C.aqua, .1)}, 514);
+  para(c, 'bias와 ReLU를 레지스터의 acc에 바로 적용해 중간 결과 [B, T, 4d]를 메모리에 쓰지 않습니다. 완성된 타일만 tl.store로 한 번 씁니다.', 1054, 670, 480, {size: 18, color: '#b3c0d1', lh: 28});
+
+  txt(c, 'acc += tl.dot(a, b)', 800, 334, {size: 22, mono: true, weight: 700, color: C.gold, align: 'center'});
+  arrow(c, 1036, 416, 1014, 450, hexA(C.gold, .85), 3);
+  card(c, 590, 670, 420, 200, C.gold, '타일 행렬곱', 'a [BLOCK_M × BLOCK_K]와 b [BLOCK_K × BLOCK_N]를 곱해 acc에 더합니다. 하드웨어에서는 Tensor Core 명령이 됩니다.');
+}
+
+// ---------- level 4: tiled matmul ----------
+function drawMatmul(c, t) {
+  header(c, '행렬곱 C = A @ B', '출력을 타일로 나누고, 타일마다 K 방향으로 누적', C.gold);
+  const kk = Math.floor(t / .9) % 4, ax = 50, ay = 400, bx = 250, by = 190, T = 70, KC = 45, pm = 1, pn = 2;
+  box(c, ax, ay, KC * 4, T * 4, 6, '#121d2a', '#3a4a5c', 2);
+  c.fillStyle = tileColor(ACTIVE_TILE, .22); c.fillRect(ax, ay + pm * T, KC * 4, T);
+  c.fillStyle = hexA(C.aqua, .7); c.fillRect(ax + kk * KC, ay + pm * T, KC, T);
+  box(c, bx, by, T * 4, KC * 4, 6, '#121d2a', '#3a4a5c', 2);
+  c.fillStyle = tileColor(ACTIVE_TILE, .22); c.fillRect(bx + pn * T, by, T, KC * 4);
+  c.fillStyle = hexA(C.purple, .75); c.fillRect(bx + pn * T, by + kk * KC, T, KC);
+  for (let m = 0; m < 4; m++) for (let n = 0; n < 4; n++) {
+    const p = m * 4 + n, hot = p === ACTIVE_TILE;
+    box(c, bx + n * T + 3, ay + m * T + 3, T - 6, T - 6, 6, tileColor(p, hot ? .85 : .16), hot ? C.gold : null, 3.5);
+    txt(c, `(${m},${n})`, bx + n * T + T / 2, ay + m * T + T / 2, {size: 14, mono: true, align: 'center', color: hot ? '#1a1305' : '#9fb0c5', weight: hot ? 700 : 500});
+  }
+  c.strokeStyle = '#3a4a5c'; c.lineWidth = 1.5; c.beginPath();
+  for (let i = 1; i < 4; i++) {
+    c.moveTo(ax + i * KC, ay); c.lineTo(ax + i * KC, ay + T * 4); c.moveTo(ax, ay + i * T); c.lineTo(ax + KC * 4, ay + i * T);
+    c.moveTo(bx, by + i * KC); c.lineTo(bx + T * 4, by + i * KC); c.moveTo(bx + i * T, by); c.lineTo(bx + i * T, by + KC * 4);
+  }
+  c.stroke();
+  txt(c, 'A  [M × K]', ax, 376, {size: 20, weight: 700});
+  txt(c, 'B  [K × N]', 238, 280, {size: 20, weight: 700, align: 'right'});
+  txt(c, 'C  [M × N]', bx, 708, {size: 20, weight: 700});
+  txt(c, 'BLOCK_K = 64', ax, 708, {size: 15, mono: true, color: C.aqua});
+  txt(c, `k = ${kk} / 4`, bx + T * 4, 166, {size: 17, mono: true, color: C.purple, align: 'right'});
+  txt(c, 'acc[128×128] += A[128×64] @ B[64×128]', ax, 780, {size: 18, mono: true, color: '#d5deea'});
+  txt(c, 'K / 64 번 반복 · 전체 2·M·N·K FLOPs', ax, 818, {size: 17, color: C.muted});
+  arrow(c, bx + 3 * T, ay + T * 1.5, 556, 500, hexA(C.gold, .8), 3, [8, 6]);
+
+  txt(c, 'grid = (4, 4) → 16 programs', 800, 296, {size: 19, mono: true, color: C.blue, weight: 600, align: 'center'});
+  txt(c, '▸ GPU의 SM들에 나눠 배정', 800, 326, {size: 16, color: C.muted, align: 'center'});
+  card(c, 560, 690, 480, 160, C.purple, 'K 루프', 'A 조각(청록)과 B 조각(보라)이 k = 0 → 3 순서로 바뀌며 acc에 더해집니다.');
+  card(c, 1080, 150, 470, 230, C.gold, 'program 하나 = C 타일 하나', '각 program은 A의 행 띠와 B의 열 띠만 BLOCK_K 조각씩 읽어 누적합니다. 읽은 값은 타일 안에서 128번씩 재사용됩니다.');
+  card(c, 1080, 410, 470, 200, C.aqua, '산술 강도', '타일이 클수록 같은 데이터로 더 많은 곱셈을 해, 메모리 대역폭보다 연산 성능에 가까워집니다.');
+}
+
+// ---------- level 5: GPU ----------
+// 3 x 3 slots: eight GPCs plus the block scheduler, with the traced SM in the middle slot
+const GPC_SLOTS = [[0, 0], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2]];
+const slotXY = (r, col) => [272 + col * 358, 145 + r * 265];
+const smXY = (g, s) => { const [x, y] = slotXY(...GPC_SLOTS[g]); return [x + 94 + (s % 3) * 54, y + 32 + Math.floor(s / 3) * 35.5]; };
+const programSM = p => [(p + 5) % 8, p < 8 ? 4 : 10];   // tile (1, 2) lands in the centre GPC
+function vtxt(c, s, x, y, o) { c.save(); c.translate(x, y); c.rotate(-Math.PI / 2); txt(c, s, 0, 0, {...o, align: 'center'}); c.restore(); }
+function drawGPU(c, t) {
+  header(c, 'GPU (H100)', 'program(CTA)들이 SM에 배정되어 동시에 실행', C.blue);
+  box(c, 40, 130, 1520, 810, 18, '#0f151e', '#3a4656', 2.5);
+  for (const hx of [56, 1434]) for (let k = 0; k < 3; k++) {
+    box(c, hx, 145 + k * 265, 110, 250, 10, '#24224d', hexA(C.purple, .7), 2);
+    txt(c, 'HBM3', hx + 55, 270 + k * 265, {size: 18, weight: 700, align: 'center', color: '#d9d8ff'});
+  }
+  for (const lx of [180, 1344]) {
+    box(c, lx, 145, 76, 780, 10, hexA(C.aqua, .16), hexA(C.aqua, .5), 2);
+    vtxt(c, 'L2 캐시 · 25 MB', lx + 38, 535, {size: 22, weight: 700, color: '#d9f5f4'});
+  }
+  const owner = {};
+  for (let p = 0; p < 16; p++) owner[programSM(p).join('-')] = p;
+  for (let g = 0; g < 8; g++) {
+    const [gx, gy] = slotXY(...GPC_SLOTS[g]);
+    box(c, gx, gy, 340, 250, 12, '#141b26', '#34404f', 2);
+    txt(c, `GPC ${g}`, gx + 14, gy + 16, {size: 15, weight: 700, color: C.muted});
+    for (let s = 0; s < 18; s++) {
+      const [sx, sy] = smXY(g, s), p = owner[`${g}-${s}`];
+      if (p === undefined) box(c, sx, sy, 44, 27.5, 4, '#1b2431', '#2c3747', 1.5);
+      else box(c, sx, sy, 44, 27.5, 4, tileColor(p, .5 + .3 * Math.sin(t * 3 + p)), p === ACTIVE_TILE ? C.gold : tileColor(p, .9), p === ACTIVE_TILE ? 3 : 2);
+    }
+  }
+  box(c, 630, 145, 340, 250, 12, hexA(C.blue, .1), hexA(C.blue, .55), 2);
+  txt(c, 'GigaThread 엔진', 800, 186, {size: 21, weight: 700, align: 'center', color: '#cfe9fa'});
+  txt(c, '블록(CTA) 스케줄러', 800, 216, {size: 17, align: 'center', color: C.muted});
+  for (let p = 0; p < 6; p++) box(c, 726 + p * 26, 250, 18, 18, 4, tileColor(p * 3, .8));
+  txt(c, '색칠된 SM = A@B program 실행 중', 800, 296, {size: 16, align: 'center', color: '#b3c0d1'});
+  txt(c, '회색 SM = 대기 또는 다른 커널', 800, 324, {size: 15, align: 'center', color: C.muted});
+  arrow(c, 800, 352, 800, 404, hexA(C.blue, .7), 2.5);
+}
+
+// ---------- level 6: SM ----------
+function drawSM(c, t) {
+  header(c, 'SM (Streaming Multiprocessor)', 'C 타일 (1, 2)를 맡은 program이 warp 단위로 실행되는 곳', C.orange);
+  box(c, 40, 130, 1520, 840, 18, '#111821', hexA(C.orange, .5), 2.5);
+  const pulse = .5 + .5 * Math.sin(t * 4);
+  for (let k = 0; k < 4; k++) {
+    const x = 70 + k * 370, y = 150;
+    box(c, x, y, 350, 550, 14, '#151d28', '#2f3b4b', 2);
+    box(c, x + 16, y + 16, 318, 56, 10, hexA(C.blue, .22), hexA(C.blue, .6), 2);
+    txt(c, 'Warp 스케줄러', x + 175, y + 44, {size: 20, weight: 600, align: 'center'});
+    box(c, x + 16, y + 86, 318, 150, 10, hexA(C.purple, .12), hexA(C.purple, .5), 2);
+    txt(c, 'Register File 64 KB', x + 30, y + 108, {size: 18, weight: 600, color: '#d9d8ff'});
+    for (let i = 0; i < 8; i++) for (let j = 0; j < 3; j++) box(c, x + 24 + i * 38, y + 128 + j * 34, 32, 28, 4, i < 4 ? hexA(C.gold, .55) : hexA(C.purple, .25));
+    txt(c, 'acc', x + 30 + 2 * 38, y + 142, {size: 14, mono: true, weight: 700, color: '#1a1305', align: 'center'});
+    box(c, x + 16, y + 250, 318, 120, 10, hexA(C.green, .1), hexA(C.green, .45), 2);
+    txt(c, 'FP32 / INT32 코어', x + 30, y + 272, {size: 18, weight: 600, color: C.green});
+    c.fillStyle = hexA(C.green, .55);
+    for (let i = 0; i < 16; i++) for (let j = 0; j < 2; j++) c.fillRect(x + 28 + i * 19, y + 292 + j * 22, 13, 15);
+    txt(c, 'ReLU = max(acc, 0)', x + 30, y + 352, {size: 16, mono: true, color: '#c9d4e5'});
+    box(c, x + 16, y + 384, 318, 150, 10, hexA(C.gold, .12 + .14 * pulse), C.gold, 2.5);
+    txt(c, 'Tensor Core', x + 30, y + 408, {size: 20, weight: 700, color: C.gold});
+    for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) box(c, x + 190 + i * 32, y + 400 + j * 22, 26, 17, 3, hexA(C.gold, .4 + .4 * ((i + j + Math.floor(t * 6)) % 4 === 0)));
+    txt(c, 'wgmma: D += A · B', x + 30, y + 506, {size: 16, mono: true, color: '#ffe3a1'});
+    for (const [dx, col, ph] of [[-40, C.aqua, 0], [40, C.purple, .5]]) {
+      const f = (t * .8 + ph + k * .25) % 1;
+      c.fillStyle = col; c.beginPath(); c.arc(x + 175 + dx, 770 - f * 230, 7, 0, Math.PI * 2); c.fill();
+    }
+  }
+  box(c, 70, 720, 1460, 130, 14, hexA(C.aqua, .08), hexA(C.aqua, .5), 2);
+  txt(c, 'Shared Memory / L1 · 256 KB', 92, 742, {size: 19, weight: 700, color: C.aqua});
+  [['A tile · stage 0', C.aqua, .45], ['B tile · stage 0', C.purple, .45], ['A tile · stage 1 (다음 k)', C.aqua, .2], ['B tile · stage 1 (다음 k)', C.purple, .2]].forEach(([s, col, a], i) => {
+    box(c, 90 + i * 360, 768, 340, 62, 8, hexA(col, a), hexA(col, .7), 1.5);
+    txt(c, s, 260 + i * 360, 799, {size: 18, weight: 600, align: 'center'});
+  });
+  box(c, 70, 868, 1460, 80, 14, hexA(C.blue, .08), hexA(C.blue, .4), 2);
+  txt(c, 'L2 / HBM  ⇄   tl.load → 비동기 복사 (TMA · cp.async)   ·   tl.store → 결과 타일 쓰기', 800, 908, {size: 20, align: 'center', color: '#cfe9fa'});
+}
+
+const LV = [
+  {id:'model', name:'Transformer 모델', tick:'Model', color:C.pink, sub:'Embedding → Decoder Block × N → LM Head', child:{x:620, y:387.5, w:360}, draw:drawModel,
+   info:'Transformer 디코더는 같은 구조의 블록을 수십 번 쌓은 모델입니다. 블록마다 Self-Attention과 MLP가 있고, 둘 다 residual로 입력을 더합니다. 계산량 대부분은 이 두 부분의 행렬곱입니다. 여기서는 원래 Transformer처럼 ReLU MLP를 예로 듭니다(최근 LLM은 주로 SwiGLU).',
+   next:'MLP 블록으로 들어가면 Linear → ReLU → Linear가 나옵니다.'},
+  {id:'relu', name:'ReLU 레이어', tick:'ReLU', color:C.green, sub:'fc2(relu(fc1(x)))', child:{x:600, y:375, w:400}, draw:drawMLP,
+   info:'MLP는 d에서 4d로 넓혔다가 다시 d로 줄이는 Linear 두 개와 그 사이의 ReLU로 이루어집니다. ReLU는 음수를 0으로 바꾸는 원소별 연산이라 계산은 가볍지만, 따로 실행하면 큰 중간 텐서 [B, T, 4d]를 메모리에 한 번 더 쓰고 읽어야 합니다.',
+   next:'torch.compile이 forward를 추적해 연산 그래프를 만듭니다.'},
+  {id:'graph', name:'torch.compile 그래프', tick:'Graph', color:C.purple, sub:'Dynamo → AOTAutograd → Inductor', child:{x:580, y:362.5, w:440}, draw:drawGraph,
+   info:'Dynamo가 Python forward를 FX 그래프로 캡처하고, AOTAutograd가 aten 연산으로 분해한 뒤, Inductor가 연산을 묶어 커널 코드를 만듭니다. max-autotune에서는 첫 행렬곱 뒤의 bias와 ReLU를 epilogue로 합쳐 Triton 커널 하나로 만들 수 있습니다.',
+   next:'퓨전된 kernel 1의 Triton 코드를 엽니다.'},
+  {id:'triton', name:'Triton 코드', tick:'Triton', color:C.aqua, sub:'@triton.jit def triton_mm_relu(...)', child:{x:590, y:368.75, w:420}, draw:drawTriton,
+   info:'Triton 커널에서는 program 하나가 출력 C의 타일 하나(BLOCK_M × BLOCK_N)를 맡습니다. K 방향으로 BLOCK_K씩 A·B 블록을 읽어 tl.dot으로 누적하고, 끝나면 bias와 ReLU를 레지스터에서 적용한 뒤 한 번만 저장합니다.',
+   next:'acc += tl.dot(a, b)가 실제로 하는 타일 행렬곱을 봅니다.'},
+  {id:'matmul', name:'행렬곱 A @ B', tick:'A@B', color:C.gold, sub:'C[M,N] = A[M,K] @ B[K,N]', child:{x:560, y:350, w:480}, draw:drawMatmul,
+   info:'C = A @ B를 128×128 타일로 나누면 타일마다 독립적인 program이 됩니다. 한 program은 A의 행 띠와 B의 열 띠를 BLOCK_K 조각씩 읽어 누적하므로, 읽은 데이터를 여러 번 재사용해 산술 강도가 높아집니다. 전체 연산량은 2·M·N·K FLOPs입니다.',
+   next:'16개 program이 GPU의 SM에 어떻게 배정되는지 봅니다.'},
+  {id:'gpu', name:'GPU 구조', tick:'GPU', color:C.blue, sub:'H100: GPC × 8 · L2 50 MB · HBM3', child:{x:778, y:477.5, w:44}, draw:drawGPU,
+   info:'H100 SXM은 SM 132개를 GPC 단위로 묶고, 가운데 50 MB L2 캐시와 양옆 HBM3 메모리(약 3.35 TB/s)를 둡니다. 커널이 실행되면 블록 스케줄러가 program(CTA)들을 빈 SM에 나눠 주고, 자원이 허락하면 한 SM에 여러 CTA가 함께 올라갑니다. 그림은 GH100 전체 구성(SM 144개) 기준입니다.',
+   next:'가운데 금색 테두리 SM — C 타일 (1, 2)를 맡은 SM으로 들어갑니다.'},
+  {id:'sm', name:'SM', tick:'SM', color:C.orange, sub:'4 sub-partitions · Tensor Core · 256 KB SMEM', draw:drawSM,
+   info:'SM은 4개의 서브파티션으로 나뉘고 각각 warp 스케줄러, 64 KB 레지스터 파일, CUDA 코어, Tensor Core를 가집니다. tl.load한 A·B 타일은 shared memory에 올라오고, tl.dot은 Tensor Core 명령(H100에서는 wgmma)이 되며, 누적값 acc는 레지스터에 남습니다. ReLU 같은 epilogue는 CUDA 코어가 레지스터 값에 바로 적용합니다.',
+   next:'가장 안쪽 단계입니다. 모델의 MLP 한 줄이 여기까지 내려왔습니다.'},
+];
+const N = LV.length;
+
+// world boxes: level i+1 sits inside level i's child rect
+const B = [{x: 0, y: 0, w: LW}];
+for (let i = 0; i < N - 1; i++) {
+  const ch = LV[i].child, k = B[i].w / LW;
+  B.push({x: B[i].x + ch.x * k, y: B[i].y + ch.y * k, w: ch.w * k});
+}
+
+function viewRect(z) {
+  const i = Math.min(Math.floor(z), N - 1);
+  if (i >= N - 1) return B[N - 1];
+  // zoom about the fixed point of the parent → child map, so the child grows in place
+  const a = B[i], b = B[i + 1], s = b.w / a.w, f = z - i, k = Math.pow(s, f);
+  const px = (b.x - s * a.x) / (1 - s), py = (b.y - s * a.y) / (1 - s);
+  return {x: px + (a.x - px) * k, y: py + (a.y - py) * k, w: a.w * k};
+}
+
+const smooth = (a, b, v) => { const t = Math.min(1, Math.max(0, (v - a) / (b - a))); return t * t * (3 - 2 * t); };
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+
+// ---------- DOM ----------
+const $ = id => document.getElementById(id);
+const view = $('view'), wrap = $('wrap'), ctx = view.getContext('2d'), slider = $('zoom');
+const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+slider.max = N - 1;
+const stageButtons = LV.map((lv, i) => {
+  const pos = `${i / (N - 1) * 100}%`;
+  const m = document.createElement('i'); m.style.left = pos; m.style.background = lv.color; $('marks').append(m);
+  const s = document.createElement('span'); s.style.left = pos; s.textContent = lv.tick; $('ticks').append(s);
+  const li = document.createElement('li'), b = document.createElement('button');
+  b.innerHTML = `<b style="background:${lv.color}">${i + 1}</b><span></span><small></small>`;
+  b.querySelector('span').textContent = lv.name;
+  b.querySelector('small').textContent = lv.tick;
+  b.addEventListener('click', () => goTo(i));
+  li.append(b); $('stages').append(li);
+  return b;
+});
+
+// ---------- state ----------
+const startIdx = Math.max(0, LV.findIndex(l => l.id === location.hash.slice(1)));
+let z = startIdx, zt = z, zDirty = true, focusIdx = -1, hits = [], outerRect = null, liveTimer = 0;
+
+function setZ(v, immediate) {
+  zt = clamp(v, 0, N - 1);
+  if (immediate || reduced.matches) z = zt;
+  zDirty = true;
+}
+function goTo(i) { setZ(i); }
+function step(dir) { goTo(clamp(dir > 0 ? Math.floor(zt + .02) + 1 : Math.ceil(zt - .02) - 1, 0, N - 1)); }
+
+// ---------- render ----------
+function resize() {
+  const dpr = window.devicePixelRatio || 1;
+  view.width = Math.round(wrap.clientWidth * dpr);
+  view.height = Math.round(wrap.clientHeight * dpr);
+}
+
+function render(t) {
+  const W = wrap.clientWidth, H = wrap.clientHeight;
+  if (!W || !H) return;
+  const dpr = view.width / W;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, W, H);
+  const V = viewRect(z), Vh = V.w * LH / LW;
+  const scale = Math.min(W * .94 / V.w, (H - 56) * .94 / Vh);
+  const ox = W / 2 - (V.x + V.w / 2) * scale, oy = (H - 40) / 2 - (V.y + Vh / 2) * scale;
+  const i0 = Math.min(Math.floor(z), N - 1);
+  hits = []; outerRect = null;
+  for (let j = Math.max(0, i0 - 1); j <= Math.min(N - 1, i0 + 2); j++) {
+    const b = B[j], sw = b.w * scale, sh = sw * LH / LW, sx = ox + b.x * scale, sy = oy + b.y * scale;
+    if (j === i0) outerRect = {x: sx, y: sy, w: sw, h: sh};
+    if (sw < 20 || sx > W || sy > H || sx + sw < 0 || sy + sh < 0) continue;
+    if (j < N - 1) {
+      const cb = B[j + 1], cx = ox + cb.x * scale, cy = oy + cb.y * scale, cw = cb.w * scale;
+      if (cx <= 0 && cy <= 0 && cx + cw >= W && cy + cw * LH / LW >= H) continue;   // fully covered by the child
+    }
+    const k = sw / LW;
+    ctx.save();
+    // outer levels that spill past the view stay as dim context
+    const alpha = smooth(20, 130, sw) * (1 - .72 * smooth(1.15, 2.2, sw / W));
+    ctx.globalAlpha = alpha;
+    ctx.setTransform(dpr * k, 0, 0, dpr * k, dpr * sx, dpr * sy);
+    box(ctx, 0, 0, LW, LH, 28, '#0c141e');
+    rr(ctx, 0, 0, LW, LH, 28); ctx.clip();
+    LV[j].draw(ctx, t);
+    if (j < N - 1) {
+      const ch = LV[j].child, chh = ch.w * LH / LW, nx = LV[j + 1];
+      box(ctx, ch.x, ch.y, ch.w, chh, 28 * ch.w / LW, '#0a1119', nx.color, Math.max(2, ch.w * .008));
+      txt(ctx, `▸ ${nx.tick}`, ch.x + ch.w / 2, ch.y + chh / 2, {size: ch.w * .08, align: 'center', color: nx.color, weight: 700});
+      hits.push({i: j + 1, x: sx + ch.x * k, y: sy + ch.y * k, w: ch.w * k, h: chh * k});
+    }
+    ctx.restore();
+    ctx.strokeStyle = hexA(LV[j].color, .55 * alpha); ctx.lineWidth = 1.5;
+    rr(ctx, sx, sy, sw, sh, 28 * k); ctx.stroke();
+  }
+}
+
+function updateUI() {
+  const V = viewRect(z), mag = LW / V.w;
+  $('mag').textContent = `×${mag < 10 ? mag.toFixed(1) : Math.round(mag).toLocaleString('en-US')}`;
+  if (document.activeElement !== slider || +slider.value !== z) slider.value = z;
+  $('scale-out').disabled = zt <= .001;
+  $('scale-in').disabled = zt >= N - 1.001;
+  const best = clamp(Math.round(z), 0, N - 1);
+  if (best === focusIdx) return;
+  if (focusIdx >= 0) stageButtons[focusIdx].removeAttribute('aria-current');
+  focusIdx = best;
+  const lv = LV[best];
+  stageButtons[best].setAttribute('aria-current', 'true');
+  $('where').textContent = `${best + 1} / ${N} · ${lv.tick}`;
+  $('where').style.color = lv.color;
+  $('eyebrow').textContent = `단계 ${best + 1} / ${N}`; $('eyebrow').style.color = lv.color;
+  $('name').textContent = lv.name;
+  $('sub').textContent = lv.sub;
+  $('desc').textContent = lv.info;
+  $('next').textContent = `▸ ${lv.next}`;
+  $('next').style.setProperty('--accent', best < N - 1 ? LV[best + 1].color : lv.color);
+  slider.setAttribute('aria-valuetext', `${best + 1}단계 ${lv.name}`);
+  try { history.replaceState(null, '', `#${lv.id}`); } catch {}
+  clearTimeout(liveTimer);
+  liveTimer = setTimeout(() => { $('live').textContent = `${best + 1}단계, ${lv.name}`; }, 400);
+}
+
+let last = performance.now();
+function frame(now) {
+  const dt = Math.min(.05, (now - last) / 1000);
+  last = now;
+  if (z !== zt) {
+    z = Math.abs(zt - z) < 1e-4 ? zt : z + (zt - z) * (1 - Math.exp(-dt * 7));
+    zDirty = true;
+  }
+  render(reduced.matches ? 0 : now / 1000);
+  if (zDirty) { zDirty = false; updateUI(); }
+  requestAnimationFrame(frame);
+}
+
+// ---------- input ----------
+slider.addEventListener('input', () => setZ(+slider.value, true));
+$('scale-in').addEventListener('click', () => step(1));
+$('scale-out').addEventListener('click', () => step(-1));
+
+view.addEventListener('wheel', e => {
+  e.preventDefault();
+  let d = e.deltaY;
+  if (e.deltaMode === 1) d *= 33; else if (e.deltaMode === 2) d *= wrap.clientHeight;
+  setZ(zt - d * (e.ctrlKey ? .008 : .0016));
+}, {passive: false});
+
+function pointAt(e) { const r = view.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
+const inside = (r, x, y) => r && x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h;
+function targetAt(x, y) {
+  const hit = [...hits].reverse().find(h => inside(h, x, y));
+  if (hit) return {type: 'in', i: hit.i};
+  if (zt > .001 && !inside(outerRect, x, y)) return {type: 'out'};
+  return null;
+}
+
+const pts = new Map();
+let tap = null, pinch = null;
+view.addEventListener('pointerdown', e => {
+  view.setPointerCapture(e.pointerId);
+  pts.set(e.pointerId, {x: e.clientX, y: e.clientY});
+  if (pts.size === 1) tap = {x: e.clientX, y: e.clientY};
+  else if (pts.size === 2) {
+    const [a, b] = [...pts.values()];
+    pinch = {d0: Math.hypot(a.x - b.x, a.y - b.y) || 1, z0: zt};
+    tap = null;
+  }
+});
+view.addEventListener('pointermove', e => {
+  if (!pts.has(e.pointerId)) {
+    const tg = targetAt(...pointAt(e));
+    view.className = tg ? (tg.type === 'in' ? 'link' : 'back') : '';
+    return;
+  }
+  pts.set(e.pointerId, {x: e.clientX, y: e.clientY});
+  if (tap && Math.hypot(e.clientX - tap.x, e.clientY - tap.y) > 6) tap = null;
+  if (pinch && pts.size === 2) {
+    const [a, b] = [...pts.values()];
+    setZ(pinch.z0 + Math.log2((Math.hypot(a.x - b.x, a.y - b.y) || 1) / pinch.d0) * .7, true);
+  }
+});
+function endPointer(e) {
+  if (!pts.has(e.pointerId)) return;
+  if (e.type === 'pointerup' && tap && pts.size === 1) {
+    const tg = targetAt(...pointAt(e));
+    if (tg) tg.type === 'in' ? goTo(tg.i) : step(-1);
+  }
+  pts.delete(e.pointerId);
+  if (pts.size < 2) pinch = null;
+  if (pts.size === 0) tap = null;
+}
+view.addEventListener('pointerup', endPointer);
+view.addEventListener('pointercancel', endPointer);
+
+document.addEventListener('keydown', e => {
+  if (e.target !== document.body && e.target !== view) return;
+  const k = e.key;
+  if (k === 'ArrowRight' || k === 'ArrowDown' || k === 'Enter') step(1);
+  else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'Backspace') step(-1);
+  else if (k === '+' || k === '=') setZ(zt + .25);
+  else if (k === '-' || k === '_') setZ(zt - .25);
+  else if (k === 'Home') goTo(0);
+  else if (k === 'End') goTo(N - 1);
+  else return;
+  e.preventDefault();
+});
+
+window.addEventListener('hashchange', () => {
+  const i = LV.findIndex(l => l.id === location.hash.slice(1));
+  if (i >= 0 && i !== focusIdx) setZ(i, true);
+});
+
+new ResizeObserver(resize).observe(wrap);
+resize();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
