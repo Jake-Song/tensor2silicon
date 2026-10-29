@@ -175,6 +175,11 @@ Vector Add의 연산 시간과 메모리 시간을 손계산해 병목을 판단
 [6주차 자료](week6/README.md)에서 블록 인덱싱·마스킹, 행 단위 Softmax와 커널 결합을 살펴봅니다.
 HBM 이동량·메모리 시간 손계산과 [실습 노트북](notebooks/week6_triton.ipynb)을 포함합니다. GPU 벤치마크 또는 CPU 해석 모드로 실행할 수 있습니다.
 
+### 7주차: Tiled MatMul과 Triton 컴파일 파이프라인
+
+[7주차 자료](week7/README.md)에서 2차원 포인터 블록·`tl.dot` K축 누적, L2 캐시 그룹핑(`GROUP_SIZE_M`), `@triton.autotune`, 그리고 `AST → TTIR → TTGIR → LLVM IR → PTX → CUBIN` 컴파일 단계를 살펴봅니다.
+9×9 그룹핑 손계산, 4096³ FP16 행렬곱의 3개 후보 `Config`별 HBM 이동량·온칩 버퍼 비교표와 [실습 노트북](notebooks/week7_triton_matmul.ipynb)을 포함합니다.
+
 ## 테스트
 
 ```bash
