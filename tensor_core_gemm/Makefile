@@ -16,7 +16,7 @@ $(BUILD_DIR)/runner.o: runner.cu $(HDRS)
 	$(NVCC) $(NVCCFLAGS) -c runner.cu -o $@
 
 $(BIN): main.cu $(BUILD_DIR)/runner.o $(HDRS)
-	$(NVCC) $(NVCCFLAGS) -o $@ main.cu $(BUILD_DIR)/runner.o -lcublas
+	$(NVCC) $(NVCCFLAGS) -o $@ main.cu $(BUILD_DIR)/runner.o -lcublas -lcublasLt
 
 # 커널별 레지스터·SMEM 사용량 (spill 확인)
 regs:
@@ -48,15 +48,30 @@ clean:
 # Native sweep: input generation and FP32 reference run once per matrix size.
 $(BUILD_DIR)/tc_tune: tune.cu $(BUILD_DIR)/runner.o $(HDRS)
 	@mkdir -p $(BUILD_DIR)
-	$(NVCC) $(NVCCFLAGS) -o $@ tune.cu $(BUILD_DIR)/runner.o -lcublas
+	$(NVCC) $(NVCCFLAGS) -o $@ tune.cu $(BUILD_DIR)/runner.o -lcublas -lcublasLt
 
 .PHONY: tune
 tune: $(BUILD_DIR)/tc_tune
 	$(BUILD_DIR)/tc_tune
 
 $(BUILD_DIR)/tc_check: check.cu $(BUILD_DIR)/runner.o $(HDRS)
-	$(NVCC) $(NVCCFLAGS) -o $@ check.cu $(BUILD_DIR)/runner.o -lcublas
+	$(NVCC) $(NVCCFLAGS) -o $@ check.cu $(BUILD_DIR)/runner.o -lcublas -lcublasLt
 
 .PHONY: check
 check: $(BUILD_DIR)/tc_check
 	$(BUILD_DIR)/tc_check
+
+# Optional CUTLASS build uses a separate directory to prevent stale runner.o reuse.
+# Tested headers: NVIDIA CUTLASS v3.5.1.
+CUTLASS_DIR ?= /tmp/tc-cutlass
+.PHONY: libraries
+libraries:
+	@test -f "$(CUTLASS_DIR)/include/cutlass/cutlass.h" || (echo "Set CUTLASS_DIR to a CUTLASS checkout"; exit 1)
+	$(MAKE) BUILD_DIR=build-libraries NVCCFLAGS="$(NVCCFLAGS) -DTC_ENABLE_CUTLASS -I$(CUTLASS_DIR)/include" build
+
+$(BUILD_DIR)/tc_check_libraries: check_libraries.cu $(BUILD_DIR)/runner.o $(HDRS)
+	$(NVCC) $(NVCCFLAGS) -o $@ check_libraries.cu $(BUILD_DIR)/runner.o -lcublas -lcublasLt
+
+.PHONY: check-libraries
+check-libraries: $(BUILD_DIR)/tc_check_libraries
+	$(BUILD_DIR)/tc_check_libraries

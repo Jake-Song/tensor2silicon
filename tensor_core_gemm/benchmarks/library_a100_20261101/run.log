@@ -1,0 +1,211 @@
+Cloning into 'cutlass'...
+Note: switching to 'f7b19de32c5d1f3cedfc735c2849f12b537522ee'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+make BUILD_DIR=build-libraries NVCCFLAGS="-O3 -std=c++17 -arch=sm_80 -lineinfo -DTC_ENABLE_CUTLASS -I/content/tc-library-run/cutlass/include" build
+make[1]: Entering directory '/content/tc-library-run/tensor_core_gemm'
+nvcc -O3 -std=c++17 -arch=sm_80 -lineinfo -DTC_ENABLE_CUTLASS -I/content/tc-library-run/cutlass/include -c runner.cu -o build-libraries/runner.o
+/content/tc-library-run/cutlass/include/cutlass/conv/conv3d_problem_size.h(215): warning #20013-D: calling a constexpr __host__ function("get") from a __host__ __device__ function("Conv3dProblemSize") is not allowed. The experimental flag '--expt-relaxed-constexpr' can be used to allow this.
+        {std::get<0>(padding)[1], std::get<1>(padding)[1],
+         ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+/content/tc-library-run/cutlass/include/cutlass/conv/conv3d_problem_size.h(215): warning #20013-D: calling a constexpr __host__ function("get") from a __host__ __device__ function("Conv3dProblemSize") is not allowed. The experimental flag '--expt-relaxed-constexpr' can be used to allow this.
+        {std::get<0>(padding)[1], std::get<1>(padding)[1],
+                                  ^
+
+/content/tc-library-run/cutlass/include/cutlass/conv/conv3d_problem_size.h(216): warning #20013-D: calling a constexpr __host__ function("get") from a __host__ __device__ function("Conv3dProblemSize") is not allowed. The experimental flag '--expt-relaxed-constexpr' can be used to allow this.
+         std::get<0>(padding)[2], std::get<1>(padding)[2]},
+         ^
+
+/content/tc-library-run/cutlass/include/cutlass/conv/conv3d_problem_size.h(216): warning #20013-D: calling a constexpr __host__ function("get") from a __host__ __device__ function("Conv3dProblemSize") is not allowed. The experimental flag '--expt-relaxed-constexpr' can be used to allow this.
+         std::get<0>(padding)[2], std::get<1>(padding)[2]},
+                                  ^
+
+/content/tc-library-run/cutlass/include/cutlass/conv/conv3d_problem_size.h(221): warning #20013-D: calling a constexpr __host__ function("get") from a __host__ __device__ function("Conv3dProblemSize") is not allowed. The experimental flag '--expt-relaxed-constexpr' can be used to allow this.
+      pad_d(std::get<0>(padding)[0]), stride_d(stride[0]), dilation_d(dilation[0])
+            ^
+
+/content/tc-library-run/cutlass/include/cutlass/conv/conv3d_problem_size.h(224): warning #20013-D: calling a constexpr __host__ function("get") from a __host__ __device__ function("Conv3dProblemSize") is not allowed. The experimental flag '--expt-relaxed-constexpr' can be used to allow this.
+        Z = ((D + pad_d + std::get<1>(padding)[0] - T * dilation_d) / stride_d) + 1;
+                          ^
+
+/content/tc-library-run/cutlass/include/cutlass/conv/conv3d_problem_size.h(215): warning #20015-D: calling a constexpr __host__ function from a __host__ __device__ function is not allowed. The experimental flag '--expt-relaxed-constexpr' can be used to allow this.
+        {std::get<0>(padding)[1], std::get<1>(padding)[1],
+                    ^
+
+/content/tc-library-run/cutlass/include/cutlass/conv/conv3d_problem_size.h(215): warning #20015-D: calling a constexpr __host__ function from a __host__ __device__ function is not allowed. The experimental flag '--expt-relaxed-constexpr' can be used to allow this.
+        {std::get<0>(padding)[1], std::get<1>(padding)[1],
+                                             ^
+
+/content/tc-library-run/cutlass/include/cutlass/conv/conv3d_problem_size.h(216): warning #20015-D: calling a constexpr __host__ function from a __host__ __device__ function is not allowed. The experimental flag '--expt-relaxed-constexpr' can be used to allow this.
+         std::get<0>(padding)[2], std::get<1>(padding)[2]},
+                    ^
+
+/content/tc-library-run/cutlass/include/cutlass/conv/conv3d_problem_size.h(216): warning #20015-D: calling a constexpr __host__ function from a __host__ __device__ function is not allowed. The experimental flag '--expt-relaxed-constexpr' can be used to allow this.
+         std::get<0>(padding)[2], std::get<1>(padding)[2]},
+                                             ^
+
+/content/tc-library-run/cutlass/include/cutlass/conv/conv3d_problem_size.h(221): warning #20015-D: calling a constexpr __host__ function from a __host__ __device__ function is not allowed. The experimental flag '--expt-relaxed-constexpr' can be used to allow this.
+      pad_d(std::get<0>(padding)[0]), stride_d(stride[0]), dilation_d(dilation[0])
+                       ^
+
+/content/tc-library-run/cutlass/include/cutlass/conv/conv3d_problem_size.h(224): warning #20015-D: calling a constexpr __host__ function from a __host__ __device__ function is not allowed. The experimental flag '--expt-relaxed-constexpr' can be used to allow this.
+        Z = ((D + pad_d + std::get<1>(padding)[0] - T * dilation_d) / stride_d) + 1;
+                                     ^
+
+/content/tc-library-run/cutlass/include/cutlass/platform/platform.h:608:33: warning: ‘long4’ is deprecated: use long4_16a or long4_32a [-Wdeprecated-declarations]
+  608 | struct alignment_of<long4> {
+      |                                 ^
+In file included from /usr/local/cuda-13.0/targets/x86_64-linux/include/driver_types.h:61,
+                 from /usr/local/cuda/bin/../targets/x86_64-linux/include/builtin_types.h:59,
+                 from /usr/local/cuda/bin/../targets/x86_64-linux/include/crt/host_runtime.h:58,
+                 from /usr/lib/gcc/x86_64-linux-gnu/13/include/stddef.h:218:
+/usr/local/cuda-13.0/targets/x86_64-linux/include/vector_types.h:532:98: note: declared here
+  532 | typedef __device_builtin__ struct long4 __VECTOR_TYPE_DEPRECATED__("use long4_16a or long4_32a") long4;
+      |                                                                                                  ^~~~~
+/content/tc-library-run/cutlass/include/cutlass/platform/platform.h:612:33: warning: ‘ulong4’ is deprecated: use ulong4_16a or ulong4_32a [-Wdeprecated-declarations]
+  612 | struct alignment_of<ulong4> {
+      |                                 ^
+/usr/local/cuda-13.0/targets/x86_64-linux/include/vector_types.h:533:101: note: declared here
+  533 | typedef __device_builtin__ struct ulong4 __VECTOR_TYPE_DEPRECATED__("use ulong4_16a or ulong4_32a") ulong4;
+      |                                                                                                     ^~~~~~
+/content/tc-library-run/cutlass/include/cutlass/platform/platform.h:628:33: warning: ‘longlong4’ is deprecated: use longlong4_16a or longlong4_32a [-Wdeprecated-declarations]
+  628 | struct alignment_of<longlong4> {
+      |                                 ^
+/usr/local/cuda-13.0/targets/x86_64-linux/include/vector_types.h:550:110: note: declared here
+  550 | typedef __device_builtin__ struct longlong4 __VECTOR_TYPE_DEPRECATED__("use longlong4_16a or longlong4_32a") longlong4;
+      |                                                                                                              ^~~~~~~~~
+/content/tc-library-run/cutlass/include/cutlass/platform/platform.h:632:33: warning: ‘ulonglong4’ is deprecated: use ulonglong4_16a or ulonglong4_32a [-Wdeprecated-declarations]
+  632 | struct alignment_of<ulonglong4> {
+      |                                 ^
+/usr/local/cuda-13.0/targets/x86_64-linux/include/vector_types.h:551:113: note: declared here
+  551 | typedef __device_builtin__ struct ulonglong4 __VECTOR_TYPE_DEPRECATED__("use ulonglong4_16a or ulonglong4_32a") ulonglong4;
+      |                                                                                                                 ^~~~~~~~~~
+/content/tc-library-run/cutlass/include/cutlass/platform/platform.h:636:33: warning: ‘double4’ is deprecated: use double4_16a or double4_32a [-Wdeprecated-declarations]
+  636 | struct alignment_of<double4> {
+      |                                 ^
+/usr/local/cuda-13.0/targets/x86_64-linux/include/vector_types.h:561:104: note: declared here
+  561 | typedef __device_builtin__ struct double4 __VECTOR_TYPE_DEPRECATED__("use double4_16a or double4_32a") double4;
+      |                                                                                                        ^~~~~~~
+nvcc -O3 -std=c++17 -arch=sm_80 -lineinfo -DTC_ENABLE_CUTLASS -I/content/tc-library-run/cutlass/include -o build-libraries/tc_gemm main.cu build-libraries/runner.o -lcublas -lcublasLt
+make[1]: Leaving directory '/content/tc-library-run/tensor_core_gemm'
+nvcc -O3 -std=c++17 -arch=sm_80 -lineinfo -DTC_ENABLE_CUTLASS -I/content/tc-library-run/cutlass/include -o build-libraries/tc_check_libraries check_libraries.cu build-libraries/runner.o -lcublas -lcublasLt
+Device 0: NVIDIA A100-SXM4-40GB (sm_80, 108 SMs, smem/block opt-in 163 KB)
+PASS id=101 M=128 N=128 K=32 alpha=1 beta=0 max_abs=0 rel=0
+PASS id=102 M=128 N=128 K=32 alpha=1 beta=0 max_abs=0.00205028 rel=0.000224901
+PASS id=101 M=128 N=128 K=32 alpha=0 beta=1 max_abs=0 rel=0
+PASS id=102 M=128 N=128 K=32 alpha=0 beta=1 max_abs=0 rel=0
+PASS id=101 M=128 N=128 K=32 alpha=0.5 beta=3 max_abs=0 rel=0
+PASS id=102 M=128 N=128 K=32 alpha=0.5 beta=3 max_abs=0.00102496 rel=0.00016999
+PASS id=101 M=128 N=128 K=32 alpha=-0.75 beta=-0.25 max_abs=0 rel=0
+PASS id=102 M=128 N=128 K=32 alpha=-0.75 beta=-0.25 max_abs=0.00153771 rel=0.000221511
+PASS id=101 M=128 N=256 K=64 alpha=1 beta=0 max_abs=0.00317669 rel=0.000287164
+PASS id=102 M=128 N=256 K=64 alpha=1 beta=0 max_abs=0.00317669 rel=0.000287164
+PASS id=101 M=128 N=256 K=64 alpha=0 beta=1 max_abs=0 rel=0
+PASS id=102 M=128 N=256 K=64 alpha=0 beta=1 max_abs=0 rel=0
+PASS id=101 M=128 N=256 K=64 alpha=0.5 beta=3 max_abs=0.00158834 rel=0.000191249
+PASS id=102 M=128 N=256 K=64 alpha=0.5 beta=3 max_abs=0.00158834 rel=0.000191249
+PASS id=101 M=128 N=256 K=64 alpha=-0.75 beta=-0.25 max_abs=0.00238252 rel=0.000279893
+PASS id=102 M=128 N=256 K=64 alpha=-0.75 beta=-0.25 max_abs=0.00238252 rel=0.000279893
+PASS id=101 M=256 N=128 K=96 alpha=1 beta=0 max_abs=0.00349665 rel=0.00024746
+PASS id=102 M=256 N=128 K=96 alpha=1 beta=0 max_abs=0.00349665 rel=0.00024746
+PASS id=101 M=256 N=128 K=96 alpha=0 beta=1 max_abs=0 rel=0
+PASS id=102 M=256 N=128 K=96 alpha=0 beta=1 max_abs=0 rel=0
+PASS id=101 M=256 N=128 K=96 alpha=0.5 beta=3 max_abs=0.00174832 rel=0.000175458
+PASS id=102 M=256 N=128 K=96 alpha=0.5 beta=3 max_abs=0.00174832 rel=0.000175458
+PASS id=101 M=256 N=128 K=96 alpha=-0.75 beta=-0.25 max_abs=0.00262237 rel=0.000241933
+PASS id=102 M=256 N=128 K=96 alpha=-0.75 beta=-0.25 max_abs=0.00262237 rel=0.000241933
+PASS id=101 M=128 N=128 K=32 alpha=1 beta=0 max_abs=0 rel=0
+PASS id=102 M=128 N=128 K=32 alpha=1 beta=0 max_abs=0.00266957 rel=0.000307324
+PASS id=101 M=128 N=128 K=32 alpha=0 beta=1 max_abs=0 rel=0
+PASS id=102 M=128 N=128 K=32 alpha=0 beta=1 max_abs=0 rel=0
+PASS id=101 M=128 N=128 K=32 alpha=0.5 beta=3 max_abs=0 rel=0
+PASS id=102 M=128 N=128 K=32 alpha=0.5 beta=3 max_abs=0.00133479 rel=0.000215185
+PASS id=101 M=128 N=128 K=32 alpha=-0.75 beta=-0.25 max_abs=0 rel=0
+PASS id=102 M=128 N=128 K=32 alpha=-0.75 beta=-0.25 max_abs=0.00200224 rel=0.000313861
+32 library checks passed
+Device 0: NVIDIA A100-SXM4-40GB (sm_80, 108 SMs, smem/block opt-in 163 KB)
+Running kernel 100: cuBLAS TF32 (Tensor Core)
+dimensions(m=n=k) 128, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.05305, max|ref| 148.5, rel 3.572e-04 -> PASS
+Average elapsed time: (0.000009) s, performance: (  485.3) GFLOPS. size: (128).
+dimensions(m=n=k) 256, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.07639, max|ref| 208.8, rel 3.659e-04 -> PASS
+Average elapsed time: (0.000014) s, performance: ( 2474.9) GFLOPS. size: (256).
+dimensions(m=n=k) 512, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1197, max|ref| 315, rel 3.799e-04 -> PASS
+Average elapsed time: (0.000014) s, performance: (18513.0) GFLOPS. size: (512).
+dimensions(m=n=k) 1024, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1676, max|ref| 480.9, rel 3.484e-04 -> PASS
+Average elapsed time: (0.000043) s, performance: (50339.7) GFLOPS. size: (1024).
+dimensions(m=n=k) 2048, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.2632, max|ref| 701.6, rel 3.751e-04 -> PASS
+Average elapsed time: (0.000230) s, performance: (74598.6) GFLOPS. size: (2048).
+dimensions(m=n=k) 4096, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.3904, max|ref| 1165, rel 3.351e-04 -> PASS
+Average elapsed time: (0.001318) s, performance: (104266.2) GFLOPS. size: (4096).
+dimensions(m=n=k) 8192, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.5483, max|ref| 1599, rel 3.430e-04 -> PASS
+Average elapsed time: (0.008195) s, performance: (134161.4) GFLOPS. size: (8192).
+Device 0: NVIDIA A100-SXM4-40GB (sm_80, 108 SMs, smem/block opt-in 163 KB)
+Running kernel 101: cuBLASLt TF32 (cached heuristic)
+dimensions(m=n=k) 128, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.05225, max|ref| 159.6, rel 3.274e-04 -> PASS
+Average elapsed time: (0.000008) s, performance: (  498.3) GFLOPS. size: (128).
+dimensions(m=n=k) 256, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.07634, max|ref| 230.9, rel 3.305e-04 -> PASS
+Average elapsed time: (0.000013) s, performance: ( 2668.4) GFLOPS. size: (256).
+dimensions(m=n=k) 512, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1151, max|ref| 327.1, rel 3.520e-04 -> PASS
+Average elapsed time: (0.000015) s, performance: (18331.7) GFLOPS. size: (512).
+dimensions(m=n=k) 1024, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1718, max|ref| 493.2, rel 3.483e-04 -> PASS
+Average elapsed time: (0.000043) s, performance: (50147.1) GFLOPS. size: (1024).
+dimensions(m=n=k) 2048, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.2447, max|ref| 694, rel 3.526e-04 -> PASS
+Average elapsed time: (0.000230) s, performance: (74578.7) GFLOPS. size: (2048).
+dimensions(m=n=k) 4096, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.4241, max|ref| 1099, rel 3.858e-04 -> PASS
+Average elapsed time: (0.001319) s, performance: (104238.7) GFLOPS. size: (4096).
+dimensions(m=n=k) 8192, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.5435, max|ref| 1501, rel 3.622e-04 -> PASS
+Average elapsed time: (0.008174) s, performance: (134505.6) GFLOPS. size: (8192).
+Device 0: NVIDIA A100-SXM4-40GB (sm_80, 108 SMs, smem/block opt-in 163 KB)
+Running kernel 102: CUTLASS TF32 (128x128x32, warp 64x32x32, 3 stages)
+dimensions(m=n=k) 128, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.06066, max|ref| 138.8, rel 4.370e-04 -> PASS
+Average elapsed time: (0.000014) s, performance: (  301.6) GFLOPS. size: (128).
+dimensions(m=n=k) 256, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.08186, max|ref| 203.9, rel 4.015e-04 -> PASS
+Average elapsed time: (0.000019) s, performance: ( 1792.6) GFLOPS. size: (256).
+dimensions(m=n=k) 512, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1162, max|ref| 311.7, rel 3.728e-04 -> PASS
+Average elapsed time: (0.000028) s, performance: ( 9477.4) GFLOPS. size: (512).
+dimensions(m=n=k) 1024, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1673, max|ref| 489.5, rel 3.419e-04 -> PASS
+Average elapsed time: (0.000048) s, performance: (44791.8) GFLOPS. size: (1024).
+dimensions(m=n=k) 2048, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.2721, max|ref| 717.2, rel 3.794e-04 -> PASS
+Average elapsed time: (0.000263) s, performance: (65336.9) GFLOPS. size: (2048).
+dimensions(m=n=k) 4096, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.3819, max|ref| 1017, rel 3.755e-04 -> PASS
+Average elapsed time: (0.001619) s, performance: (84900.6) GFLOPS. size: (4096).
+dimensions(m=n=k) 8192, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.5696, max|ref| 1503, rel 3.790e-04 -> PASS
+Average elapsed time: (0.010568) s, performance: (104043.7) GFLOPS. size: (8192).

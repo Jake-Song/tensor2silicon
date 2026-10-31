@@ -1,0 +1,34 @@
+Device 0: NVIDIA A100-SXM4-40GB (sm_80, 108 SMs, smem/block opt-in 163 KB)
+PASS id=101 M=128 N=128 K=32 alpha=1 beta=0 max_abs=0 rel=0
+PASS id=102 M=128 N=128 K=32 alpha=1 beta=0 max_abs=0.00205028 rel=0.000224901
+PASS id=101 M=128 N=128 K=32 alpha=0 beta=1 max_abs=0 rel=0
+PASS id=102 M=128 N=128 K=32 alpha=0 beta=1 max_abs=0 rel=0
+PASS id=101 M=128 N=128 K=32 alpha=0.5 beta=3 max_abs=0 rel=0
+PASS id=102 M=128 N=128 K=32 alpha=0.5 beta=3 max_abs=0.00102496 rel=0.00016999
+PASS id=101 M=128 N=128 K=32 alpha=-0.75 beta=-0.25 max_abs=0 rel=0
+PASS id=102 M=128 N=128 K=32 alpha=-0.75 beta=-0.25 max_abs=0.00153771 rel=0.000221511
+PASS id=101 M=128 N=256 K=64 alpha=1 beta=0 max_abs=0.00317669 rel=0.000287164
+PASS id=102 M=128 N=256 K=64 alpha=1 beta=0 max_abs=0.00317669 rel=0.000287164
+PASS id=101 M=128 N=256 K=64 alpha=0 beta=1 max_abs=0 rel=0
+PASS id=102 M=128 N=256 K=64 alpha=0 beta=1 max_abs=0 rel=0
+PASS id=101 M=128 N=256 K=64 alpha=0.5 beta=3 max_abs=0.00158834 rel=0.000191249
+PASS id=102 M=128 N=256 K=64 alpha=0.5 beta=3 max_abs=0.00158834 rel=0.000191249
+PASS id=101 M=128 N=256 K=64 alpha=-0.75 beta=-0.25 max_abs=0.00238252 rel=0.000279893
+PASS id=102 M=128 N=256 K=64 alpha=-0.75 beta=-0.25 max_abs=0.00238252 rel=0.000279893
+PASS id=101 M=256 N=128 K=96 alpha=1 beta=0 max_abs=0.00349665 rel=0.00024746
+PASS id=102 M=256 N=128 K=96 alpha=1 beta=0 max_abs=0.00349665 rel=0.00024746
+PASS id=101 M=256 N=128 K=96 alpha=0 beta=1 max_abs=0 rel=0
+PASS id=102 M=256 N=128 K=96 alpha=0 beta=1 max_abs=0 rel=0
+PASS id=101 M=256 N=128 K=96 alpha=0.5 beta=3 max_abs=0.00174832 rel=0.000175458
+PASS id=102 M=256 N=128 K=96 alpha=0.5 beta=3 max_abs=0.00174832 rel=0.000175458
+PASS id=101 M=256 N=128 K=96 alpha=-0.75 beta=-0.25 max_abs=0.00262237 rel=0.000241933
+PASS id=102 M=256 N=128 K=96 alpha=-0.75 beta=-0.25 max_abs=0.00262237 rel=0.000241933
+PASS id=101 M=128 N=128 K=32 alpha=1 beta=0 max_abs=0 rel=0
+PASS id=102 M=128 N=128 K=32 alpha=1 beta=0 max_abs=0.00266957 rel=0.000307324
+PASS id=101 M=128 N=128 K=32 alpha=0 beta=1 max_abs=0 rel=0
+PASS id=102 M=128 N=128 K=32 alpha=0 beta=1 max_abs=0 rel=0
+PASS id=101 M=128 N=128 K=32 alpha=0.5 beta=3 max_abs=0 rel=0
+PASS id=102 M=128 N=128 K=32 alpha=0.5 beta=3 max_abs=0.00133479 rel=0.000215185
+PASS id=101 M=128 N=128 K=32 alpha=-0.75 beta=-0.25 max_abs=0 rel=0
+PASS id=102 M=128 N=128 K=32 alpha=-0.75 beta=-0.25 max_abs=0.00200224 rel=0.000313861
+32 library checks passed

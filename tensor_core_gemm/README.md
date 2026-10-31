@@ -26,6 +26,8 @@ TF32는 FP32와 지수 범위(8비트)가 같고 mantissa만 10비트로 줄인 
 | 6 | [06_vectorized_frag](kernels/06_vectorized_frag.cuh) | k·n 순서 재배치로 fragment를 `LDS.128`로, 정수 덧셈 1개로 TF32 반올림, 주소 계산을 루프 밖으로 | kernel 6 (vectorize) |
 | 7 | [07_frag_double_buffer](kernels/07_frag_double_buffer.cuh) | fragment 더블 버퍼링(warp 수준 파이프라인), barrier 앞당기기, block rasterization | — |
 | 100 | cuBLAS `COMPUTE_32F_FAST_TF32` | Tensor Core 목표 상한 | — |
+| 101 | [cuBLASLt TF32](kernels/08_library_gemm.cuh) | row-major descriptor, heuristic 알고리즘 선택, workspace 재사용 | — |
+| 102 | [CUTLASS TF32](kernels/08_library_gemm.cuh) | 공개 TensorOp 구성, 3-stage pipeline (선택 빌드) | — |
 
 PTX 래퍼(`cvt.rna.tf32`, `mma.sync`, `cp.async`)와 fragment 레이아웃 표는 [common.cuh](kernels/common.cuh)에 있습니다.
 
@@ -257,3 +259,84 @@ cuBLAS는 **93.43%**다. 아직 cuBLAS와 같은 활용률에 도달하지 않�
 별도 변환한 입력의 FP32 GEMM 결과에는 1e-5를 적용한다.
 현재 기본 경로와 모든 지원 설정은 **13,224건**을 통과했으며,
 최대 오차는 각각 **3.13e-4 / 1.10e-6**였다.
+
+## cuBLASLt와 CUTLASS 구현
+
+동일한 row-major FP32 입출력 `C = αAB + βC`를 라이브러리 두 가지로 구현했습니다.
+소스는 [08_library_gemm.cuh](kernels/08_library_gemm.cuh)입니다.
+
+| 번호 | 구현 | 주요 설정 |
+|---|---|---|
+| 101 | cuBLASLt | `CUBLAS_COMPUTE_32F_FAST_TF32`, row-major descriptor, heuristic 후보 1개, workspace 상한 32 MiB |
+| 102 | CUTLASS (선택 빌드) | SM80 TensorOp, block 128×128×32, warp 64×32×32, MMA 16×8×8, 3-stage pipeline |
+
+CUTLASS는 FP32 저장 형식에서 TF32로 변환하여 곱하고 FP32로 누적합니다.
+`OpMultiplyAdd`를 명시하여 여러 TF32 곱으로 정확도를 높이는 TF32x3 경로와 구분합니다.
+cuBLASLt의 FAST_TF32는 라이브러리의 연산 허용 모드이며 내부 타일·명령 구성은 라이브러리가 선택합니다.
+두 구현의 결과가 비트 단위로 같다고 가정하지 않습니다.
+
+### 빌드와 실행
+
+cuBLASLt는 기본 빌드에 포함됩니다. CUDA Toolkit의 cuBLASLt가 필요합니다.
+
+```bash
+cd tensor_core_gemm
+make
+./build/tc_gemm 101 4096 128
+```
+
+CUTLASS는 공식 v3.5.1 헤더로 컴파일을 검증했습니다. 외부 의존성은 저장소에 포함하지 않습니다.
+별도 빌드 디렉터리를 사용하므로 기본 실행기와 섞이지 않습니다.
+
+```bash
+git clone --depth 1 --branch v3.5.1 https://github.com/NVIDIA/cutlass.git /tmp/tc-cutlass
+make libraries CUTLASS_DIR=/tmp/tc-cutlass
+./build-libraries/tc_gemm 101 4096 128
+./build-libraries/tc_gemm 102 4096 128
+
+# 직사각형 행렬, 여러 alpha/beta, shape 변경 후 계획 재선택 검증
+make BUILD_DIR=build-libraries \
+  NVCCFLAGS='-O3 -std=c++17 -arch=sm_80 -lineinfo -DTC_ENABLE_CUTLASS -I/tmp/tc-cutlass/include' \
+  check-libraries
+```
+
+cuBLASLt는 첫 호출에서 descriptor·알고리즘·workspace를 준비하고 같은 shape에서는 재사용합니다.
+기존 벤치마크는 정확성 검사와 warmup 후 CUDA event로 반복 구간을 측정하므로 첫 준비 비용은 제외합니다.
+알고리즘 전수 튜닝이나 CUDA Graph 측정은 아니며, 반복 호출 중 CPU dispatch 간격이 측정에 반영될 수 있습니다.
+이 어댑터는 단일 GPU·기본 stream·단일 host thread 실행용입니다.
+
+정확성 검사는 동일한 초기 C를 사용한 cuBLAS FP32 결과와 비교하여
+`max|out-ref| / max(max|ref|, 1e-30) < 1e-3`을 확인합니다.
+추가 검사 프로그램은 고정 seed의 입력과 직사각형 shape를 사용하고 최대 절대 오차도 출력합니다.
+
+검증 범위: 로컬 CUDA 12.0 / `sm_80` 기본·CUTLASS 포함 빌드와 검사 프로그램 컴파일 통과.
+2026-11-01 Colab A100-SXM4-40GB (39.49 GiB, SM80, 108 SM), CUDA 13.0.88에서도
+동일 소스를 빌드하고 GPU 수치 검사·성능 측정을 완료했습니다.
+
+### A100 측정 결과 (2026-11-01)
+
+단위는 TFLOPS이며, `M=N=K`, `α=0.5`, `β=3`, warmup 1회 후 50회 평균입니다.
+이번 실행의 세 구현을 같은 표에서 비교합니다. 앞쪽의 과거 성능 표와는 별도 측정입니다.
+
+| 구현 | 1024 | 2048 | 4096 | 8192 |
+|---|---:|---:|---:|---:|
+| cuBLAS TF32 (100) | 50.34 | 74.60 | 104.27 | 134.16 |
+| cuBLASLt TF32 (101) | 50.15 | 74.58 | 104.24 | 134.51 |
+| CUTLASS TF32 (102) | 44.79 | 65.34 | 84.90 | 104.04 |
+
+직사각형 4개(shape 복귀 포함) × alpha/beta 4조합 × 구현 2개의 **32개 검사 전부 통과**했습니다.
+추가로 세 구현 각각 128~8192의 7개 정방행렬 검사도 모두 통과했습니다.
+정방행렬 검사에서 FP32 기준 최대 정규화 오차는 cuBLASLt `3.858e-4`, CUTLASS `4.370e-4`로,
+허용치 `1e-3` 이내였습니다. 최대 절대 오차는 각각 `0.5435`, `0.5696`입니다.
+
+이번 설정에서 cuBLASLt와 cuBLAS는 비슷했고, CUTLASS 기본 설정은 8192에서 cuBLASLt의 약 77%였습니다.
+CUTLASS 타일·stage·스케줄 튜닝은 수행하지 않았습니다.
+각 벤치마크 프로세스의 입력은 기존 생성기의 같은 분포를 사용하지만 seed가 달라 동일한 값은 아닙니다.
+작은 크기의 시간에는 host dispatch 간격도 반영되며, CUDA Graph 기반 순수 커널 시간은 아닙니다.
+
+[원본 로그·장치 정보·실행 스크립트](benchmarks/library_a100_20261101/),
+[전체 크기별 수치](benchmarks/library_a100_20261101/summary.csv)를 보관했습니다.
+A100 세션 종료 후 서버에 활성 세션이 없음을 확인했습니다.
+
+참고: [CUTLASS Ampere TF32 예제](https://github.com/NVIDIA/cutlass/tree/v3.5.1/examples/14_ampere_tf32_tensorop_gemm),
+[cuBLASLt API](https://docs.nvidia.com/cuda/cublas/index.html#using-the-cublaslt-api).

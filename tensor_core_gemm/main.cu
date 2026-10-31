@@ -10,13 +10,13 @@
 int main(int argc, char **argv) {
   if (argc < 2) {
     fprintf(stderr, "Usage: %s <kernel> [max_size] [min_size]\n"
-                    "  0: cuBLAS FP32, 1-7: Tensor Core kernels, 100: cuBLAS TF32\n",
+                    "  0: cuBLAS FP32, 1-7: Tensor Core kernels, 100: cuBLAS TF32, 101: cuBLASLt TF32, 102: CUTLASS (optional)\n",
             argv[0]);
     return EXIT_FAILURE;
   }
   const int kernel_num = std::stoi(argv[1]);
   if (!is_valid_kernel(kernel_num)) {
-    fprintf(stderr, "Invalid kernel number %d (0-7 or 100)\n", kernel_num);
+    fprintf(stderr, "Invalid kernel number %d (0-7, 100, 101; 102 requires CUTLASS build)\n", kernel_num);
     return EXIT_FAILURE;
   }
   const long max_size = argc >= 3 ? std::stol(argv[2]) : 8192;

@@ -1,4 +1,5 @@
 #include "runner.cuh"
+#include "kernels/08_library_gemm.cuh"
 
 #include "kernels/01_wmma_naive.cuh"
 #include "kernels/02_wmma_smem_warptile.cuh"
@@ -421,7 +422,12 @@ void runFragPipe(int M, int N, int K, float alpha, float *A, float *B,
 }
 
 bool is_valid_kernel(int kernel_num) {
-  return (kernel_num >= 0 && kernel_num <= 7) || kernel_num == 100;
+  return (kernel_num >= 0 && kernel_num <= 7) || kernel_num == 100 ||
+         kernel_num == 101
+#ifdef TC_ENABLE_CUTLASS
+         || kernel_num == 102
+#endif
+         ;
 }
 
 const char *kernel_name(int kernel_num) {
@@ -442,6 +448,12 @@ const char *kernel_name(int kernel_num) {
     return "vectorized fragments + fast TF32 round";
   case 7:
     return "fragment double buffering (warp-level pipeline)";
+  case 101:
+    return "cuBLASLt TF32 (cached heuristic)";
+#ifdef TC_ENABLE_CUTLASS
+  case 102:
+    return "CUTLASS TF32 (128x128x32, warp 64x32x32, 3 stages)";
+#endif
   case 100:
     return "cuBLAS TF32 (Tensor Core)";
   default:
@@ -476,6 +488,14 @@ void run_kernel(int kernel_num, int M, int N, int K, float alpha, float *A,
   case 7:
     runFragPipe(M, N, K, alpha, A, B, beta, C);
     break;
+  case 101:
+    runCublasLt(M, N, K, alpha, A, B, beta, C);
+    break;
+#ifdef TC_ENABLE_CUTLASS
+  case 102:
+    runCutlass(M, N, K, alpha, A, B, beta, C);
+    break;
+#endif
   case 100:
     runCublas(handle, CUBLAS_COMPUTE_32F_FAST_TF32, M, N, K, alpha, A, B, beta,
               C);

@@ -1,0 +1,23 @@
+Device 0: NVIDIA A100-SXM4-40GB (sm_80, 108 SMs, smem/block opt-in 163 KB)
+Running kernel 101: cuBLASLt TF32 (cached heuristic)
+dimensions(m=n=k) 128, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.05225, max|ref| 159.6, rel 3.274e-04 -> PASS
+Average elapsed time: (0.000008) s, performance: (  498.3) GFLOPS. size: (128).
+dimensions(m=n=k) 256, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.07634, max|ref| 230.9, rel 3.305e-04 -> PASS
+Average elapsed time: (0.000013) s, performance: ( 2668.4) GFLOPS. size: (256).
+dimensions(m=n=k) 512, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1151, max|ref| 327.1, rel 3.520e-04 -> PASS
+Average elapsed time: (0.000015) s, performance: (18331.7) GFLOPS. size: (512).
+dimensions(m=n=k) 1024, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.1718, max|ref| 493.2, rel 3.483e-04 -> PASS
+Average elapsed time: (0.000043) s, performance: (50147.1) GFLOPS. size: (1024).
+dimensions(m=n=k) 2048, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.2447, max|ref| 694, rel 3.526e-04 -> PASS
+Average elapsed time: (0.000230) s, performance: (74578.7) GFLOPS. size: (2048).
+dimensions(m=n=k) 4096, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.4241, max|ref| 1099, rel 3.858e-04 -> PASS
+Average elapsed time: (0.001319) s, performance: (104238.7) GFLOPS. size: (4096).
+dimensions(m=n=k) 8192, alpha: 0.5, beta: 3.0
+  vs cuBLAS FP32: max|diff| 0.5435, max|ref| 1501, rel 3.622e-04 -> PASS
+Average elapsed time: (0.008174) s, performance: (134505.6) GFLOPS. size: (8192).
