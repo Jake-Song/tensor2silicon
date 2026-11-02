@@ -1,0 +1,6 @@
+DIAGNOSTIC split_vs_original=0 original_vs_quantized=1.4253e-05 row=2304 col=2251 split=799.823364258 original=799.823364258 fp32_quantized=799.838256836 fp64_quantized=799.835975764 split_abs_error=0.0126115063322 reference_abs_error=0.00228107179282
+{"size":4096,"round":0,"kernel":10,"ms":1.105247974,"tflops":124.351237601,"fp32_error":0.000385275988043,"quantized_tf32_error":1.42530341146e-05,"pass":true,"start_us":1793631275719816,"stop_us":1793631275721006}
+{"size":4096,"round":0,"kernel":7,"ms":1.634464025,"tflops":84.088087182,"fp32_error":0.000385173765706,"quantized_tf32_error":1.4837174857e-05,"pass":true,"start_us":1793631275981285,"stop_us":1793631275983008}
+{"size":4096,"round":0,"kernel":8,"ms":1.441215992,"tflops":95.363189305,"fp32_error":0.000385275988043,"quantized_tf32_error":1.42530341146e-05,"pass":true,"start_us":1793631276242888,"stop_us":1793631276244399}
+{"size":4096,"round":0,"kernel":9,"ms":1.384256005,"tflops":99.287236571,"fp32_error":0.000385275988043,"quantized_tf32_error":1.42530341146e-05,"pass":true,"start_us":1793631276503304,"stop_us":1793631276504778}
+{"size":4096,"round":0,"kernel":100,"ms":1.332095981,"tflops":103.174962967,"fp32_error":0.000385275988043,"quantized_tf32_error":1.42530341146e-05,"pass":true,"start_us":1793631276770650,"stop_us":1793631276772070}

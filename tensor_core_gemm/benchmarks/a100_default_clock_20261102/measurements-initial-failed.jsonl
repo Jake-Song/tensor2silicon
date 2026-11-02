@@ -1,0 +1,1 @@
+FAIL size=4096 round=0 kernel=10 fp32=0.000385276 tf32=1.4253e-05

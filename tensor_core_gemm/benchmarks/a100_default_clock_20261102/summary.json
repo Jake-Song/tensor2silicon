@@ -1,0 +1,413 @@
+{
+  "method": {
+    "sizes": [
+      4096,
+      8192
+    ],
+    "kernels": [
+      7,
+      8,
+      9,
+      10,
+      100
+    ],
+    "rounds": 5,
+    "repeats": 50,
+    "warmup": 5,
+    "alpha": 0.5,
+    "beta": 3,
+    "clock_policy": "driver defaults, unlocked",
+    "seed_inputs": 20261016,
+    "seed_order": 7,
+    "timing": "CUDA event; excludes allocation, reference, validation and host/device transfer; includes possible host dispatch gaps",
+    "c_reset": "before each accuracy check and timed batch, not between 50 repeated updates",
+    "correctness_gates": "original FP32 reference <1e-3 and same-input cuBLAS TF32 <1e-5; tc_check independently quantized short-K <1e-5",
+    "long_k_quantized_fp32": "diagnostic only; initial attempt failed; identical error reproduced with original implementation and cuBLAS TF32; see diagnosis.log"
+  },
+  "environment": {
+    "gpu": "NVIDIA A100-SXM4-40GB",
+    "memory_gib": 39.4935302734375,
+    "capability": [
+      8,
+      0
+    ],
+    "torch": "2.11.0+cu130",
+    "clock_policy": "unlocked default",
+    "source_commit": "dcdefd41649df3bf0e0d0f1098a1a27c92cbde70"
+  },
+  "results": [
+    {
+      "size": 4096,
+      "kernel": 7,
+      "tflops_median": 91.058619807,
+      "ms_median": 1.509345889,
+      "tflops_min": 85.036697316,
+      "tflops_max": 97.431364067,
+      "max_fp32_error": 0.000385173765706,
+      "max_quantized_tf32_error": 1.4837174857e-05,
+      "max_cublas_tf32_error": 1.75243881068e-06,
+      "quantized_fp32_diagnostic_all_within_1e5": false,
+      "clock_samples": 2,
+      "percent_cublas": 77.20129455763801,
+      "sm_mhz": {
+        "min": 1110.0,
+        "max": 1230.0,
+        "median": 1170.0
+      },
+      "memory_mhz": {
+        "min": 1215.0,
+        "max": 1215.0,
+        "median": 1215.0
+      },
+      "power_w": {
+        "min": 55.23,
+        "max": 263.7,
+        "median": 159.465
+      },
+      "temperature_c": {
+        "min": 40.0,
+        "max": 40.0,
+        "median": 40.0
+      },
+      "throttle_reasons": [
+        "0x0000000000000000"
+      ]
+    },
+    {
+      "size": 4096,
+      "kernel": 8,
+      "tflops_median": 110.96437345,
+      "ms_median": 1.238586307,
+      "tflops_min": 104.881001501,
+      "tflops_max": 121.918235896,
+      "max_fp32_error": 0.000385275988043,
+      "max_quantized_tf32_error": 1.42530341146e-05,
+      "max_cublas_tf32_error": 0,
+      "quantized_fp32_diagnostic_all_within_1e5": false,
+      "clock_samples": 4,
+      "percent_cublas": 94.07778525826778,
+      "sm_mhz": {
+        "min": 1200.0,
+        "max": 1410.0,
+        "median": 1245.0
+      },
+      "memory_mhz": {
+        "min": 1215.0,
+        "max": 1215.0,
+        "median": 1215.0
+      },
+      "power_w": {
+        "min": 61.14,
+        "max": 266.32,
+        "median": 125.64500000000001
+      },
+      "temperature_c": {
+        "min": 39.0,
+        "max": 44.0,
+        "median": 41.0
+      },
+      "throttle_reasons": [
+        "0x0000000000000000"
+      ]
+    },
+    {
+      "size": 4096,
+      "kernel": 9,
+      "tflops_median": 109.248118479,
+      "ms_median": 1.258044124,
+      "tflops_min": 100.302363452,
+      "tflops_max": 127.661277135,
+      "max_fp32_error": 0.000385275988043,
+      "max_quantized_tf32_error": 1.42530341146e-05,
+      "max_cublas_tf32_error": 0,
+      "quantized_fp32_diagnostic_all_within_1e5": false,
+      "clock_samples": 2,
+      "percent_cublas": 92.62271043028323,
+      "sm_mhz": {
+        "min": 1095.0,
+        "max": 1410.0,
+        "median": 1252.5
+      },
+      "memory_mhz": {
+        "min": 1215.0,
+        "max": 1215.0,
+        "median": 1215.0
+      },
+      "power_w": {
+        "min": 103.74,
+        "max": 179.26,
+        "median": 141.5
+      },
+      "temperature_c": {
+        "min": 40.0,
+        "max": 43.0,
+        "median": 41.5
+      },
+      "throttle_reasons": [
+        "0x0000000000000000",
+        "0x0000000000000004"
+      ]
+    },
+    {
+      "size": 4096,
+      "kernel": 10,
+      "tflops_median": 127.233483667,
+      "ms_median": 1.080210567,
+      "tflops_min": 104.488224754,
+      "tflops_max": 131.124175156,
+      "max_fp32_error": 0.000385275988043,
+      "max_quantized_tf32_error": 1.42530341146e-05,
+      "max_cublas_tf32_error": 0,
+      "quantized_fp32_diagnostic_all_within_1e5": false,
+      "clock_samples": 4,
+      "percent_cublas": 107.87105790741838,
+      "sm_mhz": {
+        "min": 1110.0,
+        "max": 1395.0,
+        "median": 1365.0
+      },
+      "memory_mhz": {
+        "min": 1215.0,
+        "max": 1215.0,
+        "median": 1215.0
+      },
+      "power_w": {
+        "min": 66.18,
+        "max": 210.54,
+        "median": 121.515
+      },
+      "temperature_c": {
+        "min": 38.0,
+        "max": 44.0,
+        "median": 41.5
+      },
+      "throttle_reasons": [
+        "0x0000000000000000",
+        "0x0000000000000004"
+      ]
+    },
+    {
+      "size": 4096,
+      "kernel": 100,
+      "tflops_median": 117.949602178,
+      "ms_median": 1.165234566,
+      "tflops_min": 104.261662737,
+      "tflops_max": 132.003533837,
+      "max_fp32_error": 0.000385275988043,
+      "max_quantized_tf32_error": 1.42530341146e-05,
+      "max_cublas_tf32_error": 0,
+      "quantized_fp32_diagnostic_all_within_1e5": false,
+      "clock_samples": 2,
+      "percent_cublas": 100.0,
+      "sm_mhz": {
+        "min": 1410.0,
+        "max": 1410.0,
+        "median": 1410.0
+      },
+      "memory_mhz": {
+        "min": 1215.0,
+        "max": 1215.0,
+        "median": 1215.0
+      },
+      "power_w": {
+        "min": 69.42,
+        "max": 69.94,
+        "median": 69.68
+      },
+      "temperature_c": {
+        "min": 39.0,
+        "max": 42.0,
+        "median": 40.5
+      },
+      "throttle_reasons": [
+        "0x0000000000000000"
+      ]
+    },
+    {
+      "size": 8192,
+      "kernel": 7,
+      "tflops_median": 117.81027439,
+      "ms_median": 9.332901001,
+      "tflops_min": 117.635796674,
+      "tflops_max": 117.9633479,
+      "max_fp32_error": 0.000331462930816,
+      "max_quantized_tf32_error": 2.87498282465e-05,
+      "max_cublas_tf32_error": 2.9056419538e-06,
+      "quantized_fp32_diagnostic_all_within_1e5": false,
+      "clock_samples": 16,
+      "percent_cublas": 86.8016021656527,
+      "sm_mhz": {
+        "min": 1395.0,
+        "max": 1410.0,
+        "median": 1395.0
+      },
+      "memory_mhz": {
+        "min": 1215.0,
+        "max": 1215.0,
+        "median": 1215.0
+      },
+      "power_w": {
+        "min": 99.42,
+        "max": 413.02,
+        "median": 402.15999999999997
+      },
+      "temperature_c": {
+        "min": 48.0,
+        "max": 56.0,
+        "median": 52.0
+      },
+      "throttle_reasons": [
+        "0x0000000000000000",
+        "0x0000000000000004"
+      ]
+    },
+    {
+      "size": 8192,
+      "kernel": 8,
+      "tflops_median": 130.869226589,
+      "ms_median": 8.401605606,
+      "tflops_min": 130.437127016,
+      "tflops_max": 131.377259544,
+      "max_fp32_error": 0.000331845196911,
+      "max_quantized_tf32_error": 3.04319990482e-05,
+      "max_cublas_tf32_error": 0,
+      "quantized_fp32_diagnostic_all_within_1e5": false,
+      "clock_samples": 15,
+      "percent_cublas": 96.42332641124268,
+      "sm_mhz": {
+        "min": 1350.0,
+        "max": 1410.0,
+        "median": 1350.0
+      },
+      "memory_mhz": {
+        "min": 1215.0,
+        "max": 1215.0,
+        "median": 1215.0
+      },
+      "power_w": {
+        "min": 391.03,
+        "max": 423.28,
+        "median": 403.63
+      },
+      "temperature_c": {
+        "min": 49.0,
+        "max": 56.0,
+        "median": 53.0
+      },
+      "throttle_reasons": [
+        "0x0000000000000004"
+      ]
+    },
+    {
+      "size": 8192,
+      "kernel": 9,
+      "tflops_median": 133.742721181,
+      "ms_median": 8.221095085,
+      "tflops_min": 133.399907228,
+      "tflops_max": 134.047032738,
+      "max_fp32_error": 0.000331845196911,
+      "max_quantized_tf32_error": 3.04319990482e-05,
+      "max_cublas_tf32_error": 0,
+      "quantized_fp32_diagnostic_all_within_1e5": false,
+      "clock_samples": 14,
+      "percent_cublas": 98.54049264051606,
+      "sm_mhz": {
+        "min": 1335.0,
+        "max": 1410.0,
+        "median": 1335.0
+      },
+      "memory_mhz": {
+        "min": 1215.0,
+        "max": 1215.0,
+        "median": 1215.0
+      },
+      "power_w": {
+        "min": 343.25,
+        "max": 435.01,
+        "median": 403.9
+      },
+      "temperature_c": {
+        "min": 47.0,
+        "max": 55.0,
+        "median": 52.0
+      },
+      "throttle_reasons": [
+        "0x0000000000000004"
+      ]
+    },
+    {
+      "size": 8192,
+      "kernel": 10,
+      "tflops_median": 135.402271907,
+      "ms_median": 8.120333672,
+      "tflops_min": 135.394846074,
+      "tflops_max": 135.583494967,
+      "max_fp32_error": 0.000331845196911,
+      "max_quantized_tf32_error": 3.04319990482e-05,
+      "max_cublas_tf32_error": 0,
+      "quantized_fp32_diagnostic_all_within_1e5": false,
+      "clock_samples": 15,
+      "percent_cublas": 99.76323541603242,
+      "sm_mhz": {
+        "min": 1320.0,
+        "max": 1395.0,
+        "median": 1320.0
+      },
+      "memory_mhz": {
+        "min": 1215.0,
+        "max": 1215.0,
+        "median": 1215.0
+      },
+      "power_w": {
+        "min": 190.15,
+        "max": 449.96,
+        "median": 402.57
+      },
+      "temperature_c": {
+        "min": 44.0,
+        "max": 54.0,
+        "median": 52.0
+      },
+      "throttle_reasons": [
+        "0x0000000000000004"
+      ]
+    },
+    {
+      "size": 8192,
+      "kernel": 100,
+      "tflops_median": 135.723617365,
+      "ms_median": 8.101107597,
+      "tflops_min": 135.314724348,
+      "tflops_max": 135.9231828,
+      "max_fp32_error": 0.000331845196911,
+      "max_quantized_tf32_error": 3.04319990482e-05,
+      "max_cublas_tf32_error": 0,
+      "quantized_fp32_diagnostic_all_within_1e5": false,
+      "clock_samples": 15,
+      "percent_cublas": 100.0,
+      "sm_mhz": {
+        "min": 1290.0,
+        "max": 1395.0,
+        "median": 1305.0
+      },
+      "memory_mhz": {
+        "min": 1215.0,
+        "max": 1215.0,
+        "median": 1215.0
+      },
+      "power_w": {
+        "min": 395.99,
+        "max": 451.17,
+        "median": 408.6
+      },
+      "temperature_c": {
+        "min": 44.0,
+        "max": 55.0,
+        "median": 52.0
+      },
+      "throttle_reasons": [
+        "0x0000000000000004"
+      ]
+    }
+  ]
+}

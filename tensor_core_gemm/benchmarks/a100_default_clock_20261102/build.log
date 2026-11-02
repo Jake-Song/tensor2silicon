@@ -1,0 +1,3 @@
+nvcc -O3 -std=c++17 -arch=sm_80 -lineinfo -c runner.cu -o build/runner.o
+nvcc -O3 -std=c++17 -arch=sm_80 -lineinfo -o build/tc_gemm main.cu build/runner.o -lcublas -lcublasLt
+nvcc -O3 -std=c++17 -arch=sm_80 -lineinfo -o build/tc_check check.cu build/runner.o -lcublas -lcublasLt

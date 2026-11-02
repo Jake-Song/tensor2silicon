@@ -1,0 +1,19 @@
+{
+  "benchmarks/a100_default_clock_20261102/benchmark.cu": "ee35346113025a597e57c7b5624ec38f78e1a1198ccaa830f06264d2ba06c161",
+  "benchmarks/a100_default_clock_20261102/resume_benchmark.py": "5dff571d03f0c0b78e771a6b38b0d8c6b455effa91dc5eaad727f0cdb5dcf607",
+  "runner.cu": "5d7b9dabae3bd614236f55d18b2e633176fb2422eb45cfe32868c8a3538e3c48",
+  "runner.cuh": "d12c01eea24acf077deb02eea49000339f375bbc13808e786ec012ff2d2cc91f",
+  "kernels/01_wmma_naive.cuh": "561d2ed67710aeaede47cacd53164c2e3a6bf462343ced4585c9b89412253103",
+  "kernels/02_wmma_smem_warptile.cuh": "426028bb7ba0cc9d6d82f53801071c68ddd61f5105466508d200c9abc204f30c",
+  "kernels/03_mma_sync_tf32.cuh": "651689f0f58233584d2a956a8476f08c79826a63a47c48f9d64f61cfbfbf8068",
+  "kernels/04_cp_async_pipeline.cuh": "c9fc27e75fb4e5e3784a9070a8e7c8047e347ec8bcd0106ed0cb0a985692fb51",
+  "kernels/05_swizzle_tuned.cuh": "6400778d05e2b63bcbaa72afdcf799f6d66c42134c400344a9678d767f2a9988",
+  "kernels/06_vectorized_frag.cuh": "aa79b98496dbd9f3c5183ce65aa373775a50af283b98455a19b7f4ddea7af803",
+  "kernels/07_frag_double_buffer.cuh": "7cdc78f18f616788c29c3d57455a5df4a53d40296d2280b9863428ba2c704b75",
+  "kernels/08_ldmatrix_distributed.cuh": "9fe23d400969a295d2cb43b0e9a462330ff00b2ddb129f76fe93f0dcc0df94ac",
+  "kernels/09_prefetch_epilogue.cuh": "3a52b656a30eb0bb294b1816c188eb0611bf9c41ae1167b01377ffd42607872a",
+  "kernels/10_raked_b_copy.cuh": "5a2a01e5a280d6b74b3f1a002c5cde5bdc9d5064fd698e33069f1d14cb6bfe8e",
+  "kernels/99_library_gemm.cuh": "28c141ec29863271d5d70e94205c89186809da815b621dddb5bf2bdb98c1c837",
+  "kernels/common.cuh": "09b8c2d294225353fbf34269f9c54292b1b761ceb691bc1fc22d92d95a353bcd",
+  "kernels/detail/frag_pipe_tuning.cuh": "fdf98f7ba1351f04df3f4a90a4510eda734e02199ec19c084417f3bed52bc230"
+}

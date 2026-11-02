@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/content/tc-default/tensor_core_gemm/benchmarks/a100_default_clock_20261102/run_remote.py", line 47, in <module>
+    try: main()
+         ~~~~^^
+  File "/content/tc-default/tensor_core_gemm/benchmarks/a100_default_clock_20261102/run_remote.py", line 43, in main
+    try: command(['./build/default_clock_bench'],'measurements.jsonl')
+         ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/content/tc-default/tensor_core_gemm/benchmarks/a100_default_clock_20261102/run_remote.py", line 11, in command
+    if p.returncode: raise RuntimeError(f'{filename}: exit {p.returncode}')
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: measurements.jsonl: exit 4
