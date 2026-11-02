@@ -35,3 +35,8 @@ struct FragPipeConfig {
   int rounding = -1; // automatic, 0: fast bits, 1: guarded, 2: guarded deferred, 3: fast deferred
 };
 void configure_frag_pipe(FragPipeConfig config);
+
+// Historical auto policy and explicit FragPipeConfig combinations, kept for tuning.
+// Numbered stages 7-10 are fixed educational paths; call this API to tune modes.
+void run_configured_frag_pipe(int M, int N, int K, float alpha, float *A,
+                              float *B, float beta, float *C);

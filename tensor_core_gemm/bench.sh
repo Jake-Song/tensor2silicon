@@ -4,7 +4,7 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 MAX_SIZE=${MAX_SIZE:-8192}
-KERNELS=(0 100 1 2 3 4 5 6 7)
+KERNELS=(1 2 3 4 5 6 7 8 9 10 0 100)
 mkdir -p results
 
 for k in "${KERNELS[@]}"; do

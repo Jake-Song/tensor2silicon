@@ -1,4 +1,4 @@
-# Worklog: TF32 Tensor Core GEMM 최적화 (A100)
+# 작업 기록: TF32 Tensor Core GEMM 최적화 (A100)
 
 2026-10-15 · Colab A100-SXM4-40GB · CUDA 13.0.88 · Nsight Compute 2025.3.1
 
@@ -423,7 +423,7 @@ TF32 a0=(g,t), a1=(g+8,t), a2=(g,t+4), a3=(g+8,t+4)에 맞는다.
 - A SMEM chunk XOR: row&7, 각 8행의 16-byte row chunk를 다른 bank로 배치.
 - LDMATRIX 주소: rows lane&15, columns 8*step + 4*(lane>>4).
 - B도 K를 t / t+4로 읽고, SMEM swizzle 기준을 row&3으로 바꿔 같은 K 순열을 유지.
-- `TC7_ORDER=3`: LDMATRIX + row-major MMA, `4`: LDMATRIX + row serpentine.
+- `TC7_ORDER=3`: LDMATRIX + 행 우선 MMA, `4`: LDMATRIX + 행 지그재그 MMA.
   기본 order는 아직 0이며, 새 경로는 실험 옵션이다.
 - 복사 0/1/2, tile 0~6, 새 순서 3/4 전체의 정확도를 먼저 검사한다.
   다음 4096/8192에서 cfg0/1 × order3/4 × copy1/2를 비교하고, 좋아지면
@@ -467,354 +467,402 @@ memory barrier를 두었다. CUDA 동기화/수식/오차 기준은 바꾸지 �
 - 목표는 여전히 active. cuBLAS의 8192 Tensor elapsed 93.38%와 아직 차이가 있다.
 
 
-## v7 結果 / v8 latest runtime state
+## v7 결과 / v8의 최신 실행 상태
 
-v7 finished: 303/303 broad correctness PASS. No spills in epi4/8.
+v7이 완료됐다. 전체 정확도 검사 303/303 PASS. epi4/8에서 spill은 없었다.
 - 4096: cfg0/order3/copy1/epi1 99.705, cfg1/order3/copy2/epi8 101.439 TFLOPS;
-  cuBLAS 108.220 (3-round screen).
+  cuBLAS 108.220 (3회 예비 측정).
 - 8192: cfg0/order3/copy1/epi1 110.019, cfg1/order3/copy2/epi8 109.982;
-  cfg0/order3/copy1/epi4 only 107.265. cuBLAS 117.410.
-- Hence epilogue batch loading helps some layouts/sizes, but does not universally improve.
-  The script's 8192 gate skipped confirmation; 4096/small promising candidates still need 5-round confirmation.
-- Records in `results/2026-10-16/v7/`, remote `/content/tcgemm-v7-results.tgz`.
+  cfg0/order3/copy1/epi4는 107.265에 그쳤다. cuBLAS 117.410.
+- epilogue 일괄 읽기는 일부 배치·크기에는 도움이 되지만 항상 개선되지는 않는다.
+  스크립트의 8192 조건을 통과하지 못해 재확인은 건너뛰었다. 4096과 작은 크기의
+  유망 후보는 여전히 5회 재확인이 필요하다.
+- 기록: `results/2026-10-16/v7/`, 원격 `/content/tcgemm-v7-results.tgz`.
 
-v8 is currently executing, local unified handle **86735**, Colab `tcgemm-opt`.
-It bounds C buffers using a non-unrolled outer loop processing two batches at a time,
-with fixed buffer indices 0/1. This avoids retaining C values for all unrolled batches.
-The default large square path now selects verified cfg0/order3/copy1/epi1 automatically.
-`FragPipeConfig.order=-1` means automatic; explicit legacy/config candidates remain fixed.
-Source/archive `/content/tcgemm-v8.tgz`; run dir `/content/tcgemm-v8/tensor_core_gemm`;
-results `/content/tcgemm-v8-results.tgz`; script `results/2026-10-16/test_v8.py`.
-Build passed. Native default correctness has passed through 8192; broad candidates still running
-at the latest handle poll. Default 4096 99.621 / 8192 109.907 TFLOPS were printed.
-Do not restart while a tool/process is live or merely because observation timed out.
-Current worktree is this v8 experiment; automatic epi remains 1 pending results.
+v8이 현재 실행 중이다. 로컬 통합 실행 핸들은 **86735**, Colab 세션은 `tcgemm-opt`다.
+외부 루프를 펼치지 않고 한 번에 두 배치를 처리하며 버퍼 인덱스를 0/1로 고정해
+C 버퍼 크기를 제한한다. 펼쳐진 모든 배치의 C 값을 동시에 보관하지 않도록 한 것이다.
+큰 정방행렬의 기본 경로는 검증된 cfg0/order3/copy1/epi1을 자동 선택한다.
+`FragPipeConfig.order=-1`은 자동 선택을 뜻하며, 명시한 기존 구성과 후보 설정은 고정된다.
+소스 압축파일 `/content/tcgemm-v8.tgz`, 실행 디렉터리 `/content/tcgemm-v8/tensor_core_gemm`,
+결과 `/content/tcgemm-v8-results.tgz`, 스크립트 `results/2026-10-16/test_v8.py`.
+빌드는 통과했다. 네이티브 기본 경로는 8192까지 정확도 검사를 통과했으며,
+마지막 핸들 조회 시 전체 후보 검사는 계속 실행 중이었다.
+기본 경로에서 4096 99.621 / 8192 109.907 TFLOPS가 출력됐다.
+도구·프로세스가 실행 중이거나 단순히 관측 시간이 초과됐다는 이유로 재시작하지 않는다.
+현재 작업 트리는 v8 실험 상태다. 결과가 나오기 전까지 자동 epi는 1을 유지한다.
 
-### New evidence for a possible next layout experiment (not implemented)
+### 다음 배치 실험을 위한 새 근거 (아직 구현하지 않음)
 
-cuBLAS SASS differs further: B uses scalar LDS, and the epilogue uses STS.64,
-whereas custom permutes N to vectorize B LDS.128 and writes STS.128.
-SourceCounters show custom STS.128 wavefronts 131072 vs ideal 65536 (2x),
-cuBLAS STS.64 wavefronts 32768 == ideal 32768. These are actual bank conflict measurements.
-The PC samples also show custom C-load FMUL long-scoreboard samples 25445 vs cuBLAS 5681.
-Do not treat instruction count alone as a bottleneck; cuBLAS executes more instructions overall.
+cuBLAS SASS에는 추가 차이가 있다. B는 스칼라 LDS, epilogue는 STS.64를 쓴다.
+반면 자체 구현은 N 순열로 B의 LDS.128을 벡터화하고 STS.128로 쓴다.
+SourceCounters에서 자체 STS.128의 wavefront 수는 이상적인 65536 대비 131072로 2배다.
+cuBLAS STS.64는 실제 32768 == 이상적인 32768이다. 실제 측정된 bank conflict 근거다.
+PC 표본에서도 C 읽기 뒤 FMUL의 long-scoreboard 표본은 자체 구현 25445, cuBLAS 5681이다.
+cuBLAS의 전체 실행 명령은 더 많으므로 명령 수만으로 병목을 판단하지 않는다.
 
-If v8 does not close the gap, a coherent experiment is natural N + scalar B (matching cuBLAS):
-- Keep LDMATRIX A/natural K. B fragment logical columns become warpCol*WN + 8*n + g,
-  K rows 8*step + t + 4*r2. B SMEM chunk XOR becomes (row&3)<<1, including NFRAG8.
-  This makes scalar B LDS bank-free: column low 3 bits=g, bank high 2 bits XOR t.
-- Precompute B fragment addresses outside the K loop; each scalar value gets the same +0x1000 rounding.
-- C accumulator maps to column warpCol*WN + 8*n + 2*t. Store each pair e0/e1 as float2,
-  use LDC=BN+8, then existing coalesced epilogue reads the same natural row-major C.
-  STS.64 half-warp banks become 8*g+2*t, covering all 32 banks without conflicts.
-- Possible new TC7_ORDER=5 (natural N, row-major) / 6 (natural N, row serpentine).
-  Existing 0..4 retain old layout. No such paths are currently implemented.
-- If adding order 5/6, update mask offsets to 21/42 for epi4/8 (7 orders * 3 copies),
-  using uint64_t to avoid bit collisions (max bit 62). Current 15/30 only covers 5 orders.
-- Validate all new copy/layout/epi combinations at 128/256/512 first; then screen
-  cfg0/1, new orders, copies1/2, epis1/4/8 at 4096/8192 once; confirm winners 5 rounds.
+v8이 격차를 충분히 줄이지 못하면 자연 N 배치 + 스칼라 B 읽기를 함께 실험한다.
+- LDMATRIX A와 자연 K 배치는 유지한다. B fragment의 논리 열은 warpCol*WN + 8*n + g,
+  K행은 8*step + t + 4*r2로 정한다. B SMEM chunk XOR은 NFRAG8에서도 (row&3)<<1이다.
+  스칼라 B LDS의 열 하위 3비트는 g, bank 상위 2비트는 t와 XOR되어 충돌을 피한다.
+- B fragment 주소를 K 루프 밖에서 미리 계산하고, 각 스칼라에 같은 +0x1000 반올림을 적용한다.
+- C 누산기의 열은 warpCol*WN + 8*n + 2*t다. e0/e1 쌍을 float2로 저장하고
+  LDC=BN+8을 사용한다. 기존 병합 접근 epilogue는 자연 행 우선 C를 그대로 읽는다.
+  STS.64의 half-warp bank는 8*g+2*t가 되어 32개 bank를 충돌 없이 덮는다.
+- 새 TC7_ORDER 후보는 5(자연 N, 행 우선) / 6(자연 N, 행 지그재그)다.
+  기존 0..4의 배치는 유지한다. 현재 이 경로들은 구현되지 않았다.
+- order 5/6을 추가하면 epi4/8의 마스크 오프셋을 21/42로 바꿔야 한다(7개 순서 * 3개 복사).
+  uint64_t로 비트 충돌을 피한다(최대 비트 62). 현재 15/30은 순서 5개만 지원한다.
+- 새 복사·배치·epi 조합을 128/256/512에서 먼저 모두 검증한다. 이후 4096/8192에서
+  cfg0/1, 새 순서, copies1/2, epis1/4/8을 한 번 탐색하고 우승 후보를 5회 재확인한다.
 
-The goal remains active: strongest verified Tensor elapsed is 87.42%, cuBLAS 93.38%.
-Latest committed-style summary artifact: `a100_2026-10-16-ldmatrix-summary.json` (v6).
-All `/tmp` helper files may disappear across turns; project results scripts persist.
+목표는 계속 진행 중이다. 검증된 최고 Tensor elapsed 사용률은 87.42%, cuBLAS는 93.38%다.
+최신 요약 산출물은 `a100_2026-10-16-ldmatrix-summary.json`(v6)이다.
+`/tmp` 보조 파일은 턴 사이에 사라질 수 있지만 프로젝트 결과 스크립트는 보존된다.
 
 
-## v8 recent poll and next-step evidence
+## v8 최근 조회 결과와 다음 단계의 근거
 
-Handle 86735 is still live; v8 broad correctness finished **303/303 PASS**.
-Three-round screening (1140 MHz) is complete:
-- 4096: default/cfg0-order3-copy1 epi1 99.67 TFLOPS;
+핸들 86735는 계속 실행 중이며, v8 전체 정확도 검사는 **303/303 PASS**로 끝났다.
+1140 MHz에서 3회 예비 측정도 완료됐다.
+- 4096: 기본 경로/cfg0-order3-copy1 epi1 99.67 TFLOPS;
   cfg0-order3-copy1-epi4 **104.13**; cuBLAS 108.23.
-- 8192: default 109.96, cfg0-order3-copy1-epi1 109.98;
+- 8192: 기본 경로 109.96, cfg0-order3-copy1-epi1 109.98;
   cfg0-order3-copy1-epi4 **112.95**; cuBLAS 117.43.
-- The script is now doing 5-round confirmation, then ncu for baseline/epi4.
-  Do not mark these screening values as final. Poll 86735 first or inspect the same remote job.
+- 스크립트는 현재 5회 재확인 중이며, 이후 기준 경로/epi4의 ncu를 수집한다.
+  예비 측정값을 최종값으로 표시하지 않는다. 먼저 86735를 조회하거나 같은 원격 작업을 확인한다.
 
-Further confirmed cuBLAS layout evidence:
-- cuBLAS B loads are scalar `LDS` (default 32-bit), not LDS.128; its A is LDSM.16.M88.4.
-- cuBLAS C stores are STS.64 with zero excessive wavefronts; custom STS.128 has 2x ideal wavefronts.
-- A coherent follow-up is *natural N*, not just another traversal order:
-  B source col=warpCol*WN+8*n+g, K=t+4*r2, with chunk XOR `(row&3)<<1`.
-  C store col=warpCol*WN+8*n+2*t, float2 store for e0/e1, **LDC=BN+8**.
-  This gives bank-free STS.64 (half warp bank index 8*g+2*t), and existing float4 C read stays coalesced.
-  Current custom N permutation (g*NFRAG+n) is why vector C stores have conflicts.
-- A possible new order 5/6 = natural N row-major/row-serpentine, with LDMATRIX A retained.
-  TRAVERSAL must map 5→0 and 6→1, not simply order-3. Current code has only orders 0..4.
-- For 7 orders × 3 copies, epi mask offsets must change from 15/30 to **21/42**,
-  max uint64 bit 62. EPI4/8 would need to accept orders 3/5/6.
-- Efficient validation for a new N layout: all copies/epis/tiles at max512 min128 first
-  (cheap), then screen large candidates once, confirm winners 5 rounds. No new layout implemented yet.
+추가로 확인한 cuBLAS 배치 근거:
+- cuBLAS의 B 읽기는 LDS.128이 아닌 스칼라 `LDS`(기본 32비트)이며, A는 LDSM.16.M88.4다.
+- cuBLAS C 쓰기는 STS.64이며 추가 wavefront가 없다. 자체 STS.128은 이상적인 수의 2배다.
+- 다음 실험은 순회 순서만 바꾸는 것이 아니라 *자연 N 배치*를 함께 적용하는 것이다.
+  B 원본 col=warpCol*WN+8*n+g, K=t+4*r2, chunk XOR은 `(row&3)<<1`이다.
+  C 쓰기는 col=warpCol*WN+8*n+2*t, e0/e1을 float2로 저장하며 **LDC=BN+8**이다.
+  STS.64의 half-warp bank 인덱스 8*g+2*t는 충돌이 없고, 기존 float4 C 읽기도 병합된다.
+  현재 자체 N 순열(g*NFRAG+n) 때문에 벡터 C 쓰기에서 충돌이 생긴다.
+- 새 order 5/6은 자연 N의 행 우선/행 지그재그 순서이며 LDMATRIX A를 유지한다.
+  TRAVERSAL은 단순 order-3이 아니라 5→0, 6→1로 대응해야 한다. 현재 코드는 0..4만 지원한다.
+- 순서 7개 × 복사 3개를 지원하려면 epi 마스크 오프셋 15/30을 **21/42**로 바꿔야 한다.
+  uint64의 최대 비트는 62다. EPI4/8은 order 3/5/6을 허용해야 한다.
+- 새 N 배치는 모든 복사·epi·타일을 max512 min128에서 먼저 저비용으로 검증한다.
+  이후 큰 후보를 한 번 탐색하고 우승 후보를 5회 재확인한다. 새 배치는 아직 구현하지 않았다.
 
-Before finalizing all defaults, confirm small winners too (v7/v8 one-round exploration):
-- <=1024: cfg6/order3/copy0/epi4; 2048 cfg4/order3/copy0/epi4.
-  Small stages show strong gains but have not yet received independent 5-round confirmation.
-- Current auto small settings are still older cfg6/4 order0. Large auto is cfg0/order3/copy1,
-  epi1 until the v8 confirmation completes. Current worktree is v8.
-- Goal still active. Tensor utilization 87.42% was verified for v6; do not infer new v8
-  utilization from GFLOPS before reading its ncu CSV. cuBLAS target is 93.38% at 8192.
+기본값을 확정하기 전에 작은 크기의 우승 후보도 재확인한다(v7/v8의 1회 탐색).
+- <=1024: cfg6/order3/copy0/epi4; 2048: cfg4/order3/copy0/epi4.
+  작은 크기는 개선 폭이 크지만 아직 독립적인 5회 재확인을 거치지 않았다.
+- 작은 크기의 현재 자동 설정은 여전히 예전 cfg6/4 order0다. 큰 크기는 cfg0/order3/copy1이며,
+  v8 재확인이 끝날 때까지 epi1을 유지한다. 현재 작업 트리는 v8이다.
+- 목표는 계속 진행 중이다. 87.42%는 v6에서 검증한 사용률이다. ncu CSV를 읽기 전에는
+  GFLOPS만으로 v8의 새 사용률을 추정하지 않는다. 8192의 cuBLAS 목표값은 93.38%다.
 
 
-## v8 completed (latest authoritative state)
+## v8 완료 (이전 상태 기록을 대체하는 최신 결과)
 
-Handle 86735 returned exit 0; no benchmark is currently running.
-Remote `/content/tcgemm-v8-results.tgz` was downloaded/extracted to local `results/2026-10-16/v8/`.
-- Broad correctness: 303/303 PASS; confirmation: 50/50 PASS.
-- 5-round median: 4096 baseline99.702 → epi4 **104.165**, cuBLAS108.249 TFLOPS.
-- 8192 baseline110.017 → epi4 **112.978**, cuBLAS117.409 TFLOPS (~96.2%).
-- ncu same 1140 MHz: Tensor elapsed baseline87.39% → epi4 **89.99%**;
-  long scoreboard/issue0.22→0.06, registers254→253. cuBLAS target93.38% remains higher.
-- Tracked-style summary file `a100_2026-10-16-epilogue-summary.json`; raw samples/counters/build
-  in local v8 results. Clock settings were restored by the script.
-- After collecting evidence, local runner auto policy was changed to epi4 for verified
-  cfg0/order3/copy1 at area>=4096², with other settings epi1. This one host policy edit
-  happened *after* the measured v8 archive. Rebuild/test the automatic path before final completion.
-  GPU kernel code is the same tested epi4 specialization.
-- Current source is v8 + this host policy adoption; small auto settings remain old order0.
-  Small LDMATRIX/epi4 candidates still need 5-round confirmation before adopting them.
-- Colab tcgemm-opt remains active for subsequent work, but no live measurement job remains.
-  Next safe work is the natural-N/scalar-B/bank-free STS.64 experiment documented above,
-  or small-case confirmation; do not restart finished v8 as if it were lost.
-- Goal is active, not complete: 89.99% vs cuBLAS93.38% Tensor elapsed is a real remaining gap.
+핸들 86735가 종료 코드 0을 반환했다. 현재 실행 중인 벤치마크는 없다.
+원격 `/content/tcgemm-v8-results.tgz`를 로컬 `results/2026-10-16/v8/`로 다운로드·해제했다.
+- 전체 정확도 303/303 PASS; 재확인 50/50 PASS.
+- 5회 중앙값: 4096 기준 경로 99.702 → epi4 **104.165**, cuBLAS 108.249 TFLOPS.
+- 8192 기준 경로 110.017 → epi4 **112.978**, cuBLAS 117.409 TFLOPS(약 96.2%).
+- 동일 1140 MHz의 ncu: Tensor elapsed 사용률 87.39% → epi4 **89.99%**;
+  long scoreboard/issue 0.22→0.06, 레지스터 254→253. cuBLAS 목표 93.38%에는 못 미친다.
+- 요약 파일은 `a100_2026-10-16-epilogue-summary.json`이며 원시 표본·카운터·빌드는
+  로컬 v8 결과에 있다. 스크립트가 클럭 설정을 복원했다.
+- 근거 수집 후 로컬 실행기의 자동 정책을 area>=4096²의 검증된 cfg0/order3/copy1에서
+  epi4로 바꾸고 나머지는 epi1로 유지했다. 이 호스트 정책 변경은 측정된 v8 압축파일을
+  만든 *이후*에 수행했다. 완료 전 자동 경로를 다시 빌드·검사해야 한다.
+  GPU 커널 코드는 검사한 epi4 특수화와 같다.
+- 현재 소스는 v8에 이 호스트 정책을 반영한 상태다. 작은 크기의 자동 설정은 여전히 order0다.
+  작은 크기의 LDMATRIX/epi4 후보는 채택 전 5회 재확인이 필요하다.
+- Colab tcgemm-opt는 후속 작업을 위해 활성 상태지만 진행 중인 측정 작업은 없다.
+  다음 작업은 위의 자연 N/스칼라 B/bank 충돌 없는 STS.64 실험 또는 작은 크기 재확인이다.
+  완료된 v8을 유실된 작업처럼 다시 시작하지 않는다.
+- 목표는 아직 완료되지 않았다. Tensor elapsed 사용률 89.99%와 cuBLAS 93.38%의 차이가 남아 있다.
 
-## v9–v12 and A100 recovery (supersedes earlier live-job notes)
+## v9–v12와 A100 복구 (이전 실행 중 메모를 대체)
 
-- v9 natural-N/scalar-B/STS.64 layouts passed 351 small checks but did not beat v8.
-- v10 direct TF32 conversion and v11 guarded bias conversion were slower. v11 passed
-  522 small checks; guarded candidates reached only about 54–82 TFLOPS at large sizes.
-- Post-v11 integration checks passed 7,772 rectangular/short-K/alpha-beta cases.
-  Five-round small-matrix winners were cfg6/order3/copy0/epi4 through 1024 and
-  cfg4/order3/copy0/epi4 at 2048: 0.597, 3.804, 20.503, 49.183, 74.132 TFLOPS.
-  These small settings have not yet been adopted by the automatic policy.
-- Raster groups 0/2/4/8/16/32/64 gave no meaningful large-matrix improvement.
-- v12 deferred conversion and copies scheduled after MMA passed 522 small checks.
-  Screening found no winner over the existing cfg0/order3/copy1/epi4:
-  4096 baseline104.135 vs cuBLAS108.223; 8192 baseline112.863 vs cuBLAS117.325 TFLOPS.
-  Handle 90599 finished exit0; archive was downloaded and extracted under
-  results/2026-10-16/{v12,source-v12.tgz,v12-results.tgz}.
-- The subsequent strict-check launch reported the old tcgemm-opt session lost
-  (404/401), and `colab sessions` confirmed it absent. A fresh A100 session with
-  the same name was created successfully. qwen35-val was left untouched.
-- Current live work: handle **72783**, rebuilding v12 and running **check_v12.py**
-  on the new A100. Re-poll this handle before launching any new Colab execution.
-  Checker independently quantizes A/B with CUDA TF32 conversion and compares
-  custom results with FP32 GEMM on those inputs at 1e-5, in addition to 1e-3
-  versus original FP32 inputs and exact alpha0/beta1 identity. The stronger test
-  has NOT passed yet; do not confuse it with the older 7,772-case pass.
-- Prepared next diagnostic: results/2026-10-16/warp_probe.py. It generates an
-  isolated small build from source-v12, tests 16-warp geometries (WM64/WN32 and
-  WM32/WN64 for both 128x256 and 256x128) and epilogue batch2/4/8. Production
-  source remains unchanged. Run only after current checker is terminal.
-- Goal remains active. Best measured Tensor elapsed is still89.99%, cuBLAS93.38%.
-- Host automatic policy now adopts the confirmed small configurations listed above;
-  README describes them. This edit happened after source-v12 was archived, and the
-  currently running strict checker still tests the archived v12 automatic policy.
-  Explicit small specializations were already measured/checked. Fresh automatic-path
-  build verification of the host policy change remains required.
+- v9 자연 N/스칼라 B/STS.64 배치는 작은 크기 검사 351건을 통과했으나 v8보다 느렸다.
+- v10 직접 TF32 변환과 v11 특수값을 보호하는 바이어스 변환은 더 느렸다.
+  v11은 작은 검사 522건을 통과했으며, 보호 처리를 넣은 후보는 큰 크기에서 약 54–82 TFLOPS였다.
+- v11 이후 통합 검사는 직사각형/짧은 K/alpha-beta 조합 7,772건을 통과했다.
+  작은 행렬의 5회 측정 우승 후보는 1024까지 cfg6/order3/copy0/epi4,
+  2048에서는 cfg4/order3/copy0/epi4였다. 성능은 0.597, 3.804, 20.503, 49.183, 74.132 TFLOPS다.
+  이 작은 크기 설정들은 아직 자동 정책에 반영하지 않았다.
+- raster 그룹 0/2/4/8/16/32/64는 큰 행렬에서 유의미한 개선을 보이지 않았다.
+- v12 변환 지연과 MMA 뒤 복사 배치는 작은 검사 522건을 통과했다.
+  예비 측정에서 기존 cfg0/order3/copy1/epi4를 이기는 후보는 없었다.
+  4096 기준 104.135 vs cuBLAS 108.223; 8192 기준 112.863 vs cuBLAS 117.325 TFLOPS.
+  핸들 90599는 종료 코드 0으로 끝났으며 압축파일을 다운로드해
+  results/2026-10-16/{v12,source-v12.tgz,v12-results.tgz}에 해제했다.
+- 이후 엄격 검사 실행 시 기존 tcgemm-opt 세션 유실(404/401)이 보고됐고,
+  `colab sessions`에서도 세션이 없음을 확인했다. 같은 이름으로 새 A100 세션을 만들었다.
+  qwen35-val은 건드리지 않았다.
+- 현재 실행 중인 작업은 핸들 **72783**이다. 새 A100에서 v12를 다시 빌드하고
+  **check_v12.py**를 실행한다. 새 Colab 실행 전에 이 핸들을 먼저 조회한다.
+  검사기는 CUDA TF32 변환으로 A/B를 독립적으로 양자화하고 그 입력의 FP32 GEMM 결과와
+  1e-5로 비교한다. 원래 FP32 입력 기준 1e-3 검사와 alpha0/beta1의 정확한 항등성도 확인한다.
+  강화된 검사는 **아직 통과하지 않았다**. 이전 7,772건 통과와 혼동하지 않는다.
+- 다음 진단 스크립트 results/2026-10-16/warp_probe.py를 준비했다.
+  source-v12에서 분리한 작은 빌드를 만들고 128x256, 256x128 각각의 16-warp 배치
+  (WM64/WN32, WM32/WN64)와 epilogue batch2/4/8을 검사한다.
+  실제 기본 소스는 바꾸지 않는다. 현재 검사기가 종료된 뒤 실행한다.
+- 목표는 계속 진행 중이다. 최고 측정 Tensor elapsed 사용률은 여전히 89.99%, cuBLAS는 93.38%다.
+- 호스트 자동 정책에는 위에서 재확인한 작은 크기 구성을 반영했고 README에도 설명했다.
+  이 수정은 source-v12 압축파일을 만든 이후이며, 현재 실행 중인 엄격 검사는 압축파일의
+  v12 자동 정책을 검사한다. 명시적인 작은 크기 특수화는 이미 측정·검사했다.
+  호스트 정책 변경을 포함한 새 자동 경로는 다시 빌드해 검증해야 한다.
 
-## Strict v12 check completed; warp probe launched
+## 엄격한 v12 검사 완료; warp 실험 시작
 
-- Handle72783 completed exit0. **All13,108 checks PASS**, including the independent
-  TF32-quantized input reference at1e-5 and original FP32 reference at1e-3.
-  Archive `results/2026-10-16/v12-strict.tgz` is local and extracted.
-- An interrupted attempt to launch the warp probe did not start execution;
-  `colab status` confirmed IDLE with the prior check as last execution.
-- A subsequent explicit launch is now active: unified exec handle **10008**,
-  `warp_probe.py`, session tcgemm-opt. Poll this handle before any new execution.
-  It first archives prior compiled binaries at `/content/tcgemm-v12-build.tgz`.
-  Download that archive when available to avoid future full recompilation.
+- 핸들 72783이 종료 코드 0으로 완료됐다. **13,108건 모두 PASS**했다.
+  독립적인 TF32 양자화 입력 기준 1e-5와 원래 FP32 기준 1e-3 검사를 포함한다.
+  `results/2026-10-16/v12-strict.tgz`를 로컬에 보존하고 해제했다.
+- warp 실험을 시작하려던 중단된 요청은 실제 실행으로 이어지지 않았다.
+  `colab status`에서 IDLE이며 마지막 실행은 이전 검사임을 확인했다.
+- 이후 명시적으로 시작한 작업이 현재 실행 중이다. 통합 실행 핸들은 **10008**,
+  스크립트는 `warp_probe.py`, 세션은 tcgemm-opt다. 새 실행 전 이 핸들을 조회한다.
+  먼저 이전 컴파일 바이너리를 `/content/tcgemm-v12-build.tgz`로 보관한다.
+  준비되면 다운로드해 이후 전체 재컴파일을 피한다.
 
-## Warp probe completed; direct epilogue probe active
+## warp 실험 완료; 직접 epilogue 실험 실행 중
 
-- Handle10008 finished exit0. Source and raw output archived locally as
-  `warp-probe-results.tgz` and extracted under `warp-probe/`.
-- No 16-warp geometry beat the existing 8-warp baseline. Representative cfg7
-  order3/copy1/epi4 required128 registers/thread with60B spill stores /44B loads.
-  Merely increasing warp count worsens register pressure.
-- Epi2 also lost: 8192 five-round112.862 vs existing epi4 **113.456 TFLOPS**,
-  paired cuBLAS **117.968**. 4096 baseline104.493 vs cuBLAS108.566.
-  These measurements are from the replacement physical A100; compare paired
-  ratios rather than mixing absolute rates with the former runtime.
-- Verified v12 compiled binaries now preserved in local `v12-build.tgz`.
-- Next experiment actually launched: handle **31681**, `direct_probe.py`.
-  Tests natural-N float2 output directly from accumulator registers, avoiding
-  shared-memory epilogue transpose/barriers. It retains alpha/beta and input math.
-  Production kernel is unchanged. Re-poll this handle before new execution.
+- 핸들 10008이 종료 코드 0으로 끝났다. 소스와 원시 출력은
+  `warp-probe-results.tgz`로 로컬에 보존하고 `warp-probe/`에 해제했다.
+- 16-warp 구성 중 기존 8-warp 기준을 이긴 것은 없었다. 대표적인 cfg7
+  order3/copy1/epi4는 스레드당 레지스터 128개와 spill 쓰기 60B / 읽기 44B가 필요했다.
+  warp 수를 늘리기만 하면 레지스터 부담이 커진다.
+- Epi2도 느렸다. 8192의 5회 측정은 112.862, 기존 epi4는 **113.456 TFLOPS**,
+  같은 실행의 cuBLAS는 **117.968**이었다. 4096 기준 104.493 vs cuBLAS 108.566.
+  교체된 물리 A100에서 측정했으므로 이전 런타임의 절대값과 섞지 말고 같은 실행의 비율로 비교한다.
+- 검증된 v12 컴파일 바이너리를 로컬 `v12-build.tgz`에 보존했다.
+- 다음 실험을 실제 시작했다. 핸들 **31681**, 스크립트 `direct_probe.py`다.
+  누산 레지스터에서 자연 N의 float2 출력을 직접 써 shared memory epilogue의 전치·barrier를
+  피하는 실험이다. alpha/beta와 입력 계산은 유지하며 기본 커널은 바꾸지 않는다.
+  새 실행 전 이 핸들을 다시 조회한다.
 
-## Direct epilogue result; public CUTLASS diagnostic
+## 직접 epilogue 결과; 공개 CUTLASS 진단
 
-- Handle31681 completed exit0; direct-probe-results.tgz downloaded/extracted.
-  Direct natural-N float2 output passed accuracy but lost to the shared epilogue:
-  five-round8192 best111.616 vs custom baseline113.450 and cuBLAS117.974 TFLOPS.
-  4096 best102.823 vs baseline104.503 and cuBLAS108.567. No production change adopted.
-- Current execution handle **75585**, `cutlass_probe.py`, on tcgemm-opt.
-  It sparsely clones official NVIDIA CUTLASS headers, records exact commit, builds
-  eight float-input TF32 `OpMultiplyAdd` (not 3xTF32 FastF32) configurations,
-  and compares them with our existing baseline/cuBLAS at1140 MHz,5 rounds.
-  This is an independent diagnostic, not replacing the custom kernel with a library.
-- Primary source confirms float/float OpMultiplyAdd uses TF32 internally:
-  NVIDIA/cutlass include/cutlass/gemm/warp/default_mma_tensor_op_sm80.h,
-  DefaultMmaTensorOp specialization around lines130–169.
+- 핸들 31681이 종료 코드 0으로 끝났다. direct-probe-results.tgz를 다운로드·해제했다.
+  자연 N float2 직접 출력은 정확도를 통과했으나 shared epilogue보다 느렸다.
+  8192의 5회 측정 최고값은 111.616, 자체 기준 113.450, cuBLAS 117.974 TFLOPS다.
+  4096 최고값은 102.823, 기준 104.503, cuBLAS 108.567이다. 기본 경로에 반영하지 않았다.
+- 현재 실행 핸들은 **75585**, 스크립트는 `cutlass_probe.py`, 세션은 tcgemm-opt다.
+  공식 NVIDIA CUTLASS 헤더만 선택적으로 복제하고 정확한 커밋을 기록한다.
+  float 입력 TF32 `OpMultiplyAdd` 구성 8개를 빌드한다(3xTF32 FastF32 경로가 아님).
+  1140 MHz에서 기존 자체 기준/cuBLAS와 5회 비교한다.
+  독립적인 진단이며 자체 커널을 라이브러리로 교체하는 작업은 아니다.
+- 원본 소스에서 float/float OpMultiplyAdd가 내부적으로 TF32를 사용함을 확인했다.
+  NVIDIA/cutlass include/cutlass/gemm/warp/default_mma_tensor_op_sm80.h의
+  DefaultMmaTensorOp 특수화 약 130–169줄이다.
 
-## Public CUTLASS evidence and instruction-path experiment
+## 공개 CUTLASS 근거와 명령 경로 실험
 
-- Handle75585 completed. CUTLASS cfg1 (128x256x32,warp64x64,3 stages,identity8)
-  reached108.046/117.438 TFLOPS at4096/8192, paired cuBLAS108.571/117.942.
-  Custom default104.518/113.423. All accuracy records PASS. Exact CUTLASS commit,
-  sources, binaries and clocks saved under local `cutlass-probe/` and archive.
-- Handle4352 profiled custom/CUTLASS/cuBLAS at1140 and completed exit0.
-  Local `cutlass-profiles/` includes ncu reports and SASS source counters.
-  Tensor elapsed90.10/93.00/93.40%; registers253/228/230 respectively.
-  Custom short-scoreboard/issue .03 versus CUTLASS .00, Cu .01;
-  custom long-scoreboard/issue .07 versus both .04. Custom executes fewer
-  instructions (1.691B vs CUTLASS2.362B/Cu2.225B), so instruction count alone
-  is not the optimization target. IADD3 has2,498 custom short-SB PC samples.
-- Handle23047 accumulator-storage/visitation probe completed exit0. Neither
-  column-major accumulator storage nor new column-serpentine LDMATRIX paths won.
-  8192 baseline113.458, same column-storage113.451, cuBLAS117.937 TFLOPS.
-  Archive `accumulator-probe-results.tgz` downloaded/extracted. No kernel adopted.
-- Current execution: handle **30825**, `mad_probe.py`, tcgemm-opt.
-  Tests integer-MAD rounding with runtime multiplier1 (to prevent IADD folding),
-  and predicated MAD, versus unchanged integer-add rounding. It saves SASS for
-  modes0/4/5 before benchmarking. Input/output/TF32 arithmetic are unchanged.
+- 핸들 75585가 완료됐다. CUTLASS cfg1(128x256x32, warp64x64, 3 stages, identity8)은
+  4096/8192에서 108.046/117.438 TFLOPS, 같은 실행의 cuBLAS는 108.571/117.942였다.
+  자체 기본값은 104.518/113.423이었다. 정확도 기록은 모두 PASS다. 정확한 CUTLASS 커밋,
+  소스·바이너리·클럭을 로컬 `cutlass-probe/`와 압축파일에 보존했다.
+- 핸들 4352는 1140에서 자체/CUTLASS/cuBLAS를 프로파일하고 종료 코드 0으로 끝났다.
+  로컬 `cutlass-profiles/`에 ncu 보고서와 SASS 소스 카운터가 있다.
+  Tensor elapsed 사용률은 각각 90.10/93.00/93.40%, 레지스터는 253/228/230개다.
+  자체 short-scoreboard/issue는 .03, CUTLASS는 .00, cuBLAS는 .01이다.
+  자체 long-scoreboard/issue는 .07, 나머지는 모두 .04다. 자체 실행 명령은
+  1.691B로 CUTLASS 2.362B/cuBLAS 2.225B보다 적다. 명령 수만을 최적화 목표로 삼지 않는다.
+  자체 IADD3에는 short-SB PC 표본 2,498개가 있다.
+- 핸들 23047의 누산기 저장·순회 실험이 종료 코드 0으로 끝났다.
+  열 우선 누산기 저장과 새 열 지그재그 LDMATRIX 경로 모두 개선되지 않았다.
+  8192 기준 113.458, 열 우선 저장 113.451, cuBLAS 117.937 TFLOPS다.
+  `accumulator-probe-results.tgz`를 다운로드·해제했다. 새 커널은 채택하지 않았다.
+- 현재 실행은 핸들 **30825**, `mad_probe.py`, tcgemm-opt다.
+  런타임 승수 1을 써 IADD로 접히지 않게 한 정수 MAD 반올림과 조건부 MAD를,
+  기존 정수 덧셈 반올림과 비교한다. 측정 전 modes0/4/5의 SASS를 보존한다.
+  입출력과 TF32 연산은 바꾸지 않는다.
 
-## MAD completed; B-copy mapping diagnostic active
+## MAD 완료; B 복사 배치 진단 실행 중
 
-- Handle30825 completed exit0; MAD instruction paths did not beat baseline.
-  Five-round8192 baseline113.440 / default113.456, cuBLAS117.943 TFLOPS.
-  Archive mad-probe-results.tgz downloaded/extracted. No production change adopted.
-- SASS exposes a concrete copy-layout difference: custom B copies use distinct
-  64-bit global row addresses; CUTLASS reuses one base with constant0x80 column
-  increments. The warp-raked map spans all32 K rows with threads, then N columns
-  with copy iterations, reducing live address state without changing SMEM layout.
-- Current live handle **32076**, `rake_probe.py`, tcgemm-opt. Broad small checks
-  already passed; large performance screening is running. Scratch kernel adds
-  RAKE_B template flag. Scratch config.epilogue8 selects RAKE_B with actual
-  epilogue batch4; this diagnostic encoding must NOT be shipped as public API.
-  Copy modes1/3, orders3/5/6, rounding0/1/2/3 tested for RAKE_B.
-- Prepared strict follow-up `check_rake.py` (run only after32076 terminal).
-  Tests only the actually instantiated diagnostic configurations on rectangular,
-  K32/64/96/160, alpha/beta and raster-tail cases against both independent refs.
-  Updated/uploaded check.cu also reports worst relative errors. Older13,108-case
-  pass remains valid; the new maximum-error print is not yet executed.
+- 핸들 30825가 종료 코드 0으로 끝났다. MAD 명령 경로는 기준보다 빠르지 않았다.
+  8192의 5회 측정은 기준 113.440 / 기본 113.456, cuBLAS 117.943 TFLOPS다.
+  mad-probe-results.tgz를 다운로드·해제했다. 기본 경로에는 반영하지 않았다.
+- SASS에서 복사 배치의 구체적인 차이를 찾았다. 자체 B 복사는 서로 다른 64비트 global
+  행 주소를 쓰지만, CUTLASS는 기준 주소 하나에 상수 0x80 열 오프셋을 더해 재사용한다.
+  warp-raked 배치는 스레드들이 K행 32개를 나누고 복사 반복에서는 N열을 이동한다.
+  SMEM 배치를 바꾸지 않으면서 살아 있는 주소 상태를 줄이는 구조다.
+- 현재 핸들 **32076**, `rake_probe.py`, tcgemm-opt가 실행 중이다.
+  작은 크기의 전체 검사는 이미 통과했고 큰 크기의 예비 성능 측정 중이다.
+  실험 커널에 RAKE_B 템플릿 플래그를 추가했다. 임시 config.epilogue8은 RAKE_B를 선택하지만
+  실제 epilogue 배치는 4다. 이 진단용 인코딩을 공개 API로 내보내면 안 된다.
+  RAKE_B에 대해 복사 modes1/3, orders3/5/6, rounding0/1/2/3을 검사한다.
+- 후속 엄격 검사 `check_rake.py`를 준비했다(32076 종료 후 실행).
+  실제 인스턴스화한 진단 구성만 대상으로 직사각형, K32/64/96/160, alpha/beta,
+  raster 마지막 그룹을 두 독립 기준과 비교한다. 수정·업로드한 check.cu는 최대 상대 오차도
+  출력한다. 기존 13,108건 통과 기록은 유효하지만 새 최대 오차 출력은 아직 실행하지 않았다.
 
-## B-copy mapping wins repeated benchmark; strict validation active
+## B 복사 배치의 반복 측정 개선 확인; 엄격 검사 실행 중
 
-- Handle32076 finished exit0. All small screening and large correctness records PASS.
-  Five-round medians for cfg0/order6/copy3/epi4/round0/RAKE_B:
-  4096 **107.3956** vs old baseline104.2999 / default104.5176 / cuBLAS108.5666 TFLOPS;
-  8192 **116.5987** vs old baseline113.4190 / default113.4183 / cuBLAS117.9223.
-  Thus98.9% of paired cuBLAS throughput at both sizes; utilization not yet measured.
-  Archive `rake-probe-results.tgz` downloaded/extracted locally.
-- Important: ptxas still reports252 registers and no spills for the natural-N
-  RAKE_B candidates. Address reuse is proven by layout/source, but a reduction
-  in total allocated registers is NOT proven and must not be claimed.
-- Current live handle **89725**, `check_rake.py`, independently checks all supported
-  RAKE_B/baseline combinations at1e-5 quantized TF32 /1e-3 FP32. Poll first.
-  After it passes, profile cfg0/order6/copy3/RAKE_B at1140 and compare with paired
-  custom baseline/CUTLASS/cuBLAS reports. Still no production adoption of RAKE_B.
-- User explicitly asked whether accuracy is checked. Answered: every performance
-  trial checks FP32 before timing; strengthened full checks gate adoption. Preserve
-  that requirement and report measured worst errors once new checker completes.
+- 핸들 32076이 종료 코드 0으로 끝났다. 작은 예비 검사와 큰 정확도 기록 모두 PASS다.
+  cfg0/order6/copy3/epi4/round0/RAKE_B의 5회 중앙값:
+  4096 **107.3956** vs 이전 기준 104.2999 / 기본 104.5176 / cuBLAS 108.5666 TFLOPS;
+  8192 **116.5987** vs 이전 기준 113.4190 / 기본 113.4183 / cuBLAS 117.9223.
+  두 크기 모두 같은 실행의 cuBLAS 처리량 대비 98.9%다. 사용률은 아직 측정하지 않았다.
+  `rake-probe-results.tgz`를 로컬로 다운로드·해제했다.
+- 주의: 자연 N RAKE_B 후보는 ptxas 기준 여전히 레지스터 252개, spill 없음이다.
+  주소 재사용은 배치·소스로 확인했지만 **전체 할당 레지스터 수 감소는 확인되지 않았다.**
+  레지스터 수가 줄었다고 주장하면 안 된다.
+- 현재 핸들 **89725**, `check_rake.py`가 지원하는 모든 RAKE_B/기준 조합을 독립적으로
+  양자화 TF32 1e-5 / FP32 1e-3 기준으로 검사한다. 먼저 이 핸들을 조회한다.
+  통과하면 1140에서 cfg0/order6/copy3/RAKE_B를 프로파일하고 같은 조건의
+  자체 기준/CUTLASS/cuBLAS 보고서와 비교한다. RAKE_B는 아직 기본 경로로 채택하지 않았다.
+- 사용자가 정확도 검사 여부를 명시적으로 물었다. 각 성능 실험은 시간 측정 전에 FP32
+  정확도를 검사하며 강화된 전체 검사 통과 후에 채택한다고 답했다. 이 요구를 유지하고
+  새 검사기가 완료되면 측정된 최대 오차를 보고한다.
 
-## New candidate accuracy confirmed
+## 새 후보의 정확도 확인
 
-- Handle89725 completed exit0. **All1,200 B-copy diagnostic checks PASS**:
-  rectangular tiles, K32/64/96/160, four alpha/beta pairs, full/partial raster groups,
-  all actually instantiated RAKE_B configurations and baseline controls.
-- Worst FP32-reference normalized error **3.12642872e-4** (limit1e-3).
-  Worst independently quantized TF32-reference error **1.10369408e-6** (limit1e-5).
-  Exact alpha0/beta1 identity also checked. Archive rake-check.tgz is local/extracted.
-- Current live job **95484**, `profile_rake.py`, tcgemm-opt. Profiles baseline,
-  cfg0/order6/copy3/RAKE_B/epi4/round0 and cuBLAS, clocks1140, with SASS sampling.
-  Poll this handle before launching more execution. Result path when done:
-  `/content/tcgemm-rake-profiles.tgz`. Production RAKE_B adoption and actual current
-  automatic policy build verification still pending. Goal remains active.
+- 핸들 89725가 종료 코드 0으로 끝났다. **B 복사 진단 검사 1,200건 모두 PASS**다.
+  직사각형 타일, K32/64/96/160, alpha/beta 네 조합, 완전한/불완전한 raster 그룹,
+  실제 인스턴스화한 모든 RAKE_B 구성과 기준 경로를 포함한다.
+- FP32 기준 최대 정규화 오차는 **3.12642872e-4**(허용치 1e-3)다.
+  독립적으로 양자화한 TF32 기준 최대 오차는 **1.10369408e-6**(허용치 1e-5)다.
+  alpha0/beta1의 정확한 항등성도 검사했다. rake-check.tgz를 로컬에 보존·해제했다.
+- 현재 작업 **95484**, `profile_rake.py`, tcgemm-opt가 실행 중이다.
+  1140 클럭에서 기준 경로, cfg0/order6/copy3/RAKE_B/epi4/round0, cuBLAS를
+  SASS 표본과 함께 프로파일한다. 추가 실행 전 이 핸들을 조회한다.
+  완료 후 결과 경로는 `/content/tcgemm-rake-profiles.tgz`다. RAKE_B 채택과 실제 현재
+  자동 정책의 빌드 검증은 아직 남아 있다. 목표는 계속 진행 중이다.
 
-## Production copy4 adoption and v13 verification
+## 기본 copy4 채택과 v13 검증
 
-- Handle95484 completed; rake-profiles.tgz downloaded/extracted.
-  Same1140 MHz Tensor elapsed: baseline90.11%, RAKE_B **92.32%**, cuBLAS93.40%.
-  RAKE_B252 registers/no spills; long-SB/issue.07, short-SB/issue.07.
-  Target remains unmet by1.08 percentage points.
-- Production source now exposes **COPY_MODE4**: B-raked map plus post-MMA copy
-  groups. Host restricts it to order6/epi4/round0, and auto selects it for large
-  cfg0 tiles. This is the same algorithm as diagnostic copy3+RAKE_B=true;
-  the diagnostic epi8 flag encoding was NOT adopted. Tuner/checker includecopy4.
-  Small auto settings cfg6/4 order3/copy0/epi4 are also adopted.
-- Current-source archive source-v13.tgz uploaded and extracted. Async CPU build
-  workerPID15754 completed returncode0 in351.21s. Build-done.json downloaded.
-- Epi batch2/8, explicit FMA contraction order, and scaling accumulators before
-  SMEM stores all lost to existing epi4. Archive epilogue-rake-results.tgz local.
-- C prefetch buffers3/4/8 also lost; largest settings were much slower. Raw
-  cbuffer-probe-results.tgz downloaded/extracted. No changes adopted.
-- Active unified exec handle **16231**, `validate_v13.py`: actual production
-  code passed **13,224** strict checks; max relative FP32 **3.12791562e-4**,
-  quantized TF32 **1.10369408e-6**. Default benchmarks128..8192 are running,
-  followed by original CLI and ncu of actual default and cuBLAS. Poll this handle.
-- Prepared next diagnostic raster_probe.py (NOT started). Official CUTLASS
-  GemmIdentityThreadblockSwizzle groups N tiles, whereas current custom raster
-  groups M tiles. Test negative diagnostic group values for N grouping and
-  positive M groups only after16231 terminal. Production group API unchanged.
-- Latest README/summary describe candidate measurements; after actual v13 completes,
-  update README validation status and summary to current-source evidence.
+- 핸들 95484가 완료됐다. rake-profiles.tgz를 다운로드·해제했다.
+  동일 1140 MHz의 Tensor elapsed 사용률은 기준 90.11%, RAKE_B **92.32%**, cuBLAS 93.40%다.
+  RAKE_B는 레지스터 252개/spill 없음이며 long-SB/issue .07, short-SB/issue .07이다.
+  목표까지 1.08%포인트가 남아 있다.
+- 기본 소스에 **COPY_MODE4**를 추가했다. B-raked 배치와 MMA 뒤 복사 그룹 발행을 합친 경로다.
+  호스트는 order6/epi4/round0만 허용하며 큰 cfg0 타일에서 자동 선택한다.
+  진단용 copy3+RAKE_B=true와 같은 알고리즘이고, 진단용 epi8 인코딩은 채택하지 않았다.
+  튜너·검사기에 copy4를 추가했다. 작은 자동 설정 cfg6/4 order3/copy0/epi4도 반영했다.
+- 현재 소스 압축파일 source-v13.tgz를 업로드·해제했다. 비동기 CPU 빌드 작업
+  workerPID15754는 351.21s 후 returncode0으로 완료됐다. Build-done.json을 다운로드했다.
+- Epi batch2/8, 명시적인 FMA 결합 순서, SMEM 저장 전 누산값에 배율 적용은
+  모두 기존 epi4보다 느렸다. epilogue-rake-results.tgz를 로컬에 보존했다.
+- C prefetch 버퍼 3/4/8도 더 느렸고 가장 큰 설정은 크게 느려졌다.
+  원시 cbuffer-probe-results.tgz를 다운로드·해제했다. 변경은 채택하지 않았다.
+- 현재 통합 실행 핸들 **16231**, `validate_v13.py`: 실제 기본 코드가 엄격 검사
+  **13,224건**을 통과했다. 최대 상대 오차는 FP32 **3.12791562e-4**,
+  양자화 TF32 **1.10369408e-6**이다. 기본 벤치마크 128..8192를 실행 중이며,
+  이후 기존 CLI와 실제 기본 경로/cuBLAS의 ncu를 실행한다. 먼저 이 핸들을 조회한다.
+- 다음 진단 raster_probe.py를 준비했다(아직 시작하지 않음). 공식 CUTLASS의
+  GemmIdentityThreadblockSwizzle은 N 타일을 묶고 현재 자체 raster는 M 타일을 묶는다.
+  16231 종료 후 음수 진단 group 값으로 N 그룹핑, 양수로 M 그룹핑을 검사한다.
+  기본 group API는 바꾸지 않는다.
+- 현재 README/요약은 후보 측정값을 설명한다. 실제 v13 실행이 끝나면 현재 소스의
+  근거에 맞춰 README 검증 상태와 요약을 갱신한다.
 
-## v13 production validation completed; further gap analysis
+## v13 기본 경로 검증 완료; 남은 차이 분석
 
-- Handle16231 finished exit0. v13-results.tgz and v13-build.tgz are local.
-  Actual auto default five-round107.401/116.569 TFLOPS at4096/8192 versus
-  cuBLAS108.551/117.892; explicit copy4 matches default within noise.
-  Original CLI7 at every size128..8192 passes accuracy. Clocks all sampled1140.
-  Actual default ncu name confirms specialization<...,6,4,4,0>; Tensor elapsed
-  **92.34%** vs paired cuBLAS**93.43%**. All13,224 strict checks pass as above.
-- README and a100_2026-10-16-rake-summary.json updated to actual production
-  measurements, including all sizes and repeated samples. tune.py acceptscopy4
-  and skips unsupported order/copy and128-size tile combinations (Python-only edit).
-- Handle56261 raster probe finished exit0. No meaningful N-grouping improvement:
-  8192 N-group4 116.632 vs M-group8 116.593; pairedCu117.898 TFLOPS.
-  Keep production group8. Archive raster-probe-results.tgz downloaded/extracted.
-- Current next execution is `load_round_probe.py` (record returned handle below).
-  New modes4/5/6 round the NEXT loaded A+B/A-only/B-only fragment after its
-  loads, before returning loadNext. This differs from v12 rounding CURRENT
-  fragments just before MMA. Shared wait PC sample evidence: IADD3 R160 immediately
-  using LDSM result has4,680 short-SB samples in rake profile, the largest site.
-  New modes remain diagnostic, not public production configuration.
+- 핸들 16231이 종료 코드 0으로 끝났다. v13-results.tgz와 v13-build.tgz를 로컬에 보존했다.
+  실제 자동 기본값의 5회 측정은 4096/8192에서 107.401/116.569 TFLOPS,
+  cuBLAS는 108.551/117.892였다. 명시적인 copy4는 기본값과 측정 변동 범위 안에서 일치한다.
+  기존 CLI7은 모든 크기 128..8192에서 정확도를 통과했다. 클럭 표본은 모두 1140이었다.
+  실제 기본값의 ncu 커널 이름으로 특수화 <...,6,4,4,0>을 확인했다. Tensor elapsed는
+  **92.34%**, 같은 실행의 cuBLAS는 **93.43%**였다. 위의 엄격 검사 13,224건 모두 통과했다.
+- README와 a100_2026-10-16-rake-summary.json을 모든 크기·반복 표본을 포함한
+  실제 기본 경로의 측정값으로 갱신했다. tune.py는 copy4를 허용하고 지원하지 않는
+  order/copy 및 크기 128의 타일 조합은 건너뛴다(Python만 수정).
+- 핸들 56261의 raster 실험이 종료 코드 0으로 끝났다. N 그룹핑의 유의미한 개선은 없었다.
+  8192 N-group4 116.632 vs M-group8 116.593; 같은 실행의 cuBLAS 117.898 TFLOPS.
+  기본 group8을 유지한다. raster-probe-results.tgz를 다운로드·해제했다.
+- 다음 실행은 `load_round_probe.py`다(반환된 핸들은 아래에 기록).
+  새 modes4/5/6은 다음 A+B/A만/B만의 fragment를 읽은 뒤 loadNext에서 반환하기 전에
+  반올림한다. 현재 fragment를 MMA 직전에 반올림하는 v12와 다르다.
+  shared 대기의 PC 표본 근거: rake 프로파일에서 LDSM 결과를 바로 쓰는 IADD3 R160에
+  short-SB 표본 4,680개가 있어 가장 큰 지점이었다.
+  새 모드는 진단용이며 공개 기본 설정이 아니다.
 
-## Post-v13 diagnostics and register allocation experiment
+## v13 이후 진단과 레지스터 할당 실험
 
-- Load/round handle67069 finished exit0. New next-fragment rounding modes4/5/6
-  did not win: best116.600 TFLOPS vs default116.596 at8192, cuBLAS117.915.
-  Archive load-round-probe-results.tgz local/extracted. No production change.
-- A-two-ahead handle42293 finished exit0. Accuracy passed but performance fell
-  to80.025/86.184 TFLOPS (4096/8192). It used242 registers with **zero spills**;
-  do not attribute this regression to spilling. Archive ahead-probe-results.tgz
-  downloaded/extracted. No live GPU job remained afterward; colab status confirmedIDLE.
-- Current live execution **16917**, regcap_probe.py, tcgemm-opt.
-  It separately compiles the SAME production B-raked math with limits224/228/
-  232/240/248/252/255, removing launch_bounds in limited modules. Control0 retains
-  original launch_bounds; original production default is also measured in-process.
-  Each module has its own kernel name and wrapper; production code unchanged.
-- Build evidence: control252 regs/no spills; limit224→224 regs/28B stores+loads;
-  228→228/12B; **232→232/no spills**;240→240/no spills;248→247/no spills;
-  252→249/no spills;255→252/no spills. Correctness/performance measurement follows.
-- Goal still active: measured production92.34% vs cuBLAS93.43%; do not mark complete.
+- 읽기/반올림 핸들 67069가 종료 코드 0으로 끝났다. 다음 fragment 반올림 modes4/5/6은
+  개선되지 않았다. 8192 최고 116.600 TFLOPS vs 기본 116.596, cuBLAS 117.915.
+  load-round-probe-results.tgz를 로컬에 보존·해제했다. 기본 경로는 바꾸지 않았다.
+- A를 두 단계 앞서 읽는 핸들 42293이 종료 코드 0으로 끝났다.
+  정확도는 통과했지만 4096/8192 성능은 80.025/86.184 TFLOPS로 떨어졌다.
+  레지스터 242개, **spill 0**이므로 이 저하를 spilling 탓으로 설명하면 안 된다.
+  ahead-probe-results.tgz를 다운로드·해제했다. 이후 실행 중인 GPU 작업은 없으며
+  colab status에서 IDLE을 확인했다.
+- 현재 실행 **16917**, regcap_probe.py, tcgemm-opt.
+  같은 기본 B-raked 계산을 레지스터 상한 224/228/232/240/248/252/255로 각각 컴파일한다.
+  제한 모듈에서는 launch_bounds를 제거하고, 대조군 0은 원래 launch_bounds를 유지한다.
+  원래 기본 경로도 같은 프로세스에서 측정한다. 모듈마다 별도 커널 이름과 래퍼를 쓰며
+  기본 소스는 바꾸지 않는다.
+- 빌드 근거: 대조군 252개/spill 없음; 상한 224→224개/쓰기+읽기 28B;
+  228→228/12B; **232→232/spill 없음**; 240→240/spill 없음; 248→247/spill 없음;
+  252→249/spill 없음; 255→252/spill 없음. 이후 정확도·성능을 측정한다.
+- 목표는 계속 진행 중이다. 기본 사용률 92.34% vs cuBLAS 93.43%이므로 완료 처리하지 않는다.
 
-## Paused state and final benchmark summary
+## 일시 중지 상태와 최종 벤치마크 요약
 
-- User paused optimization and requested a summary. This entry supersedes the
-  active-job/active-goal status above. Colab tcgemm-opt is IDLE; no new experiment
-  is authorized by the summary request.
-- Register-cap handle16917 completed exit0. Five-round confirmation, TFLOPS:
-  4096: cap240 107.864967873, production107.398830457, cuBLAS108.559598956;
-  8192: cap240 117.161640172, production116.625553742, cuBLAS117.916355366.
-  Cap240 uses240 registers with zero spills and reaches about99.36% of paired
-  cuBLAS throughput. Basic FP32 accuracy checks passed at256/512/4096/8192.
-  It has NOT received the full independent TF32 validation or an ncu Tensor
-  utilization profile and is NOT adopted in production. Raw confirmation is in
-  results/2026-10-16/regcap-probe/confirmation.jsonl.
-- The finer register sweep regcap_fine.py did not start: its remote result
-  directory and archive do not exist. It has no benchmark result.
-- Production remains v13 COPY_MODE4/order6/epi4 for large tiles, within kernel7
-  rather than a separate numbered kernel. Its validated auto performance is
-  107.401/116.569 TFLOPS at4096/8192, paired cuBLAS108.551/117.892.
-  All13,224 strict checks passed. Tensor elapsed remains92.34% vs93.43% cuBLAS;
-  utilization parity has not been achieved, and the goal remains paused.
+- 사용자가 최적화를 중지하고 요약을 요청했다. 이 기록이 위의 실행 중 작업·진행 중 목표
+  상태를 대체한다. Colab tcgemm-opt는 IDLE이며 요약 요청은 새 실험 실행을 허용하지 않는다.
+- 레지스터 상한 핸들 16917이 종료 코드 0으로 완료됐다. 5회 재확인 결과(TFLOPS):
+  4096: cap240 107.864967873, 기본 107.398830457, cuBLAS 108.559598956;
+  8192: cap240 117.161640172, 기본 116.625553742, cuBLAS 117.916355366.
+  Cap240은 레지스터 240개, spill 0으로 같은 실행의 cuBLAS 처리량 대비 약 99.36%에 도달했다.
+  기본 FP32 정확도 검사는 256/512/4096/8192에서 통과했다.
+  전체 독립 TF32 검사와 ncu Tensor 사용률 프로파일은 **아직 수행하지 않았고 기본 경로에도
+  채택하지 않았다.** 원시 재확인 기록은 results/2026-10-16/regcap-probe/confirmation.jsonl이다.
+- 더 세밀한 레지스터 탐색 regcap_fine.py는 시작되지 않았다.
+  원격 결과 디렉터리와 압축파일이 없고 벤치마크 결과도 없다.
+- 기본 경로는 큰 타일에서 v13 COPY_MODE4/order6/epi4다. 당시에는 별도 번호의 커널이 아닌
+  kernel7 안에 있었다. 검증된 자동 성능은 4096/8192에서 107.401/116.569 TFLOPS,
+  같은 실행의 cuBLAS는 108.551/117.892다. 엄격 검사 13,224건 모두 통과했다.
+  Tensor elapsed는 92.34% vs cuBLAS 93.43%다. 사용률 동등성은 달성하지 못했고 목표는 중지 상태다.
+
+## 2026-11-01: cuBLASLt·CUTLASS 검증과 측정 기록
+
+검증 범위: 로컬 CUDA 12.0 / `sm_80` 기본·CUTLASS 포함 빌드와 검사 프로그램 컴파일 통과.
+2026-11-01 Colab A100-SXM4-40GB (39.49 GiB, SM80, 108 SM), CUDA 13.0.88에서도
+동일 소스를 빌드하고 GPU 수치 검사·성능 측정을 완료했습니다.
+
+### 라이브러리 A100 측정 결과
+
+단위는 TFLOPS이며, `M=N=K`, `α=0.5`, `β=3`, warmup 1회 후 50회 평균입니다.
+이번 실행의 세 구현을 같은 표에서 비교합니다. 10월의 자체 커널 실험과는 별도 측정입니다.
+
+| 구현 | 1024 | 2048 | 4096 | 8192 |
+|---|---:|---:|---:|---:|
+| cuBLAS TF32 (100) | 50.34 | 74.60 | 104.27 | 134.16 |
+| cuBLASLt TF32 (101) | 50.15 | 74.58 | 104.24 | 134.51 |
+| CUTLASS TF32 (102) | 44.79 | 65.34 | 84.90 | 104.04 |
+
+직사각형 4개(shape 복귀 포함) × alpha/beta 4조합 × 구현 2개의 **32개 검사 전부 통과**했습니다.
+추가로 세 구현 각각 128~8192의 7개 정방행렬 검사도 모두 통과했습니다.
+정방행렬 검사에서 FP32 기준 최대 정규화 오차는 cuBLASLt `3.858e-4`, CUTLASS `4.370e-4`로,
+허용치 `1e-3` 이내였습니다. 최대 절대 오차는 각각 `0.5435`, `0.5696`입니다.
+
+이번 설정에서 cuBLASLt와 cuBLAS는 비슷했고, CUTLASS 기본 설정은 8192에서 cuBLASLt의 약 77%였습니다.
+CUTLASS 타일·stage·스케줄 튜닝은 수행하지 않았습니다.
+각 벤치마크 프로세스의 입력은 기존 생성기의 같은 분포를 사용하지만 seed가 달라 동일한 값은 아닙니다.
+작은 크기의 시간에는 host dispatch 간격도 반영되며, CUDA Graph 기반 순수 커널 시간은 아닙니다.
+
+[원본 로그·장치 정보·실행 스크립트](benchmarks/library_a100_20261101/),
+[전체 크기별 수치](benchmarks/library_a100_20261101/summary.csv)를 보관했습니다.
+A100 세션 종료 후 서버에 활성 세션이 없음을 확인했습니다.
+
+
+## 2026-11-02: 더블 버퍼링 이후 최적화를 학습 단계로 분리
+
+- `07_frag_double_buffer.cuh`는 고정된 더블 버퍼링 기준 커널이다.
+  `08_ldmatrix_distributed.cuh`, `09_prefetch_epilogue.cuh`, `10_raked_b_copy.cuh`에
+  단계별 최적화를 누적한 전체 커널 본문을 추가했다(CLI 번호 8/9/10).
+  고정 단계들은 같은 타일 정책을 공유해 단계 비교 시 타일까지 함께 바뀌지 않게 했다.
+- 기존 설정 조합 구현은 include 경로를 제외하고 바이트 단위로 동일하게
+  `kernels/detail/frag_pipe_tuning.cuh`에 보존했다. 네이티브 튜너와 설정 검사는
+  `run_configured_frag_pipe`를 호출한다. 명시적인 TC7_* CLI 실험은 번호 7로 계속 지원한다.
+  TC7_* 환경변수를 지정하지 않으면 번호 7은 고정 학습 단계로 동작한다.
+- 라이브러리 구현을 내용 변경 없이 `08_library_gemm.cuh`에서 `99_library_gemm.cuh`로 옮겼다.
+  번호 100/101/102는 유지했다. include, README, 벤치마크 순서, 노트북 단계 이름을 갱신했다.
+  과거 소스 manifest는 해당 측정 당시의 경로를 유지한다.
+- 기존 직사각형/짧은 K/alpha-beta 검사에 고정 단계 검사도 추가했다.
+  FP32 및 독립적으로 TF32 양자화한 입력의 기준 결과와 비교한다.
+- 벤치마크·검사기·네이티브 튜너의 로컬 CUDA sm_80 빌드·링크를 통과했다.
+  최종 고정 단계 컴파일(4개 단계 x 3개 타일 형상)은 경고와 register spill 없이 통과했다.
+  원래 튜닝·라이브러리 내용 보존, 노트북/Python/셸 문법, README 링크와 diff 공백을 확인했다.
+- 로컬 GPU 접근이 차단되어 새 단계의 런타임 정확도 검사와 성능 측정은 실행하지 못했다.
+  기존 성능 표는 과거 측정 기록으로 유지한다.

@@ -3,75 +3,20 @@
 #include "common.cuh"
 #include "06_vectorized_frag.cuh"
 
-template <bool GUARDED>
-__device__ __forceinline__ uint32_t tc7_round_bits(uint32_t bits) {
-  if constexpr (GUARDED) {
-    // Match the cuBLAS SASS strategy: preserve Inf/NaN, otherwise add half
-    // a TF32 ulp. MMA ignores the low bits, so no explicit truncation is needed.
-    uint32_t result = bits;
-    const float value = __uint_as_float(bits);
-    asm volatile("{ .reg .pred special; .reg .f32 magnitude; "
-                 "abs.f32 magnitude, %1; "
-                 "setp.geu.f32 special, magnitude, 0f7f800000; "
-                 "@!special mad.lo.u32 %0, %0, 1, 4096; }"
-                 : "+r"(result) : "f"(value));
-    return result;
-  } else return bits + 0x1000u;
-}
-
-template <int MODE>
-__device__ __forceinline__ uint32_t tc7_fragment_bits(uint32_t bits) {
-  if constexpr (MODE >= 2) return bits;
-  else return tc7_round_bits<MODE == 1>(bits);
-}
-
-template <bool GUARDED>
-__device__ __forceinline__ void tc7_round_inplace(uint32_t &bits) {
-  if constexpr (GUARDED) {
-    const float value = __uint_as_float(bits);
-    asm volatile("{ .reg .pred special; .reg .f32 magnitude; "
-                 "abs.f32 magnitude, %1; "
-                 "setp.geu.f32 special, magnitude, 0f7f800000; "
-                 "@!special mad.lo.u32 %0, %0, 1, 4096; }"
-                 : "+r"(bits) : "f"(value));
-  } else {
-    asm volatile("add.u32 %0, %0, 4096;" : "+r"(bits));
-  }
-}
-
-// Kernel 7: warp 수준 소프트웨어 파이프라인 (CUTLASS MmaMultistage와 같은 구조).
-//
-// kernel 6의 PC sampling에서 남은 손실은 fragment LDS 결과 대기(short scoreboard, MIO)와
-// 타일 경계 barrier였다. SM당 warp가 8개뿐이라 다른 warp가 이 지연을 가려 주지 못한다.
-//
-// 1) fragment 더블 버퍼링: k8 step i의 mma를 내기 전에 step i+1의 fragment LDS를 먼저 낸다.
-//    LDS 지연이 이전 step의 HMMA 뒤에 숨는다.
-// 2) 타일 경계: 마지막 step 직전에 cp.async wait + __syncthreads를 하고,
-//    마지막 step의 mma보다 먼저 다음 타일 step 0의 fragment를 읽는다.
-// 3) threadblock rasterization: 연속 실행되는 block들이 GROUP개 행 블록 안에서 열 방향으로
-//    지그재그로 돌게 해 A 행 패널과 B 열 패널을 L2에서 재사용한다 (group <= 0이면 끔).
-// 4) step 단위로 fragment를 들고 있으려면(레지스터 2배) A를 LDS.64로 읽어야 한다.
-//    k 순열을 k8 step 단위로 바꿔 lane t가 step의 k = 8s+2t, 8s+2t+1을 쓰게 하면
-//    A의 두 값이 인접해 LDS.64 하나로 읽힌다.
-//    A swizzle: chunk ^ ((row & 3) << 1)   (half-warp 16 lane의 LDS.64가 32 bank에 퍼짐)
-//    B swizzle: chunk ^ f(t), t = (row >> 1) & 3  (quarter-warp의 LDS.128이 32 bank에 퍼짐)
+// 단계 7: fragment 더블 버퍼링과 타일 경계 동기화. 후속 최적화 없는 기준 단계.
+// 비교를 위해 7~10은 같은 shape에서 같은 타일 정책을 사용한다.
+// 설정 조합 전체를 지원하는 기존 구현은 detail/frag_pipe_tuning.cuh에 보존한다.
 template <const int BM, const int BN, const int BK, const int WM, const int WN,
-          const int STAGES, const int NUM_THREADS, const int MMA_ORDER = 0,
-          const int COPY_MODE = 0, const int EPILOGUE_VECTORS = 1, const int ROUND_MODE = 0>
+          const int STAGES, const int NUM_THREADS>
 __global__ void __launch_bounds__(NUM_THREADS)
-    tcgemmFragPipe(int M, int N, int K, float alpha, const float *A,
+    tcgemmFragDoubleBuffer(int M, int N, int K, float alpha, const float *A,
                    const float *B, float beta, float *C, int group) {
-  constexpr bool DEFER_ROUNDING = ROUND_MODE >= 2;
-  constexpr bool RAKE_B = COPY_MODE == 4;
-  constexpr bool CU_COPY = COPY_MODE == 3 || RAKE_B;
-  static_assert(ROUND_MODE >= 0 && ROUND_MODE <= 3);
-  constexpr bool LDM_A = MMA_ORDER >= 3;
-  constexpr bool NATURAL_N = MMA_ORDER >= 5;
-  constexpr int TRAVERSAL = NATURAL_N ? MMA_ORDER - 5 : LDM_A ? MMA_ORDER - 3 : MMA_ORDER;
-  constexpr bool DISTRIBUTE_COPY = COPY_MODE != 0;
-  constexpr bool STEP_POINTERS = COPY_MODE == 2;
-  static_assert(COPY_MODE >= 0 && COPY_MODE <= 4);
-  static_assert(EPILOGUE_VECTORS == 1 || EPILOGUE_VECTORS == 4 || EPILOGUE_VECTORS == 8);
+  constexpr bool RAKE_B = false;
+  constexpr bool CU_COPY = false;
+  constexpr bool LDM_A = false;
+  constexpr bool NATURAL_N = false;
+  constexpr bool DISTRIBUTE_COPY = false;
+  constexpr int EPILOGUE_VECTORS = 1;
   static_assert(BM * BN % (4 * NUM_THREADS * EPILOGUE_VECTORS) == 0);
   constexpr int A_STAGE = BM * BK;
   constexpr int B_STAGE = BK * BN;
@@ -80,7 +25,6 @@ __global__ void __launch_bounds__(NUM_THREADS)
   constexpr int LDC = BN + (NATURAL_N ? 8 : 4);
   constexpr int KSTEPS = BK / 8;
   static_assert((BM / WM) * (BN / WN) * WARPSIZE == NUM_THREADS);
-  static_assert(MMA_ORDER >= 0 && MMA_ORDER <= 6);
   static_assert(BK == 32, "A 한 행 = 8 chunk");
   static_assert(NFRAG == 4 || NFRAG == 8);
   static_assert(STAGES >= 3, "다음 타일 로드와 현재 타일 읽기가 겹치므로 3 stage 이상");
@@ -114,8 +58,7 @@ __global__ void __launch_bounds__(NUM_THREADS)
 
   // ---- cp.async 주소 (kernel 6과 같은 방식, swizzle만 다름) ----
   constexpr int A_CH = BK / 4, A_ROWS = NUM_THREADS / A_CH, A_ITERS = BM / A_ROWS;
-  // Raked B copies keep a thread on one K row and advance across adjacent
-  // N chunks. Global addresses then share one base plus constant offsets.
+  // 각 스레드는 복사 반복마다 다음 K행을 읽는다. 10번에서 N방향 복사로 바뀐다.
   constexpr int B_CH = RAKE_B ? NUM_THREADS / BK : BN / 4;
   constexpr int B_ROWS = RAKE_B ? BK : NUM_THREADS / B_CH;
   constexpr int B_ITERS = RAKE_B ? BN / (4 * B_CH) : BK / B_ROWS;
@@ -136,7 +79,7 @@ __global__ void __launch_bounds__(NUM_THREADS)
 #pragma unroll
     for (int j = 0; j < A_ITERS; ++j)
       if (part < 0 || (CU_COPY ? j / A_GROUP : j % KSTEPS) == part)
-        cp_async_16(aD + j * A_ROWS * BK, aG + (long)(j - (STEP_POINTERS && part >= 0 ? part : 0)) * A_ROWS * K);
+        cp_async_16(aD + j * A_ROWS * BK, aG + (long)j * A_ROWS * K);
     float *bD = Bs + stage * B_STAGE;
 #pragma unroll
     for (int j = 0; j < B_ITERS; ++j) {
@@ -145,16 +88,9 @@ __global__ void __launch_bounds__(NUM_THREADS)
       if (part < 0 || (CU_COPY ? j / B_GROUP : j % KSTEPS) == part)
         cp_async_16(bD + row * BN + ((chunk ^ swzB(LDM_A ? (row & 3) : ((row >> 1) & 3))) << 2),
                     bG + (RAKE_B ? (long)j * B_CH * 4 :
-                      (long)(j - (STEP_POINTERS && part >= 0 ? part : 0)) * B_ROWS * N));
+                      (long)j * B_ROWS * N));
     }
-    if (STEP_POINTERS && part >= 0) {
-      // Carry source pointers between copy steps. j-part is a compile-time
-      // 0 or KSTEPS, avoiding a fresh row-stride product for each step.
-      aG += part < KSTEPS - 1 ? (long)A_ROWS * K
-                              : BK - (long)(KSTEPS - 1) * A_ROWS * K;
-      bG += part < KSTEPS - 1 ? (long)B_ROWS * N
-                              : (long)(BK - (KSTEPS - 1) * B_ROWS) * N;
-    } else if (part < 0 || part == KSTEPS - 1) {
+    if (part < 0 || part == KSTEPS - 1) {
       aG += BK;
       bG += (long)BK * N;
     }
@@ -172,37 +108,11 @@ __global__ void __launch_bounds__(NUM_THREADS)
     bFragOff[q] = (LDM_A ? t : 2 * t) * BN +
                   ((((warpCol * WN + g * NFRAG) / 4 + q) ^ swzB(t)) << 2);
 
-  int bNaturalOff[NFRAG];
-#pragma unroll
-  for (int n = 0; n < NFRAG; ++n)
-    bNaturalOff[n] = t * BN + ((warpCol * WN + 8 * n + g) ^ (t << 3));
-
   uint32_t aFrag[2][MFRAG][4];
   uint32_t bFrag[2][NFRAG][2];
 
   auto loadFrag = [&](int buf, const float *as, const float *bs, int step) {
-    if constexpr (LDM_A) {
-      // Four 8x8 matrices of raw 16-bit halves hold one 16x8 FP32 tile.
-      // Lane groups 0..7/8..15/16..23/24..31 supply its four row-address sets.
-      // The returned words match TF32 a0=(g,t), a1=(g+8,t),
-      // a2=(g,t+4), a3=(g+8,t+4); B uses the same natural K order.
-      const int row = warpRow * WM + (lane & 15);
-      const int chunk = ((2 * step + (lane >> 4)) ^ (lane & 7));
-      const float *aBase = as + row * BK + chunk * 4;
-#pragma unroll
-      for (int m = 0; m < MFRAG; ++m) {
-        const uint32_t addr = static_cast<uint32_t>(
-            __cvta_generic_to_shared(aBase + m * 16 * BK));
-        uint32_t r0, r1, r2, r3;
-        asm volatile("ldmatrix.sync.aligned.m8n8.x4.shared.b16 "
-                     "{%0, %1, %2, %3}, [%4];"
-                     : "=r"(r0), "=r"(r1), "=r"(r2), "=r"(r3) : "r"(addr));
-        aFrag[buf][m][0] = tc7_fragment_bits<ROUND_MODE>(r0);
-        aFrag[buf][m][1] = tc7_fragment_bits<ROUND_MODE>(r1);
-        aFrag[buf][m][2] = tc7_fragment_bits<ROUND_MODE>(r2);
-        aFrag[buf][m][3] = tc7_fragment_bits<ROUND_MODE>(r3);
-      }
-    } else {
+
     const float *aBase = as + aRowOff + ((step ^ gSw) << 3);
 #pragma unroll
     for (int m = 0; m < MFRAG; ++m) {
@@ -210,47 +120,24 @@ __global__ void __launch_bounds__(NUM_THREADS)
       for (int h = 0; h < 2; ++h) {
         const float2 v =
             reinterpret_cast<const float2 *>(aBase + (m * 16 + h * 8) * BK)[0];
-        aFrag[buf][m][h + 0] = tc7_fragment_bits<ROUND_MODE>(__float_as_uint(v.x)); // a0 / a1 (k0)
-        aFrag[buf][m][h + 2] = tc7_fragment_bits<ROUND_MODE>(__float_as_uint(v.y)); // a2 / a3 (k1)
+        aFrag[buf][m][h + 0] = tf32_round_fast<true>(v.x); // a0 / a1 (k0)
+        aFrag[buf][m][h + 2] = tf32_round_fast<true>(v.y); // a2 / a3 (k1)
       }
     }
-    }
-    if constexpr (NATURAL_N) {
-#pragma unroll
-      for (int n = 0; n < NFRAG; ++n) {
-#pragma unroll
-        for (int r2 = 0; r2 < 2; ++r2) {
-          const float v = bs[bNaturalOff[n] + (8 * step + 4 * r2) * BN];
-          bFrag[buf][n][r2] = tc7_fragment_bits<ROUND_MODE>(__float_as_uint(v));
-        }
-      }
-    } else {
+
 #pragma unroll
     for (int r2 = 0; r2 < 2; ++r2) {
 #pragma unroll
       for (int q = 0; q < NFRAG / 4; ++q) {
         const float4 v = reinterpret_cast<const float4 *>(
             bs + bFragOff[q] + (8 * step + (LDM_A ? 4 * r2 : r2)) * BN)[0];
-        bFrag[buf][4 * q + 0][r2] = tc7_fragment_bits<ROUND_MODE>(__float_as_uint(v.x));
-        bFrag[buf][4 * q + 1][r2] = tc7_fragment_bits<ROUND_MODE>(__float_as_uint(v.y));
-        bFrag[buf][4 * q + 2][r2] = tc7_fragment_bits<ROUND_MODE>(__float_as_uint(v.z));
-        bFrag[buf][4 * q + 3][r2] = tc7_fragment_bits<ROUND_MODE>(__float_as_uint(v.w));
+        bFrag[buf][4 * q + 0][r2] = tf32_round_fast<true>(v.x);
+        bFrag[buf][4 * q + 1][r2] = tf32_round_fast<true>(v.y);
+        bFrag[buf][4 * q + 2][r2] = tf32_round_fast<true>(v.z);
+        bFrag[buf][4 * q + 3][r2] = tf32_round_fast<true>(v.w);
       }
-    }    }
+    }
 
-  };
-
-  auto roundFrag = [&](int buf) {
-#pragma unroll
-    for (int m = 0; m < MFRAG; ++m)
-#pragma unroll
-      for (int r = 0; r < 4; ++r)
-        tc7_round_inplace<ROUND_MODE == 2>(aFrag[buf][m][r]);
-#pragma unroll
-    for (int n = 0; n < NFRAG; ++n)
-#pragma unroll
-      for (int r = 0; r < 2; ++r)
-        tc7_round_inplace<ROUND_MODE == 2>(bFrag[buf][n][r]);
   };
 
   float acc[MFRAG][NFRAG][4] = {};
@@ -269,7 +156,6 @@ __global__ void __launch_bounds__(NUM_THREADS)
   const float *as = As;
   const float *bs = Bs;
   loadFrag(0, as, bs, 0);
-  if constexpr (DEFER_ROUNDING) roundFrag(0);
 
   for (int tile = 0; tile < numTiles; ++tile) {
 #pragma unroll
@@ -298,56 +184,16 @@ __global__ void __launch_bounds__(NUM_THREADS)
         bs = Bs + readStage * B_STAGE;
         loadFrag(0, as, bs, 0);
       }
-      if constexpr (DEFER_ROUNDING)
-        if (step > 0) roundFrag(step & 1);
 #pragma unroll
-      for (int outer = 0; outer < (TRAVERSAL == 2 ? NFRAG : MFRAG); ++outer) {
+      for (int m = 0; m < MFRAG; ++m) {
 #pragma unroll
-        for (int inner = 0; inner < (TRAVERSAL == 2 ? MFRAG : NFRAG); ++inner) {
-          // Compile-time permutations preserve each accumulator's K order.
-          // Serpentine traversal reuses an operand at row/column boundaries.
-          const int m = TRAVERSAL == 2 ? ((outer & 1) ? MFRAG - 1 - inner : inner) : outer;
-          const int n = TRAVERSAL == 2 ? outer :
-              ((TRAVERSAL == 1 && (outer & 1)) ? NFRAG - 1 - inner : inner);
+        for (int inner = 0; inner < NFRAG; ++inner) {
+          const int n = inner;
           mma_m16n8k8_tf32(acc[m][n], aFrag[step & 1][m], bFrag[step & 1][n]);
         }
       }
-      if constexpr (CU_COPY) {
-        if (step < KSTEPS - 1) {
-          if (tile + STAGES - 1 < numTiles) loadTile(writeStage, step);
-          if (step == KSTEPS - 2) {
-            if (tile + STAGES - 1 < numTiles) loadTile(writeStage, KSTEPS - 1);
-            cp_async_commit();
-            cp_async_wait<STAGES - 2>();
-            __syncthreads();
-            writeStage = writeStage == STAGES - 1 ? 0 : writeStage + 1;
-            readStage = readStage == STAGES - 1 ? 0 : readStage + 1;
-          }
-        }
-      }
-      if constexpr (DEFER_ROUNDING)
-        if (step == KSTEPS - 1 && tile + 1 < numTiles) roundFrag(0);
 
     }
-  }
-
-  // Load actual C values before the SMEM epilogue barriers. Subsequent
-  // batches overlap global loads with current shared loads and stores.
-  float4 cValues[2][EPILOGUE_VECTORS];
-  auto cVector = [&](int index) {
-    const int row = index / (BN / 4), col = (index % (BN / 4)) * 4;
-    return reinterpret_cast<float4 *>(C + (long)row * N + col);
-  };
-  auto loadC = [&](int buf, int batch) {
-#pragma unroll
-    for (int j = 0; j < EPILOGUE_VECTORS; ++j)
-      cValues[buf][j] = cVector(tid + (batch * EPILOGUE_VECTORS + j) * NUM_THREADS)[0];
-  };
-  if constexpr (EPILOGUE_VECTORS > 1) {
-    // Keep these loads after the MMA loop in compiler IR; holding them
-    // across the main loop would increase its register requirement.
-    asm volatile("" ::: "memory");
-    loadC(0, 0);
   }
 
   cp_async_wait<0>();
@@ -355,19 +201,7 @@ __global__ void __launch_bounds__(NUM_THREADS)
 
   // epilogue: kernel 6과 같다 (fragment n의 열 j -> 실제 열 j*NFRAG + n).
   float *Cs = smem;
-  if constexpr (NATURAL_N) {
-#pragma unroll
-    for (int m = 0; m < MFRAG; ++m)
-#pragma unroll
-      for (int n = 0; n < NFRAG; ++n)
-#pragma unroll
-        for (int h = 0; h < 2; ++h) {
-          const int row = warpRow * WM + 16 * m + g + 8 * h;
-          const int col = warpCol * WN + 8 * n + 2 * t;
-          reinterpret_cast<float2 *>(Cs + row * LDC + col)[0] =
-              make_float2(acc[m][n][2 * h], acc[m][n][2 * h + 1]);
-        }
-  } else {
+
 #pragma unroll
   for (int m = 0; m < MFRAG; ++m) {
 #pragma unroll
@@ -386,10 +220,9 @@ __global__ void __launch_bounds__(NUM_THREADS)
       }
     }
   }
-  }
+
   __syncthreads();
 
-  if constexpr (EPILOGUE_VECTORS == 1) {
   for (int i = tid; i < BM * BN / 4; i += NUM_THREADS) {
     const int r = i / (BN / 4);
     const int c = (i % (BN / 4)) * 4;
@@ -401,31 +234,6 @@ __global__ void __launch_bounds__(NUM_THREADS)
     v.z = alpha * ab.z + beta * v.z;
     v.w = alpha * ab.w + beta * v.w;
     p[0] = v;
-  }  } else {
-    constexpr int BATCHES = BM * BN / (4 * NUM_THREADS * EPILOGUE_VECTORS);
-    auto storeC = [&](int buf, int batch) {
-#pragma unroll
-      for (int j = 0; j < EPILOGUE_VECTORS; ++j) {
-        const int i = tid + (batch * EPILOGUE_VECTORS + j) * NUM_THREADS;
-        const int r = i / (BN / 4), c = (i % (BN / 4)) * 4;
-        const float4 ab = reinterpret_cast<const float4 *>(Cs + r * LDC + c)[0];
-        float4 v = cValues[buf][j];
-        v.x = alpha * ab.x + beta * v.x;
-        v.y = alpha * ab.y + beta * v.y;
-        v.z = alpha * ab.z + beta * v.z;
-        v.w = alpha * ab.w + beta * v.w;
-        cVector(i)[0] = v;
-      }
-    };
-    // Keep two fixed register buffers. A non-unrolled outer loop bounds
-    // live C values, while fixed buffer indices permit scalar replacement.
-#pragma unroll 1
-    for (int batch = 0; batch < BATCHES; batch += 2) {
-      if (batch + 1 < BATCHES) loadC(1, batch + 1);
-      storeC(0, batch);
-      if (batch + 2 < BATCHES) loadC(0, batch + 2);
-      if (batch + 1 < BATCHES) storeC(1, batch + 1);
-    }
   }
 
 }

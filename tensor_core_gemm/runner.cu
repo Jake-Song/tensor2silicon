@@ -1,5 +1,4 @@
 #include "runner.cuh"
-#include "kernels/08_library_gemm.cuh"
 
 #include "kernels/01_wmma_naive.cuh"
 #include "kernels/02_wmma_smem_warptile.cuh"
@@ -8,6 +7,11 @@
 #include "kernels/05_swizzle_tuned.cuh"
 #include "kernels/06_vectorized_frag.cuh"
 #include "kernels/07_frag_double_buffer.cuh"
+#include "kernels/08_ldmatrix_distributed.cuh"
+#include "kernels/09_prefetch_epilogue.cuh"
+#include "kernels/10_raked_b_copy.cuh"
+#include "kernels/detail/frag_pipe_tuning.cuh"
+#include "kernels/99_library_gemm.cuh"
 
 #include <cmath>
 #include <cstdio>
@@ -380,7 +384,7 @@ static void launchFragPipe(int M, int N, int K, float alpha, float *A, float *B,
 // TC7_CFG: 6: 64x64 3-stage, 128 threads.
 // TC7_CFG: 4: 64x128 3-stage, 5: 128x64 3-stage (smaller warp tiles).
 // TC7_CFG: 0: 128x256 3-stage  1: 256x128 3-stage  2: 128x128 3-stage  3: 128x128 4-stage
-void runFragPipe(int M, int N, int K, float alpha, float *A, float *B,
+void run_configured_frag_pipe(int M, int N, int K, float alpha, float *A, float *B,
                  float beta, float *C) {
   int cfg = frag_pipe_config().tile;
   if (cfg < 0) {
@@ -421,8 +425,41 @@ void runFragPipe(int M, int N, int K, float alpha, float *A, float *B,
   }
 }
 
+// Numbered learning stages share a tile policy to isolate pipeline changes.
+// Unlike the configurable tuner, these paths have fixed order/copy/epilogue modes.
+template <int STAGE, int BM, int BN, int WM, int WN>
+static void launchFragStage(int M, int N, int K, float alpha, float *A, float *B,
+                           float beta, float *C) {
+  constexpr int THREADS = (BM / WM) * (BN / WN) * WARPSIZE;
+  constexpr int INPUT_SMEM = tc6SmemFloats<BM, BN, 32, 3>();
+  constexpr int OUTPUT_SMEM = BM * (BN + (STAGE == 10 ? 8 : 4));
+  constexpr int SMEM = (INPUT_SMEM > OUTPUT_SMEM ? INPUT_SMEM : OUTPUT_SMEM) * sizeof(float);
+  require_divisible("kernel 7-10", M, N, K, BM, BN, 32);
+  auto kernel = tcgemmFragDoubleBuffer<BM, BN, 32, WM, WN, 3, THREADS>;
+  if constexpr (STAGE == 8) kernel = tcgemmLdmatrixDistributed<BM, BN, 32, WM, WN, 3, THREADS>;
+  if constexpr (STAGE == 9) kernel = tcgemmPrefetchEpilogue<BM, BN, 32, WM, WN, 3, THREADS>;
+  if constexpr (STAGE == 10) kernel = tcgemmRakedBCopy<BM, BN, 32, WM, WN, 3, THREADS>;
+  static bool configured = false;
+  if (!configured) { set_max_dynamic_smem(kernel, SMEM); configured = true; }
+  kernel<<<dim3(N / BN, M / BM), THREADS, SMEM>>>(M, N, K, alpha, A, B, beta, C, 8);
+}
+
+template <int STAGE>
+static void runFragStage(int M, int N, int K, float alpha, float *A, float *B,
+                         float beta, float *C) {
+  const long area = (long)M * N;
+  if (area <= 1024L * 1024)
+    launchFragStage<STAGE, 64, 64, 32, 32>(M,N,K,alpha,A,B,beta,C);
+  else if (area <= 2048L * 2048 && N % 128 == 0)
+    launchFragStage<STAGE, 64, 128, 32, 32>(M,N,K,alpha,A,B,beta,C);
+  else if (M % 128 == 0 && N % 256 == 0)
+    launchFragStage<STAGE, 128, 256, 64, 64>(M,N,K,alpha,A,B,beta,C);
+  else
+    launchFragStage<STAGE, 64, 64, 32, 32>(M,N,K,alpha,A,B,beta,C);
+}
+
 bool is_valid_kernel(int kernel_num) {
-  return (kernel_num >= 0 && kernel_num <= 7) || kernel_num == 100 ||
+  return (kernel_num >= 0 && kernel_num <= 10) || kernel_num == 100 ||
          kernel_num == 101
 #ifdef TC_ENABLE_CUTLASS
          || kernel_num == 102
@@ -447,7 +484,13 @@ const char *kernel_name(int kernel_num) {
   case 6:
     return "vectorized fragments + fast TF32 round";
   case 7:
-    return "fragment double buffering (warp-level pipeline)";
+    return "fragment double buffering (fixed stage; TC7_* selects tuner)";
+  case 8:
+    return "LDMATRIX A + distributed copies";
+  case 9:
+    return "LDMATRIX + prefetched C epilogue";
+  case 10:
+    return "raked B copy + natural N / serpentine MMA";
   case 101:
     return "cuBLASLt TF32 (cached heuristic)";
 #ifdef TC_ENABLE_CUTLASS
@@ -486,7 +529,22 @@ void run_kernel(int kernel_num, int M, int N, int K, float alpha, float *A,
     runVecFrag(M, N, K, alpha, A, B, beta, C);
     break;
   case 7:
-    runFragPipe(M, N, K, alpha, A, B, beta, C);
+    // Preserve legacy explicit TC7_* experiments, but make the default a real
+    // double-buffer-only stage. The native tuner uses the dedicated API below.
+    if (getenv("TC7_CFG") || getenv("TC7_ORDER") || getenv("TC7_COPY") ||
+        getenv("TC7_GROUP") || getenv("TC7_EPI") || getenv("TC7_ROUND"))
+      run_configured_frag_pipe(M,N,K,alpha,A,B,beta,C);
+    else
+      runFragStage<7>(M,N,K,alpha,A,B,beta,C);
+    break;
+  case 8:
+    runFragStage<8>(M,N,K,alpha,A,B,beta,C);
+    break;
+  case 9:
+    runFragStage<9>(M,N,K,alpha,A,B,beta,C);
+    break;
+  case 10:
+    runFragStage<10>(M,N,K,alpha,A,B,beta,C);
     break;
   case 101:
     runCublasLt(M, N, K, alpha, A, B, beta, C);

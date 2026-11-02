@@ -126,8 +126,14 @@ int main(int argc, char **argv) {
       std::shuffle(variants.begin(), variants.end(), schedule);
       for (const auto &v : variants) {
         configure_frag_pipe(v.config);
+        auto run = [&]() {
+          if (v.kernel == 7)
+            run_configured_frag_pipe(size, size, size, alpha, da, db, beta, dc);
+          else
+            run_kernel(v.kernel, size, size, size, alpha, da, db, beta, dc, handle);
+        };
         cudaCheck(cudaMemcpy(dc, c.data(), bytes, cudaMemcpyHostToDevice));
-        run_kernel(v.kernel, size, size, size, alpha, da, db, beta, dc, handle);
+        run();
         cudaCheck(cudaGetLastError());
         cudaCheck(cudaDeviceSynchronize());
         cudaCheck(cudaMemcpy(out.data(), dc, bytes, cudaMemcpyDeviceToHost));
@@ -137,12 +143,10 @@ int main(int argc, char **argv) {
           return EXIT_FAILURE;
         }
         // Warmup, then reset C so beta=3 cannot accumulate across trials.
-        for (int i = 0; i < 5; ++i)
-          run_kernel(v.kernel, size, size, size, alpha, da, db, beta, dc, handle);
+        for (int i = 0; i < 5; ++i) run();
         cudaCheck(cudaMemcpy(dc, c.data(), bytes, cudaMemcpyHostToDevice));
         cudaCheck(cudaEventRecord(begin));
-        for (int i = 0; i < repeats; ++i)
-          run_kernel(v.kernel, size, size, size, alpha, da, db, beta, dc, handle);
+        for (int i = 0; i < repeats; ++i) run();
         cudaCheck(cudaEventRecord(end));
         cudaCheck(cudaEventSynchronize(end));
         cudaCheck(cudaGetLastError());

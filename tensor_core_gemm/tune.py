@@ -43,7 +43,7 @@ def main():
     for size in args.sizes:
         samples = {}
         for trial in range(args.rounds):
-            variants = [('cublas', 100, {}), ('default', 7, {})]
+            variants = [('cublas', 100, {}), ('default', 7, {'TC7_GROUP': '8'})]
             variants += [(f'cfg{cfg}-order{order}-copy{copy}', 7,
                           {'TC7_CFG': str(cfg), 'TC7_ORDER': str(order), 'TC7_COPY': str(copy)})
                          for cfg in args.configs for order in args.orders for copy in args.copies

@@ -5,7 +5,7 @@ ARCH ?= sm_80
 NVCCFLAGS ?= -O3 -std=c++17 -arch=$(ARCH) -lineinfo
 BUILD_DIR := build
 BIN := $(BUILD_DIR)/tc_gemm
-HDRS := runner.cuh $(wildcard kernels/*.cuh)
+HDRS := runner.cuh $(wildcard kernels/*.cuh kernels/detail/*.cuh)
 
 all: build
 

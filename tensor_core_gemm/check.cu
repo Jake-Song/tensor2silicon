@@ -53,10 +53,26 @@ static void check_shape(int M, int N, int K, int tile, cublasHandle_t handle,
     cudaCheck(cudaMemcpy(dr,c.data(),c.size()*sizeof(float),cudaMemcpyHostToDevice));
     run_kernel(0,M,N,K,alpha,daq,dbq,beta,dr,handle);
     cudaCheck(cudaMemcpy(quantRef.data(),dr,c.size()*sizeof(float),cudaMemcpyDeviceToHost));
+    // Fixed learning stages must satisfy the same independent references.
+    for (int stage=7; stage<=10; ++stage) {
+      cudaCheck(cudaMemcpy(dc,c.data(),c.size()*sizeof(float),cudaMemcpyHostToDevice));
+      run_kernel(stage,M,N,K,alpha,da,db,beta,dc,handle);
+      cudaCheck(cudaGetLastError());
+      cudaCheck(cudaMemcpy(out.data(),dc,c.size()*sizeof(float),cudaMemcpyDeviceToHost));
+      const auto fp32=verify_matrix(ref.data(),out.data(),out.size(),1e-3);
+      const auto tf32=verify_matrix(quantRef.data(),out.data(),out.size(),1e-5);
+      const bool identity=alpha!=0 || beta!=1 || std::equal(out.begin(),out.end(),c.begin());
+      if (!fp32.ok || !tf32.ok || !identity) {
+        fprintf(stderr,"FAIL stage=%d M=%d N=%d K=%d rel=%g quant_rel=%g\n",
+                stage,M,N,K,fp32.relErr,tf32.relErr);
+        exit(EXIT_FAILURE);
+      }
+      ++checked;
+    }
     for (const auto &config : configs) {
       configure_frag_pipe(config);
       cudaCheck(cudaMemcpy(dc,c.data(),c.size()*sizeof(float),cudaMemcpyHostToDevice));
-      run_kernel(7,M,N,K,alpha,da,db,beta,dc,handle);
+      run_configured_frag_pipe(M,N,K,alpha,da,db,beta,dc);
       cudaCheck(cudaGetLastError());
       cudaCheck(cudaMemcpy(out.data(),dc,c.size()*sizeof(float),cudaMemcpyDeviceToHost));
       const auto result=verify_matrix(ref.data(),out.data(),out.size(),1e-3);
