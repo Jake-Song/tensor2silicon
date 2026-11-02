@@ -1,0 +1,11 @@
+{
+  "python": "3.13.16",
+  "platform": "Linux-6.6.159+-x86_64-with-glibc2.39",
+  "torch": "2.11.0+cu130",
+  "triton": "3.6.0",
+  "cuda_build": "13.0",
+  "gpu": "NVIDIA A100-SXM4-40GB",
+  "compute_capability": "8.0",
+  "shared_memory_per_block_optin_kib": 163.0,
+  "mode": "GPU"
+}

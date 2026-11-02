@@ -6,6 +6,8 @@
 
 실습: [노트북](../notebooks/week7_triton_matmul.ipynb) · [Colab에서 열기](https://colab.research.google.com/github/Jake-Song/tensor2silicon/blob/main/notebooks/week7_triton_matmul.ipynb)
 
+컴파일 산출물: [핵심 요약](compiled_artifacts_summary.md) · [원본](artifacts/a100/) · 주석 사본: [TTIR](artifacts/a100_annotated/kernel.ttir) · [TTGIR](artifacts/a100_annotated/kernel.ttgir) · [LLVM IR](artifacts/a100_annotated/kernel.llir) · [PTX](artifacts/a100_annotated/kernel.ptx) · [SASS](artifacts/a100_annotated/kernel.sass)
+
 ---
 
 ## ① 2차원 포인터 블록과 K축 누적
@@ -138,7 +140,15 @@ pid_n = (pid % num_pid_in_group) // group_size_m
   - 필요한 B 입력: 0~2번째 열 블록 **3줄** × K축 9개 = **27개 타일** (3개 행이 공유)
   - 합계: `27 + 27 = 54개` 입력 타일만 있으면 9개 출력 블록을 모두 계산할 수 있다(**90개 → 54개, 40% 감소**).
 
-타일 크기(`BM, BN, BK`)와 총 연산량은 전혀 바뀌지 않았지만, **비슷한 시각에 실행되는 프로그램들이 좁은 정사각 구역의 A·B를 함께 참조**하므로 L2 캐시 적중률이 높아지고 실제 HBM 트래픽이 줄어든다.
+타일 크기(`BM, BN, BK`)와 총 연산량은 전혀 바뀌지 않았지만, **비슷한 시각에 실행되는 프로그램들이 좁은 정사각 구역의 A·B를 함께 참조**하도록 배치하면 L2 캐시 적중률을 높이고 실제 HBM 트래픽을 줄일 수 있다.
+
+그룹핑은 **작은 출력 영역을 계산하는 데 필요한 고유 입력 타일 수를 줄이고, 같은 입력을 다시 사용하는 시간 간격을 짧게 만든다.** 행 우선 순회에서는 B 타일을 다음 출력 타일 행에서 다시 사용하기까지 출력 타일 한 행을 순회해야 하지만, 그룹핑에서는 인접한 출력 타일 행에서 더 빨리 재사용한다. 따라서 캐시 용량이 제한되어 있을 때, 필요한 입력이 L2에서 퇴출되기 전에 다시 요청될 가능성이 높아진다. 다만 그룹핑은 실행 순서를 매핑하는 방식이며, 실제 CTA 실행 시점과 순서는 GPU 스케줄링에 따라 달라질 수 있다.
+
+> **참고: `90개 → 54개`와 전체 HBM 트래픽은 구분해야 한다.**
+> - 위 숫자는 **첫 9개 출력 타일에 필요한 서로 다른 입력 타일 수**다. 처음 캐시가 비어 있고, 이 구간에서 한 번 가져온 입력 타일은 퇴출되지 않아 이후 요청에서 모두 재사용된다고 가정한다. 커널의 논리적 load 요청 수가 줄어드는 것은 아니며, **전체 실행의 HBM 트래픽이 40% 감소한다는 뜻도 아니다.**
+> - **모든 입력을 L2에 유지할 수 있다면**, 두 순서 모두 각 입력을 처음 한 번 HBM에서 읽고 계속 재사용하므로 전체 HBM 입력 트래픽은 같다.
+> - **캐시 재사용이 전혀 없다면**, 두 순서 모두 각 CTA의 입력 요청마다 HBM에서 읽으므로 전체 HBM 입력 트래픽은 같다.
+> - 그룹핑의 이점은 **일부 입력만 캐시에 유지할 수 있는 중간 상황**에서 나타난다. 같은 입력을 다시 요청하는 간격을 줄여 L2에서 퇴출되기 전에 재사용할 가능성을 높인다. 실제 감소량은 캐시 용량, 다른 CTA의 접근, 실행 스케줄 등에 달려 있으며, HBM 트래픽이 같다고 실행 시간까지 같다는 보장은 없다.
 
 근거: [Tutorial 03: L2 Cache Optimizations](https://triton-lang.org/main/getting-started/tutorials/03-matrix-multiplication.html#l2-cache-optimizations)
 

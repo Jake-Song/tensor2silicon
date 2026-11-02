@@ -1,0 +1,15 @@
+{
+  "shared_bytes": 24576,
+  "num_warps": 2,
+  "num_stages": 5,
+  "n_regs": 96,
+  "n_spills": 0,
+  "asm_keys": [
+    "source",
+    "ttir",
+    "ttgir",
+    "llir",
+    "ptx",
+    "cubin"
+  ]
+}
