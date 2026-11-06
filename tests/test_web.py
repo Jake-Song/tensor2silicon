@@ -128,7 +128,7 @@ class APITests(unittest.TestCase):
             return response.status, response.headers, response.read()
 
     def test_static_assets_and_catalog(self):
-        for path in ("/", "/style.css", "/app.js", "/architecture.js", "/architecture.css", "/favicon.svg"):
+        for path in ("/", "/style.css", "/theme.css", "/app.js", "/gpu.js", "/gpu.css", "/architecture.js", "/architecture.css", "/favicon.svg"):
             status, headers, body = self.request(path)
             self.assertEqual(status, 200)
             self.assertTrue(body)
@@ -136,6 +136,21 @@ class APITests(unittest.TestCase):
         status, _, body = self.request("/api/examples")
         self.assertEqual(status, 200)
         self.assertEqual(json.loads(body)["defaults"], web.DEFAULTS)
+
+    def test_legacy_simulator_opens_integrated_lab(self):
+        # Inspect the response before urllib follows the compatibility redirect.
+        import http.client
+        for path in ("/simulator", "/simulator/", "/simulator/index.html"):
+            with self.subTest(path=path):
+                connection = http.client.HTTPConnection("127.0.0.1", self.server.server_port)
+                try:
+                    connection.request("GET", path)
+                    response = connection.getresponse()
+                    self.assertEqual(response.status, 302)
+                    self.assertEqual(response.getheader("Location"), "/#gpu")
+                    response.read()
+                finally:
+                    connection.close()
 
     def test_files_outside_web_assets_are_not_served(self):
         for path in ("/README.md", "/../pyproject.toml", "/%2e%2e/pyproject.toml", "/toy/web.py"):

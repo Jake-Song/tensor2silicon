@@ -1,0 +1,109 @@
+/* Shared visual language for the compiler, architecture atlas and simulator. */
+:root {
+  color-scheme: dark;
+  --paper: #0c1119;
+  --bg: var(--paper);
+  --surface: #121c28;
+  --raised: #182431;
+  --field: #0e1722;
+  --ink: #e6edf3;
+  --text: var(--ink);
+  --muted: #9aabba;
+  --line: #2b3a49;
+  --green: #a9ead4;
+  --mint: #19372f;
+  --accent-hover: #c4f9e7;
+  --on-accent: #112a23;
+  --cyan: #80d0e6;
+  --amber: #e7b87d;
+  --red: #ff9999;
+  --code: #0b141e;
+  --code-text: #dce8ee;
+  --edge: #6e8a9d;
+  --grid-dot: #344658;
+  --compute-bg: #19372f;
+  --compute-border: #4b9c85;
+  --memory-bg: #1c2c43;
+  --memory-border: #6088b0;
+  --memory-text: #b7d7ff;
+  --control-bg: #362c24;
+  --control-border: #9a7850;
+  --control-text: #f0cea2;
+  --group-bg: #20303c;
+  --group-border: #697f91;
+  --timeline-issue: #70c9a6;
+  --timeline-memory: #d9b569;
+  --timeline-ready: #2b3a49;
+  --timeline-barrier: #aba6d9;
+  --timeline-track: #162330;
+  --timeline-selection: #ffad80;
+  --mono: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.site-header {
+  height: 82px;
+  padding: 0 4vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  border-bottom: 1px solid var(--line);
+}
+.site-header .site-brand {
+  display: inline-block;
+  color: var(--ink);
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.6;
+  letter-spacing: -2px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.site-brand > span:first-child { color: var(--green); }
+.site-header .brand-name {
+  margin-left: 20px;
+  color: var(--ink);
+  font-size: 12px;
+  letter-spacing: 2px;
+  vertical-align: middle;
+}
+.site-header .site-nav {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 12px;
+}
+.site-header .site-nav a {
+  padding: 9px 0;
+  color: var(--muted);
+  font-size: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+  background: transparent;
+}
+.site-header .site-nav a:hover,
+.site-header .site-nav a[aria-current="page"] { color: var(--green); }
+.site-header .site-nav a[aria-current="page"] { font-weight: 700; }
+a:focus-visible, button:focus-visible, input:focus-visible,
+select:focus-visible, summary:focus-visible, [tabindex="0"]:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 3px;
+}
+@media (max-width: 700px) {
+  .site-header {
+    height: auto;
+    min-height: 82px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 18px;
+    padding-top: 12px;
+    padding-bottom: 10px;
+  }
+  .site-header .site-nav { width: 100%; gap: 22px; }
+  .site-header .site-nav a { flex: 0 1 auto; }
+  .site-header .brand-name { margin-left: 14px; font-size: 10px; }
+}

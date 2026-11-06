@@ -22,9 +22,9 @@ GCC가 없어도 그래프와 Python 결과는 볼 수 있습니다.
 
 | 화면 | 사용 방법 |
 |---|---|
-| 컴파일러 실험실 | 예제와 M/K/N, fusion, tiling을 선택하고 **실행하기**를 누릅니다. Python → 그래프 → 최적화 → 코드 생성 → 검증 순서로 확인합니다. |
+| 컴파일러 실험실 | 예제와 M/K/N, fusion, 실행 대상(C CPU / sim-gpu)을 선택하고 **실행하기**를 누릅니다. Python → 그래프 → 최적화 → 코드 생성 → 검증 → GPU 내부 실행 순서로 확인합니다. CPU에서는 tiling도 사용할 수 있습니다. |
 | GPU / TPU 구조 | 상단 탭에서 GPU·TPU 구조도를 열고 블록을 눌러 내부 구조와 설명을 확인합니다. |
-| GPU 실행 | 아래 sim-gpu 설정 후 **컴파일 & 실행**을 눌러 assembly, warp timeline, NumPy와의 결과 비교를 확인합니다. |
+| GPU 내부 실행 | 아래 sim-gpu 설정 후 실험실의 실행 대상을 **sim-gpu · SIMT**로 선택합니다. **06 GPU 내부 실행**에서 그래프 노드에 연결된 커널, assembly, warp timeline과 메모리 배치를 확인합니다. |
 
 그래프 노드를 선택하면 shape·dtype·입력 관계를 볼 수 있고, 생성된 NumPy/C 코드는 복사할 수 있습니다.
 
@@ -52,8 +52,9 @@ float32 ISA를 지원하는 `sim-gpu` 저장소가 이 프로젝트와 나란히
 uv run --with-editable ../sim-gpu python -m toy.web --port 8010
 ```
 
-**http://127.0.0.1:8010/simulator**에서 실행 대상을 **sim-gpu · SIMT**로 선택합니다.
+**http://127.0.0.1:8010/**에서 실행 대상을 **sim-gpu · SIMT**로 선택합니다.
 예제·shape·fusion을 바꾸며 커널과 실행 흐름을 비교하세요.
+**04 코드 생성**에서 실제 SIMT assembly를, **06 GPU 내부 실행**에서 커널별 명령어와 warp timeline을 볼 수 있습니다. 기존 `/simulator` 주소는 통합 실험실의 GPU 단계로 이동합니다.
 시뮬레이터 통계는 교육용이며 실제 GPU 성능을 나타내지 않습니다.
 
 ## 터미널과 Python에서 사용하기

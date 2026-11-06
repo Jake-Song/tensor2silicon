@@ -1,0 +1,33 @@
+.gpu-viewer .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}.gpu-viewer .stat{background:var(--raised);border:1px solid var(--line);border-radius:7px;padding:13px 16px}.gpu-viewer .stat strong{font-size:25px;font-weight:550;display:block;line-height:1.35}.gpu-viewer .stat span{font-size:10px;color:var(--muted)}.gpu-viewer .kernel-toolbar{display:flex;gap:20px;align-items:flex-end;padding:14px 0 20px}.gpu-viewer .kernel-toolbar select{min-width:220px}.gpu-viewer .gpu-columns{display:grid;grid-template-columns:minmax(290px,.8fr) minmax(450px,1.5fr);gap:24px}.gpu-viewer .assembly-scroll{max-height:360px;overflow:auto;border:1px solid var(--line);border-radius:6px}.gpu-viewer table{width:100%;border-collapse:collapse;text-align:left;font-size:11px}.gpu-viewer th{font-size:10px;color:var(--muted);background:var(--raised);font-weight:600;position:sticky;top:0}.gpu-viewer th,.gpu-viewer td{padding:7px 9px;border-bottom:1px solid var(--line)}.gpu-viewer td{font-family:ui-monospace,Consolas,monospace}.gpu-viewer .assembly tr{cursor:pointer}.gpu-viewer .assembly tr:hover{background:var(--raised)}.gpu-viewer .assembly tr.selected{background:var(--mint);color:var(--green);box-shadow:inset 3px 0 var(--green)}.gpu-viewer .assembly td:nth-child(2){white-space:nowrap}.gpu-viewer .window-label{flex-direction:row;align-items:center;font-weight:400;font-size:10px}.gpu-viewer .window-label select{height:28px;font-size:10px}.gpu-viewer .legend{display:flex;flex-wrap:wrap;gap:13px;font-size:10px;color:var(--muted);margin-bottom:12px}.gpu-viewer .legend span{display:flex;align-items:center;gap:5px}.gpu-viewer .legend i{width:8px;height:8px;border-radius:2px}.gpu-viewer .issue{background:var(--timeline-issue)}.gpu-viewer .memory{background:var(--timeline-memory)}.gpu-viewer .ready{background:var(--timeline-ready)}.gpu-viewer .barrier{background:var(--timeline-barrier)}.gpu-viewer canvas{display:block;width:100%;border:1px solid var(--line);border-radius:7px;background:var(--field)}.gpu-viewer .timeline-controls{display:flex;align-items:center;gap:10px;margin-top:10px}.gpu-viewer .timeline-controls label,.gpu-viewer .timeline-controls output{font-size:10px;white-space:nowrap;color:var(--muted)}.gpu-viewer .timeline-controls input{flex:1;min-width:50px;accent-color:var(--green)}.gpu-viewer .timeline-detail{font:10px/1.8 ui-monospace,monospace;min-height:40px;color:var(--muted);background:var(--raised);padding:8px 10px;border-radius:5px;overflow-wrap:anywhere}.gpu-viewer .insights{font-size:11px;color:var(--muted)}.gpu-viewer .insights p{padding-left:10px;border-left:2px solid var(--group-border)}.gpu-viewer .insights b{color:var(--ink)}
+.gpu-viewer { padding: 22px; margin-top: 20px; }
+.gpu-viewer .section-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+.gpu-viewer h2 { font-size: 16px; }
+.gpu-viewer h3 { font-size: 12px; margin: 0 0 12px; }
+.gpu-viewer .note { color: var(--muted); font-size: 12px; line-height: 1.8; margin: 10px 0; }
+.gpu-viewer .tag { border-radius: 4px; background: var(--mint); color: var(--green); padding: 4px 8px; font-size: 10px; }
+.gpu-viewer .muted { font-size: 11px; }
+.gpu-viewer .gpu-columns > *, .gpu-viewer .stat { min-width: 0; }
+.gpu-viewer .stat strong { overflow-wrap: anywhere; }
+.gpu-viewer details { margin-top: 16px; }
+.gpu-viewer summary { cursor: pointer; font-size: 12px; color: var(--muted); padding: 6px 0; }
+.gpu-viewer details pre { margin-top: 8px; border-radius: 7px; max-height: 350px; }
+.gpu-viewer .table-scroll { overflow: auto; }
+.gpu-graph .graph-canvas svg { max-width: 700px; margin: auto; }
+.gpu-prompt { padding: 28px; }
+.gpu-prompt p { color: var(--muted); margin: 12px 0 20px; }
+.gpu-prompt .primary-button { margin: 0; }
+.backend-control { flex: 1; min-width: 145px; }
+.backend-note { color: var(--muted); font-size: 12px; line-height: 1.8; margin-top: 12px; }
+.kernel-link { display: inline-block; color: var(--green); font-size: 12px; margin-top: 14px; text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 1100px) { .gpu-viewer .gpu-columns { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 680px) {
+  .gpu-viewer { padding: 16px; }
+  .gpu-viewer .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .gpu-viewer .stat { padding: 12px; }
+  .gpu-viewer .stat strong { font-size: 22px; }
+  .gpu-viewer .kernel-toolbar { flex-wrap: wrap; gap: 10px; }
+  .gpu-viewer .kernel-toolbar select { min-width: 0; width: 100%; }
+  .gpu-viewer .timeline-controls { flex-wrap: wrap; }
+  .gpu-viewer .timeline-controls input { flex-basis: 50%; }
+  .backend-control { flex-basis: 100%; min-width: 0; }
+}

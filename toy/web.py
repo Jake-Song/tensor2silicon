@@ -196,14 +196,12 @@ class Handler(BaseHTTPRequestHandler):
     # Explicit asset routes keep repository files outside the web server.
     ASSETS = {"/": ("index.html", "text/html; charset=utf-8"),
               "/style.css": ("style.css", "text/css; charset=utf-8"),
+              "/theme.css": ("theme.css", "text/css; charset=utf-8"),
               "/app.js": ("app.js", "text/javascript; charset=utf-8"),
+              "/gpu.js": ("gpu.js", "text/javascript; charset=utf-8"),
+              "/gpu.css": ("gpu.css", "text/css; charset=utf-8"),
               "/architecture.js": ("architecture.js", "text/javascript; charset=utf-8"),
               "/architecture.css": ("architecture.css", "text/css; charset=utf-8"),
-              "/simulator": ("simulator/index.html", "text/html; charset=utf-8"),
-              "/simulator/": ("simulator/index.html", "text/html; charset=utf-8"),
-              "/simulator/app.js": ("simulator/app.js", "text/javascript; charset=utf-8"),
-              "/simulator/style.css": ("simulator/style.css", "text/css; charset=utf-8"),
-              "/simulator/favicon.svg": ("simulator/favicon.svg", "image/svg+xml"),
               "/favicon.svg": ("favicon.svg", "image/svg+xml")}
 
     def send_body(self, status, data: bytes, content_type):
@@ -224,7 +222,13 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         path = urlsplit(self.path).path
-        if path == "/api/examples":
+        if path in ("/simulator", "/simulator/", "/simulator/index.html"):
+            self.send_response(302)
+            self.send_header("Location", "/#gpu")
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+        elif path == "/api/examples":
             self.send_json(200, examples())
         elif path in self.ASSETS:
             name, mime = self.ASSETS[path]

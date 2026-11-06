@@ -8,30 +8,29 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="/architecture.css">
+  <link rel="stylesheet" href="/gpu.css">
+  <link rel="stylesheet" href="/theme.css">
   <script type="module" src="/app.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#lesson">본문으로 건너뛰기</a>
-  <header class="topbar">
-    <a class="brand" href="/" aria-label="Tensor to Silicon 처음으로">
-      <svg viewBox="0 0 36 36" aria-hidden="true"><path d="M5 10 18 3l13 7v16l-13 7-13-7Z M5 10l13 8 13-8 M18 18v15"/></svg>
-      <span>tensor<span class="brand-to">2</span>silicon</span>
-      <span class="brand-divider"></span><span class="lab-label">LEARNING LAB</span>
-    </a>
-    <nav class="view-switcher" aria-label="학습 화면"><a href="#compiler" data-view="compiler" aria-current="page">컴파일러 실험실</a><a href="#architecture" data-view="architecture">GPU / TPU 구조</a><a href="/simulator">GPU 실행</a></nav>
-    <div class="environment"><span class="live-dot"></span><span id="environment-label">LOCAL CPU / FLOAT32</span></div>
+  <header class="topbar site-header">
+    <a class="site-brand" href="/" aria-label="Tensor to Silicon 처음으로">t<span>→</span>s <span class="brand-name">TENSOR TO SILICON</span></a>
+    <nav class="view-switcher site-nav" aria-label="학습 화면"><a href="#compiler" data-view="compiler" aria-current="page">컴파일러 실험실</a><a href="#architecture" data-view="architecture">GPU / TPU 구조</a></nav>
+    <span id="environment-label" hidden>LOCAL CPU / FLOAT32</span>
   </header>
 
   <div class="app-shell">
     <aside class="sidebar compiler-sidebar">
       <div class="rail-label">THE COMPILER JOURNEY</div>
-      <p class="rail-title">작은 식 하나,<br>다섯 번의 변환.</p>
+      <p class="rail-title">작은 식 하나,<br>실행까지 연결합니다.</p>
       <nav class="stages" aria-label="학습 단계">
         <button class="stage-nav active" data-step="0" aria-current="step"><span class="step-number">01</span><span>Python 코드<small>Start with a function</small></span></button>
         <button class="stage-nav" data-step="1"><span class="step-number">02</span><span>그래프 추출<small>Capture the operations</small></span></button>
         <button class="stage-nav" data-step="2"><span class="step-number">03</span><span>연산 합치기<small>Fuse the graph</small></span></button>
         <button class="stage-nav" data-step="3"><span class="step-number">04</span><span>코드 생성<small>Lower to executable code</small></span></button>
         <button class="stage-nav" data-step="4"><span class="step-number">05</span><span>실행과 검증<small>Close the loop</small></span></button>
+        <button class="stage-nav" data-step="5"><span class="step-number">06</span><span>GPU 내부 실행<small>Inspect SIMT execution</small></span></button>
       </nav>
       <div class="rail-note"><span class="note-symbol">↳</span><p>직접 바꾸고, 살펴보고,<br>같은 결과인지 확인하세요.</p><span class="small-tag">INTERACTIVE LESSON</span></div>
       <div class="rail-footer"><span class="mini-chip">ƒ</span><span>Built on the toy compiler<br><small>NumPy · Graph IR · C</small></span></div>
@@ -51,7 +50,7 @@
 
     <main id="lesson" tabindex="-1">
       <div id="compiler-view">
-      <div class="lesson-heading"><div><p id="eyebrow" class="eyebrow">01 / THE SOURCE</p><h1 id="lesson-title">모든 것은 함수에서 시작됩니다.</h1><p id="lesson-description" class="lesson-description">익숙한 Python 식이 컴파일러의 언어로 바뀌는 과정을 따라가 보세요.</p></div><span class="chapter-count" aria-hidden="true"><b id="chapter-number">01</b> / 05</span></div>
+      <div class="lesson-heading"><div><p id="eyebrow" class="eyebrow">01 / THE SOURCE</p><h1 id="lesson-title">모든 것은 함수에서 시작됩니다.</h1><p id="lesson-description" class="lesson-description">익숙한 Python 식이 컴파일러의 언어로 바뀌는 과정을 따라가 보세요.</p></div><span class="chapter-count" aria-hidden="true"><b id="chapter-number">01</b> / 06</span></div>
 
       <section class="controls" aria-label="실험 설정">
         <div class="controls-heading"><h2><span class="control-icon">⊞</span> 실험 설정</h2><span class="muted">변경 후 실행하면 모든 단계가 갱신됩니다</span></div>
@@ -59,16 +58,18 @@
           <label class="example-control">예제 <select id="example" name="example" disabled><option>불러오는 중…</option></select></label>
           <fieldset class="dimensions"><legend>텐서 차원</legend><label>M<input id="m" name="m" type="number" min="1" max="128" step="1" value="16" required></label><span>×</span><label>K<input id="k" name="k" type="number" min="1" max="128" step="1" value="8" required></label><span>×</span><label>N<input id="n" name="n" type="number" min="1" max="128" step="1" value="4" required></label></fieldset>
           <label class="fusion-control">Fusion <select id="fusion" name="fusion"><option value="full">Matmul까지 합치기</option><option value="epilogue">원소별 연산만</option><option value="none">합치지 않기</option></select></label>
+          <label class="backend-control">실행 대상 <select id="backend" name="backend"><option value="c">C · CPU</option><option value="simgpu">sim-gpu · SIMT</option></select></label>
           <label class="tile-control"><input id="tiled" name="tiled" type="checkbox"><span>Tiling<small>16 × 16 × 16</small></span></label>
           <button id="run-button" class="primary-button" type="submit" disabled><span>↻</span> 실행하기</button>
         </form>
+        <p id="backend-note" class="backend-note">C · CPU: M, K, N ≤ 128 · tiling으로 행렬곱의 루프 구조를 바꿀 수 있습니다.</p>
       </section>
       <div class="status-line"><span id="run-status" role="status" aria-live="polite">로컬 컴파일러에 연결하는 중…</span><span class="seed-note">DETERMINISTIC · SEED 0</span></div>
       <div id="error-message" class="error-banner" role="alert" hidden></div>
       <div id="stage-content" aria-busy="true"><div class="empty-state"><span class="spinner"></span><p>첫 번째 실험을 준비하고 있습니다.</p></div></div>
 
-      <footer class="lesson-footer"><button id="previous" class="quiet-button" disabled>← 이전 단계</button><span id="footer-step">STEP 01 OF 05</span><button id="next" class="next-button">그래프 추출 살펴보기 <span>→</span></button></footer>
-      <p class="method-note">실제 toy 컴파일러로 계산합니다. CPU float32 예제이며, 실행 검증은 성능 벤치마크가 아닙니다.</p>
+      <footer class="lesson-footer"><button id="previous" class="quiet-button" disabled>← 이전 단계</button><span id="footer-step">STEP 01 OF 06</span><button id="next" class="next-button">그래프 추출 살펴보기 <span>→</span></button></footer>
+      <p class="method-note">실제 toy 컴파일러로 계산합니다. CPU 또는 sim-gpu float32 결과를 검증하며, 시뮬레이터 cycle은 실제 GPU 실행 시간이 아닙니다.</p>
       </div>
       <section id="architecture-view" aria-label="GPU와 TPU 구조 탐색" hidden></section>
     </main>

@@ -1,16 +1,19 @@
 import {mountArchitecture} from "./architecture.js";
+import {gpuPanel, mountGpu} from "./gpu.js";
 
 const $ = (selector) => document.querySelector(selector);
 const escape = (value) => String(value).replace(/[&<>"']/g, (c) => ({"&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"}[c]));
 const shape = (dims) => `[${dims.join(" × ")}]`;
 const pad = (n) => String(n).padStart(2, "0");
-const state = {step: 0, data: null, busy: false, selected: null, codeTab: "python", examples: []};
+const state = {step: 0, data: null, busy: false, selected: null, codeTab: "python", examples: [], gpuKernel: 0};
+let gpuView;
 const stages = [
   ["THE SOURCE", "모든 것은 함수에서 시작됩니다.", "익숙한 Python 식이 컴파일러의 언어로 바뀌는 과정을 따라가 보세요."],
   ["GRAPH CAPTURE", "계산하지 않고, 연산을 기록합니다.", "값 대신 shape을 가진 Tensor를 전달하면, 연산과 의존 관계가 그래프로 남습니다."],
   ["GRAPH FUSION", "함께 계산할 연산을 찾아봅니다.", "중간 배열을 줄일 수 있도록 연결된 연산을 합칩니다. 모든 연산을 합칠 수 있는 것은 아닙니다."],
   ["CODE GENERATION", "그래프가 실행할 코드로 바뀝니다.", "같은 계산을 NumPy 함수와 C 루프로 표현합니다. 실제 생성된 소스를 비교해 보세요."],
   ["EXECUTE & VERIFY", "표현이 달라도, 결과는 같아야 합니다.", "원래 함수의 NumPy 결과를 기준으로 각 실행 경로가 같은 값을 계산하는지 확인합니다."],
+  ["GPU EXECUTION", "연산이 스레드에서 실행됩니다.", "같은 실험의 최적화된 그래프를 따라 커널, SIMT 명령어와 warp 실행 흐름을 살펴보세요."],
 ];
 const explanations = {
   input: "함수에 전달하는 입력입니다. 추적할 때는 실제 숫자 대신 shape과 dtype만 가진 추상 Tensor가 됩니다.",
@@ -101,7 +104,8 @@ function inspector() {
   state.selected = {graph: key, id: node.id};
   const inputs = node.inputs.map((id) => nodes.find((n) => n.id === id)?.name ?? id);
   const attrs = Object.entries(node.attrs).map(([k, v]) => `${k} = ${JSON.stringify(v)}`).join("\n");
-  return `<div class="inspector"><span class="section-kicker">NODE INSPECTOR · ${key === "raw" ? "RAW" : "OPTIMIZED"}</span><h3>${escape(node.op)}</h3><p>${explanations[node.op] ?? "그래프의 내부 연산입니다."}</p><dl><div><dt>노드 이름</dt><dd>${escape(node.name)}</dd></div><div><dt>입력 의존 관계</dt><dd>${escape(inputs.join(", ") || "함수 입력")}</dd></div><div><dt>출력 shape / dtype</dt><dd>${shape(node.shape)} · ${node.dtype}</dd></div>${attrs ? `<div><dt>속성</dt><dd>${escape(attrs)}</dd></div>` : ""}</dl>${node.body ? `<details open><summary>Fusion 내부 보기 · ${node.body.filter((n) => n.op !== "param").length}개 연산</summary>${node.body.map((inner) => `<div class="inner-node">${escape(inner.name)} = ${escape(inner.op)}<small>${inner.op === "param" ? "외부 입력 " + escape(inputs[inner.attrs.index]) : escape(inner.inputs.map((id) => node.body.find((n) => n.id === id).name).join(", "))} · ${shape(inner.shape)}</small></div>`).join("")}</details>` : ""}</div>`;
+  const kernel = key === "optimized" ? state.data.simulation?.kernels.findIndex(k => k.node_id === node.id) ?? -1 : -1;
+  return `<div class="inspector"><span class="section-kicker">NODE INSPECTOR · ${key === "raw" ? "RAW" : "OPTIMIZED"}</span><h3>${escape(node.op)}</h3><p>${explanations[node.op] ?? "그래프의 내부 연산입니다."}</p><dl><div><dt>노드 이름</dt><dd>${escape(node.name)}</dd></div><div><dt>입력 의존 관계</dt><dd>${escape(inputs.join(", ") || "함수 입력")}</dd></div><div><dt>출력 shape / dtype</dt><dd>${shape(node.shape)} · ${node.dtype}</dd></div>${attrs ? `<div><dt>속성</dt><dd>${escape(attrs)}</dd></div>` : ""}</dl>${node.body ? `<details open><summary>Fusion 내부 보기 · ${node.body.filter((n) => n.op !== "param").length}개 연산</summary>${node.body.map((inner) => `<div class="inner-node">${escape(inner.name)} = ${escape(inner.op)}<small>${inner.op === "param" ? "외부 입력 " + escape(inputs[inner.attrs.index]) : escape(inner.inputs.map((id) => node.body.find((n) => n.id === id).name).join(", "))} · ${shape(inner.shape)}</small></div>`).join("")}</details>` : ""}${kernel >= 0 ? `<a class="kernel-link" href="#gpu" data-open-kernel="${kernel}">이 연산의 GPU 실행 보기 →</a>` : ""}</div>`;
 }
 
 function rawStage() {
@@ -118,22 +122,47 @@ function fusionStage() {
     ${callout("무엇을 합칠 수 있을까요?", note)}<div class="exercise"><span class="exercise-label">TRY IT</span><span>Fusion을 ‘원소별 연산만’으로 바꾸어 실행하거나 ‘공유되는 중간값’ 예제를 선택해 비교하세요.</span></div>`;
 }
 
+function generatedAssembly() {
+  return state.data.simulation?.kernels.map(k => k.source).join("\n") ?? "";
+}
+
 function codeStage() {
-  const python = state.codeTab === "python";
-  return `<div class="tabs" role="tablist" aria-label="생성 코드 언어"><button role="tab" id="tab-python" class="tab" data-tab="python" aria-selected="${python}" aria-controls="code-panel" tabindex="${python ? 0 : -1}">NumPy / Python</button><button role="tab" id="tab-c" class="tab" data-tab="c" aria-selected="${!python}" aria-controls="code-panel" tabindex="${python ? -1 : 0}">Native / C</button></div>
-    <div id="code-panel" role="tabpanel" aria-labelledby="tab-${python ? "python" : "c"}" class="code-stage">${codePanel(python ? state.data.python_code : state.data.c_code, python ? "generated_forward.py · RAW GRAPH" : "toy_run.c · OPTIMIZED GRAPH", python ? "python_code" : "c_code")}</div>
-    ${callout(python ? "이 소스가 GraphModule의 실행 함수입니다" : "최적화가 루프 구조에 드러납니다", python ? "함수를 다시 추적하지 않습니다. 입력을 float32로 변환하고 shape을 확인한 뒤, 생성된 NumPy 연산을 실행합니다. 이 코드는 퓨전 전 그래프를 표현합니다." : "C 코드는 최적화된 그래프를 사용합니다. Fusion 내부 값은 스칼라로 계산하고, tiling을 켜면 matmul에 16 × 16 × 16 블록 루프가 추가됩니다. GCC가 이 소스를 로컬 CPU에서 실행할 라이브러리로 컴파일합니다.")}`;
+  const sim = Boolean(state.data.simulation);
+  const tabs = [["python", "NumPy / Python"], ["c", sim ? "C · 비교용" : "Native / C"]];
+  if (sim) tabs.push(["assembly", "SIMT assembly"]);
+  const selected = state.codeTab;
+  const sources = {python: state.data.python_code, c: state.data.c_code, assembly: generatedAssembly()};
+  const titles = {python: "generated_forward.py · RAW GRAPH", c: "toy_run.c · OPTIMIZED GRAPH", assembly: "kernels.asm · OPTIMIZED GRAPH"};
+  const keys = {python: "python_code", c: "c_code", assembly: "assembly"};
+  const notes = {
+    python: ["이 소스가 GraphModule의 실행 함수입니다", "입력을 float32로 변환하고 shape을 확인한 뒤 생성된 NumPy 연산을 실행합니다. 이 코드는 퓨전 전 그래프를 표현합니다."],
+    c: ["최적화가 루프 구조에 드러납니다", sim ? "현재 실행 대상은 sim-gpu입니다. 이 C 소스는 같은 최적화 그래프의 CPU 표현을 비교하기 위한 코드입니다. 실제 실행한 GPU 명령은 SIMT assembly 탭에서 확인하세요." : "C 코드는 최적화된 그래프를 사용합니다. Fusion 내부 값은 스칼라로 계산하고, tiling을 켜면 matmul에 16 × 16 × 16 블록 루프가 추가됩니다. GCC가 이 소스를 로컬 CPU에서 실행할 라이브러리로 컴파일합니다."],
+    assembly: ["이 명령어가 sim-gpu에서 실행되었습니다", "출력 원소 하나를 스레드 하나가 계산합니다. GPU 내부 실행 단계에서 커널별 명령어와 warp timeline을 연결해 볼 수 있습니다."],
+  };
+  return `<div class="tabs" role="tablist" aria-label="생성 코드 언어">${tabs.map(([key, label]) => `<button role="tab" id="tab-${key}" class="tab" data-tab="${key}" aria-selected="${selected === key}" aria-controls="code-panel" tabindex="${selected === key ? 0 : -1}">${label}</button>`).join("")}</div>
+    <div id="code-panel" role="tabpanel" aria-labelledby="tab-${selected}" class="code-stage">${codePanel(sources[selected], titles[selected], keys[selected])}</div>
+    ${callout(...notes[selected])}`;
 }
 
 function resultsStage() {
   const d = state.data, values = Object.values(d.checks);
   const failed = values.some((c) => c.status === "fail"), unavailable = values.some((c) => c.status === "unavailable"), warning = failed || unavailable;
-  const title = failed ? "실행 결과에 차이가 있습니다." : unavailable ? "Python 검증 완료 · C 실행은 사용할 수 없습니다." : "모든 실행 경로의 결과가 일치합니다.";
-  const labels = {python: "Generated Python", interpreter: "Raw IR interpreter", optimized_interpreter: "Optimized IR interpreter", c: "Compiled C"};
-  return `<div class="results-header ${warning ? "warning" : ""}"><span class="result-icon" aria-hidden="true">${warning ? "!" : "✓"}</span><div><h2>${title}</h2><p>실제 로컬 CPU 실행 결과를 eager NumPy와 비교했습니다.</p></div></div><div class="results-grid"><section class="panel"><div class="panel-head"><h2>정확성 검증</h2><span class="pill mint">CPU · f32</span></div><table class="checks-table"><thead><tr><th>실행 경로</th><th>상태</th><th>최대 절대 오차</th></tr></thead><tbody>${Object.entries(d.checks).map(([key, check]) => `<tr><td>${labels[key]}</td><td><span class="check-status ${check.status}">${check.status.toUpperCase()}</span></td><td class="error-value">${check.max_abs_error === undefined ? "—" : check.max_abs_error.toExponential(2)}</td></tr>`).join("")}</tbody></table>${d.checks.c.message ? `<p class="unavailable-message">${escape(d.checks.c.message)}</p>` : ""}<div class="tolerance">np.allclose · rtol=${d.tolerance.rtol} · atol=${d.tolerance.atol}</div></section>
-    <section class="panel"><div class="panel-head"><h2>출력 Y 미리보기</h2><span class="pill">${shape(d.output.shape)}</span></div><div class="matrix-wrapper"><table class="matrix-output" aria-label="eager NumPy 출력의 왼쪽 위 원소"><tbody>${d.output.preview.map((row) => `<tr>${row.map((value) => `<td>${value.toFixed(3)}</td>`).join("")}</tr>`).join("")}</tbody></table></div><p class="matrix-note">Eager NumPy 기준 · 왼쪽 위 최대 4 × 4 원소 · 소수 셋째 자리까지 표시</p></section></div>
+  const sim = d.config.backend === "simgpu";
+  const backendName = sim ? "sim-gpu" : "C";
+  const title = failed ? "실행 결과에 차이가 있습니다." : unavailable ? `Python 검증 완료 · ${backendName} 실행은 사용할 수 없습니다.` : "모든 실행 경로의 결과가 일치합니다.";
+  const labels = {python: "Generated Python", interpreter: "Raw IR interpreter", optimized_interpreter: "Optimized IR interpreter", c: "Compiled C", simgpu: "sim-gpu · SIMT"};
+  return `<div class="results-header ${warning ? "warning" : ""}"><span class="result-icon" aria-hidden="true">${warning ? "!" : "✓"}</span><div><h2>${title}</h2><p>${unavailable ? "사용 가능한 실행 경로의" : sim ? "sim-gpu" : "로컬 CPU"} 실행 결과를 eager NumPy와 비교했습니다.</p></div></div><div class="results-grid"><section class="panel"><div class="panel-head"><h2>정확성 검증</h2><span class="pill mint">${sim ? "SIMT" : "CPU"} · f32</span></div><table class="checks-table"><thead><tr><th>실행 경로</th><th>상태</th><th>최대 절대 오차</th></tr></thead><tbody>${Object.entries(d.checks).map(([key, check]) => `<tr><td>${labels[key]}</td><td><span class="check-status ${check.status}">${check.status.toUpperCase()}</span></td><td class="error-value">${check.max_abs_error === undefined ? "—" : check.max_abs_error.toExponential(2)}</td></tr>`).join("")}</tbody></table>${Object.values(d.checks).filter(c => c.message).map(c => `<p class="unavailable-message">${escape(c.message)}</p>`).join("")}<div class="tolerance">np.allclose · rtol=${d.tolerance.rtol} · atol=${d.tolerance.atol}</div></section>
+    <section class="panel"><div class="panel-head"><h2>출력 Y 미리보기</h2><span class="pill">${shape(d.output.shape)}</span></div><div class="matrix-wrapper"><table class="matrix-output" aria-label="${sim && d.simulation ? "sim-gpu" : "eager NumPy"} 출력의 왼쪽 위 원소"><tbody>${d.output.preview.map((row) => `<tr>${row.map((value) => `<td>${value.toFixed(3)}</td>`).join("")}</tr>`).join("")}</tbody></table></div><p class="matrix-note">${sim && d.simulation ? "sim-gpu 실행 결과" : "Eager NumPy 기준"} · 왼쪽 위 최대 4 × 4 원소 · 소수 셋째 자리까지 표시</p></section></div>
     <details class="branch-example"><summary>더 알아보기 · 텐서 값에 따라 if로 분기하면 어떻게 될까요?</summary><div class="branch-body"><p>추적 중인 Tensor에는 실제 값이 없습니다. 따라서 <code>if x</code>의 참·거짓을 판단할 수 없어 이 toy tracer는 TraceError를 발생시킵니다.</p><pre tabindex="0">${escape(d.branch.source)}</pre><div class="branch-error">TraceError: ${escape(d.branch.error)}</div><div class="branch-caption">백엔드에서 실제 추적해 얻은 예상된 오류입니다. 이 예제는 부분 그래프 실행이나 eager fallback을 구현하지 않습니다.</div></div></details>
     ${callout("다음 실험: 결과를 유지하면서 표현 바꾸기", "Fusion과 tiling 설정을 바꾸고 다시 실행해 보세요. 생성되는 그래프와 루프는 달라지지만, 허용 오차 안에서 같은 값을 계산해야 합니다. 이 페이지의 작은 예제는 정확성을 확인하기 위한 것이며 성능을 비교하는 벤치마크가 아닙니다.")}`;
+}
+
+function gpuStage() {
+  if (!state.data.simulation) {
+    const unavailable = state.data.config.backend === "simgpu";
+    return `<section class="panel gpu-prompt"><h2>${unavailable ? "sim-gpu 실행을 사용할 수 없습니다." : "같은 예제를 GPU 시뮬레이터로 실행해 보세요."}</h2><p>${escape(unavailable ? state.data.checks.simgpu?.message ?? "실행 결과를 확인하고 다시 시도해 주세요." : "실행 대상을 sim-gpu로 바꾸면 이 단계에 커널, 명령어, warp timeline과 메모리 배치가 표시됩니다. M, K, N은 16 이하이며 CPU tiling은 사용할 수 없습니다.")}</p><button class="primary-button" data-run-gpu>${unavailable ? "다시 실행" : "sim-gpu로 실행"}</button></section>`;
+  }
+  return `<div class="gpu-graph">${graphPanel("optimized", "실행 커널과 연결된 그래프")}</div>${gpuPanel()}`;
 }
 
 function updateSelection() {
@@ -148,39 +177,53 @@ function updateSelection() {
 }
 
 function render() {
+  gpuView?.destroy();
+  gpuView = null;
   const [eyebrow, title, description] = stages[state.step];
   $("#eyebrow").textContent = `${pad(state.step + 1)} / ${eyebrow}`;
   $("#lesson-title").textContent = title;
   $("#lesson-description").textContent = description;
   $("#chapter-number").textContent = pad(state.step + 1);
-  $("#footer-step").textContent = `STEP ${pad(state.step + 1)} OF 05`;
+  $("#footer-step").textContent = `STEP ${pad(state.step + 1)} OF ${pad(stages.length)}`;
   document.querySelectorAll(".stage-nav[data-step]").forEach((button) => {
     const active = Number(button.dataset.step) === state.step;
     button.classList.toggle("active", active);
     if (active) button.setAttribute("aria-current", "step"); else button.removeAttribute("aria-current");
   });
   $("#previous").disabled = state.step === 0;
-  $("#next").innerHTML = `${["그래프 추출 살펴보기", "연산 합치기 살펴보기", "코드 생성 살펴보기", "실행 결과 확인하기", "처음부터 다시 살펴보기"][state.step]} <span>→</span>`;
+  $("#next").innerHTML = `${["그래프 추출 살펴보기", "연산 합치기 살펴보기", "코드 생성 살펴보기", "실행 결과 확인하기", "GPU 내부 실행 살펴보기", "처음부터 다시 살펴보기"][state.step]} <span>→</span>`;
   if (!state.data) return;
-  $("#stage-content").innerHTML = [sourceStage, rawStage, fusionStage, codeStage, resultsStage][state.step]();
+  $("#stage-content").innerHTML = [sourceStage, rawStage, fusionStage, codeStage, resultsStage, gpuStage][state.step]();
+  if (state.step === 5 && state.data.simulation) {
+    gpuView = mountGpu($("#gpu"), state.data.simulation, {
+      selectedKernel: state.gpuKernel,
+      onKernelChange(index, nodeId) {
+        state.gpuKernel = index;
+        state.selected = {graph: "optimized", id: nodeId};
+        updateSelection();
+      },
+    });
+  }
   updateSelection();
 }
 
 function navigate(step) {
   state.step = step;
   state.selected = null;
+  if (location.hash !== "#architecture") history.replaceState(null, "", step === 5 ? "#gpu" : "#compiler");
   render();
 }
 
 function readConfig() {
-  return {backend: "c", example: $("#example").value, m: Number($("#m").value), k: Number($("#k").value), n: Number($("#n").value), fusion: $("#fusion").value, tiled: $("#tiled").checked};
+  return {backend: $("#backend").value, example: $("#example").value, m: Number($("#m").value), k: Number($("#k").value), n: Number($("#n").value), fusion: $("#fusion").value, tiled: $("#tiled").checked};
 }
 
 function settingsChanged() {
+  const max = $("#backend").value === "simgpu" ? 16 : 128;
   let valid = true;
   for (const key of ["m", "k", "n"]) {
     const input = $(`#${key}`), value = Number(input.value);
-    const ok = input.value.trim() !== "" && Number.isInteger(value) && value >= 1 && value <= 128;
+    const ok = input.value.trim() !== "" && Number.isInteger(value) && value >= 1 && value <= max;
     input.setAttribute("aria-invalid", String(!ok));
     valid &&= ok;
   }
@@ -189,9 +232,9 @@ function settingsChanged() {
   $("#stage-content").classList.toggle("stale-content", Boolean(stale || !valid));
   $("#run-button").disabled = !valid || state.busy || !state.examples.length;
   if (state.busy) $("#run-status").textContent = "추적 → 최적화 → 컴파일 → 검증 중…";
-  else if (!valid) $("#run-status").textContent = "M, K, N에는 1–128 사이 정수를 입력하세요. 아래는 이전 실행 결과입니다.";
+  else if (!valid) $("#run-status").textContent = `M, K, N에는 1–${max} 사이 정수를 입력하세요. 아래는 이전 실행 결과입니다.`;
   else if (stale) $("#run-status").textContent = "설정이 변경되었습니다. 실행하기를 눌러 갱신하세요. 아래는 이전 실행 결과입니다.";
-  else if (state.data) $("#run-status").textContent = `✓ 실행 완료 · ${state.data.config.m} × ${state.data.config.k} × ${state.data.config.n} · 실제 CPU 결과`;
+  else if (state.data) $("#run-status").textContent = `✓ 실행 완료 · ${state.data.config.m} × ${state.data.config.k} × ${state.data.config.n} · ${state.data.config.backend === "simgpu" ? state.data.simulation ? "sim-gpu 결과" : "sim-gpu 사용 불가 · Python 검증 결과" : "실제 CPU 결과"}`;
   return valid;
 }
 
@@ -210,6 +253,8 @@ async function runExperiment(event) {
     if (!response.ok) throw new Error(data.error ?? "실행에 실패했습니다.");
     state.data = data;
     state.selected = null;
+    state.gpuKernel = 0;
+    if (!data.simulation && state.codeTab === "assembly") state.codeTab = "python";
     render();
   } catch (error) {
     $("#error-message").textContent = `${error.message}\n서버 연결과 설정을 확인한 뒤 다시 실행해 주세요.`;
@@ -224,9 +269,21 @@ async function runExperiment(event) {
   }
 }
 
+function backendChanged() {
+  const sim = $("#backend").value === "simgpu";
+  $("#tiled").disabled = sim;
+  if (sim) $("#tiled").checked = false;
+  for (const key of ["m", "k", "n"]) $(`#${key}`).max = sim ? 16 : 128;
+  $("#backend-note").textContent = sim
+    ? "sim-gpu · SIMT: M, K, N ≤ 16 · 한 스레드당 출력 원소 하나 · CPU tiling 미지원 · 06 GPU 내부 실행에서 warp timeline을 확인하세요."
+    : "C · CPU: M, K, N ≤ 128 · tiling으로 행렬곱의 루프 구조를 바꿀 수 있습니다.";
+  settingsChanged();
+}
+$("#backend").addEventListener("change", backendChanged);
+
 document.querySelectorAll(".stage-nav[data-step]").forEach((button) => button.addEventListener("click", () => navigate(Number(button.dataset.step))));
 $("#previous").addEventListener("click", () => navigate(Math.max(0, state.step - 1)));
-$("#next").addEventListener("click", () => navigate((state.step + 1) % 5));
+$("#next").addEventListener("click", () => navigate((state.step + 1) % stages.length));
 $("#config-form").addEventListener("input", settingsChanged);
 $("#config-form").addEventListener("submit", runExperiment);
 
@@ -234,8 +291,20 @@ $("#stage-content").addEventListener("click", async (event) => {
   const node = event.target.closest("[data-node]");
   if (node) {
     state.selected = {graph: node.dataset.graph, id: node.dataset.node};
-    $("#inspector").innerHTML = inspector();
+    if ($("#inspector")) $("#inspector").innerHTML = inspector();
+    if (node.dataset.graph === "optimized") gpuView?.selectNode(node.dataset.node);
     updateSelection();
+  }
+  const kernelLink = event.target.closest("[data-open-kernel]");
+  if (kernelLink) {
+    event.preventDefault();
+    state.gpuKernel = Number(kernelLink.dataset.openKernel);
+    navigate(5);
+  }
+  if (event.target.closest("[data-run-gpu]")) {
+    $("#backend").value = "simgpu";
+    backendChanged();
+    await runExperiment();
   }
   const tab = event.target.closest("[data-tab]");
   if (tab) {
@@ -246,7 +315,7 @@ $("#stage-content").addEventListener("click", async (event) => {
   const copy = event.target.closest("[data-copy]");
   if (copy) {
     try {
-      await navigator.clipboard.writeText(state.data[copy.dataset.copy]);
+      await navigator.clipboard.writeText(copy.dataset.copy === "assembly" ? generatedAssembly() : state.data[copy.dataset.copy]);
       copy.textContent = "복사됨 ✓";
     } catch {
       copy.textContent = "소스를 선택해 복사하세요";
@@ -263,7 +332,9 @@ $("#stage-content").addEventListener("keydown", (event) => {
   const tab = event.target.closest("[data-tab]");
   if (tab && ["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
     event.preventDefault();
-    state.codeTab = event.key === "Home" ? "python" : event.key === "End" ? "c" : state.codeTab === "python" ? "c" : "python";
+    const tabs = [...$("#stage-content").querySelectorAll("[data-tab]")].map(t => t.dataset.tab);
+    const index = tabs.indexOf(state.codeTab);
+    state.codeTab = event.key === "Home" ? tabs[0] : event.key === "End" ? tabs.at(-1) : tabs[(index + (event.key === "ArrowLeft" ? -1 : 1) + tabs.length) % tabs.length];
     render();
     $(`[data-tab="${state.codeTab}"]`).focus();
   }
@@ -283,6 +354,8 @@ async function initialize() {
     $("#example").disabled = false;
     for (const key of ["m", "k", "n", "fusion"]) $(`#${key}`).value = data.defaults[key];
     $("#tiled").checked = data.defaults.tiled;
+    $("#backend").value = location.hash === "#gpu" ? "simgpu" : data.defaults.backend;
+    backendChanged();
     await runExperiment();
   } catch (error) {
     $("#error-message").textContent = `${error.message} 페이지를 새로고침해 다시 연결하세요.`;
@@ -307,7 +380,10 @@ function showView() {
     if ((link.dataset.view === "architecture") === architecture) link.setAttribute("aria-current", "page");
     else link.removeAttribute("aria-current");
   });
-  if (!architecture) initialize();
+  if (!architecture) {
+    if (location.hash === "#gpu" && state.step !== 5) navigate(5);
+    initialize();
+  }
 }
 
 window.addEventListener("hashchange", showView);
